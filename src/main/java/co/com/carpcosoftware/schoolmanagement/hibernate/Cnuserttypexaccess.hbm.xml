@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-abr-2015 18:35:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.carpcosoftware.schoolmanagement.hibernate.Cnuserttypexaccess" table="cnuserttypexaccess" catalog="schoolmanagement" optimistic-lock="version">
+        <composite-id name="id" class="co.com.carpcosoftware.schoolmanagement.hibernate.CnuserttypexaccessId">
+            <key-property name="idUserType" type="int">
+                <column name="idUserType" />
+            </key-property>
+            <key-property name="idAccess" type="int">
+                <column name="idAccess" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="cnaccess" class="co.com.carpcosoftware.schoolmanagement.hibernate.Cnaccess" update="false" insert="false" fetch="select">
+            <column name="idAccess" not-null="true" />
+        </many-to-one>
+        <many-to-one name="cnusertype" class="co.com.carpcosoftware.schoolmanagement.hibernate.Cnusertype" update="false" insert="false" fetch="select">
+            <column name="idUserType" not-null="true" />
+        </many-to-one>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

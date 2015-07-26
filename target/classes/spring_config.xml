@@ -1,0 +1,64 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+	
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/schoolManagement" />
+        <property name="username" value="root" />
+        <property name="password" value="MySql020486" />
+    </bean>
+    
+    <!-- Hibernate session factory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzuserxusertype.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bznotevalue.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnaccess.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnuserttypexaccess.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzschool.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bznotedefinition.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzgrade.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzyear.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzsubject.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnusertype.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzclass.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzperiod.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzuser.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzclassroom.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzschoolxuser.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzclassroomxuser.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+		    <props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.show_sql">true</prop>
+		    </props>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+    
+     <bean class="org.springframework.cache.ehcache.EhCacheCacheManager">
+	    <property name="cacheManager">
+	        <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+	            <property name="configLocation" value="classpath:ehcache.xml"/>
+	        </bean>
+	    </property>
+	</bean>
+	
+	<context:component-scan base-package="co.com.carpcosoftware.schoolmanagement" />
+</beans>

@@ -1,0 +1,69 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" 
+	updateCheck="true"
+	monitoring="autodetect" 
+	dynamicConfig="true">
+ 
+	<diskStore path="java.io.tmpdir" />
+ 
+	<cache name="classrooms" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	<cache name="grades" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	<cache name="schools" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>	
+	<cache name="users" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	<cache name="userTypes" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	<cache name="years" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+</ehcache>

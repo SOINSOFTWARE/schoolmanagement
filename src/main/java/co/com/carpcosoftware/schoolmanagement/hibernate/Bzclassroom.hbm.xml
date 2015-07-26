@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-abr-2015 18:35:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.carpcosoftware.schoolmanagement.hibernate.Bzclassroom" table="bzclassroom" catalog="schoolmanagement" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="bzgrade" class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzgrade" fetch="select">
+            <column name="idGrade" not-null="true" />
+        </many-to-one>
+        <many-to-one name="bzschool" class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzschool" fetch="select">
+            <column name="idSchool" not-null="true" />
+        </many-to-one>
+        <many-to-one name="bzuser" class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzuser" fetch="select">
+            <column name="idUser" not-null="true" />
+        </many-to-one>
+        <many-to-one name="bzyear" class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzyear" fetch="select">
+            <column name="idYear" not-null="true" />
+        </many-to-one>
+        <property name="code" type="string">
+            <column name="code" length="5" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="50" not-null="true" />
+        </property>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+        <set name="bzclasses" table="bzclass" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idClassRoom" not-null="true" />
+            </key>
+            <one-to-many class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzclass" />
+        </set>
+        <set name="bzclassroomxusers" table="bzclassroomxuser" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idClassRoom" not-null="true" />
+            </key>
+            <one-to-many class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzclassroomxuser" />
+        </set>
+    </class>
+</hibernate-mapping>

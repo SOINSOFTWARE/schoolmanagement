@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="schoolManagement"/>
+  <table-filter match-name="bzclass"/>
+  <table-filter match-name="bzclassroom"/>
+  <table-filter match-name="bzclassroomxuser"/>
+  <table-filter match-name="bzgrade"/>
+  <table-filter match-name="bznotedefinition"/>
+  <table-filter match-name="bznotevalue"/>
+  <table-filter match-name="bzperiod"/>
+  <table-filter match-name="bzschool"/>
+  <table-filter match-name="bzschoolxuser"/>
+  <table-filter match-name="bzsubject"/>
+  <table-filter match-name="bzuser"/>
+  <table-filter match-name="bzuserxusertype"/>
+  <table-filter match-name="bzyear"/>
+  <table-filter match-name="cnaccess"/>
+  <table-filter match-name="cnuserttypexaccess"/>
+  <table-filter match-name="cnusertype"/>
+</hibernate-reverse-engineering>
