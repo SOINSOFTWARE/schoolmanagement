@@ -34,4 +34,11 @@ public class YearRequestHandler {
 	public Set<YearBO> findAll() {
 		return yearBLL.findAll();
 	}
+	
+	@GET
+	@Path("currentYear")
+	@Produces(MediaType.APPLICATION_JSON)
+	public YearBO findCurrentYear() {
+		return yearBLL.findCurrentYear();
+	}
 }

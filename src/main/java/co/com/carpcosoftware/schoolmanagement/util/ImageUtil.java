@@ -79,15 +79,15 @@ public class ImageUtil {
 	 */
 	public static byte[] encodeToByteArray(BufferedImage image) {
 		byte[] imageInByte = null;
-
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			ImageIO.write((BufferedImage) image, IMG_TYPE, baos);
-			baos.flush();
-			imageInByte = baos.toByteArray();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (image != null) {
+			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				ImageIO.write((BufferedImage) image, IMG_TYPE, baos);
+				baos.flush();
+				imageInByte = baos.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-
 		return imageInByte;
 	}
 

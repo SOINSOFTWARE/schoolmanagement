@@ -151,4 +151,15 @@ public class SchoolBLL implements IBusinessLogicLayer<SchoolBO> {
 		}
 		return schoolBOSet;
 	}
+
+	public Bzschool buildSchoolHibernateEntity(SchoolBO schoolBO) {
+		Bzschool bzSchool = new Bzschool();
+		bzSchool.setId(schoolBO.getId());
+		bzSchool.setCode(schoolBO.getCode());
+		bzSchool.setName(schoolBO.getName());
+		bzSchool.setCreation(schoolBO.getCreation());
+		bzSchool.setUpdated(schoolBO.getUpdated());
+		bzSchool.setEnabled(schoolBO.isEnabled());
+		return bzSchool;
+	}
 }

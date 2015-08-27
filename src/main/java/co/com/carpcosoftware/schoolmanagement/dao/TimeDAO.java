@@ -10,68 +10,60 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
-import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclassroom;
+import co.com.carpcosoftware.schoolmanagement.hibernate.Bztime;
 import co.com.carpcosoftware.schoolmanagement.util.Chronometer;
 
 /**
  * @author Carlos Rodriguez
  * @version 1.0
- * @since 05/06/2015
+ * @since 27/08/2015
  */
 @Repository
-public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassroom> {
+public class TimeDAO extends AbstractDAO implements IDataAccesable<Bztime> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Bzclassroom> select() {
-		Set<Bzclassroom> bzClassRoomSet = null;
+	public Set<Bztime> select() {
+		Set<Bztime> bzTimeSet = null;
 		Chronometer chrono = this.startNewChronometer();
         
         try {
             Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzClassRoomSet = new HashSet<>(query.list());
+            bzTimeSet = new HashSet<>(query.list());
         } catch (HibernateException ex) {
         	LOGGER.error(ex.getMessage());
         } finally {
             chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", Select function");
+            this.stopChronometerAndLogMessage(chrono, TimeDAO.class.getName() + ", Select function");
         }
         
-        return bzClassRoomSet;
+        return bzTimeSet;
 	}
 
 	@Override
-	public Bzclassroom selectByIdentifier(Integer identifier) {
-		Bzclassroom bzClassRoom = null;
+	public Bztime selectByIdentifier(Integer identifier) {
+		Bztime bzTime = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
         	Query query = this.createQuery(this.getSelectStatementByIdentifier());
         	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	bzClassRoom = (Bzclassroom) query.list().get(0);
+        	bzTime = (Bztime) query.list().get(0);
         } catch (HibernateException ex) {
             LOGGER.error(ex.getMessage());
         } finally {
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", selectByIdentifier function");
+            this.stopChronometerAndLogMessage(chrono, TimeDAO.class.getName() + ", selectByIdentifier function");
         }
-		return bzClassRoom;
+		return bzTime;
 	}
 
 	@Override
-	public boolean insert(Bzclassroom newRecord) {
-		Chronometer chrono = this.startNewChronometer();
-		try {
-			this.save(newRecord);
-		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", Insert function");
-        }
+	public boolean insert(Bztime newRecord) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean update(Bzclassroom record) {
+	public boolean update(Bztime record) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -80,7 +72,7 @@ public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassr
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_CLASSROOM);		
+		sql.append(TABLE_NAME_TIME);		
 		return sql.toString();
 	}
 
@@ -104,4 +96,5 @@ public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassr
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

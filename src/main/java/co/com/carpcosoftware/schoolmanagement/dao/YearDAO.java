@@ -42,8 +42,18 @@ public class YearDAO extends AbstractDAO implements IDataAccesable<Bzyear> {
 
 	@Override
 	public Bzyear selectByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		Bzyear bzYear = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
+        	query.setParameter(COLUMN_IDENTIFIER, identifier);
+        	bzYear = (Bzyear) query.list().get(0);
+        } catch (HibernateException ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            this.stopChronometerAndLogMessage(chrono, YearDAO.class.getName() + ", selectByIdentifier function");
+        }
+		return bzYear;
 	}
 
 	@Override
@@ -68,8 +78,11 @@ public class YearDAO extends AbstractDAO implements IDataAccesable<Bzyear> {
 
 	@Override
 	protected String getSelectStatementByIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
+		sql.append(STATEMENT_WHERE);
+		sql.append(COLUMN_IDENTIFIER);
+		sql.append(PARAMETER + COLUMN_IDENTIFIER);
+		return sql.toString();
 	}
 
 	@Override

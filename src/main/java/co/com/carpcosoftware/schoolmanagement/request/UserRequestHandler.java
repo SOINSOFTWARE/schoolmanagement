@@ -51,4 +51,12 @@ public class UserRequestHandler {
 	public Set<UserBO> findByType(@QueryParam("schoolId") int schoolId, @QueryParam("userTypeCode") String userTypeCode) {
 		return userBLL.findByType(schoolId, userTypeCode);
 	}
+	
+	@GET
+	@Path("teacherFree")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Set<UserBO> findTeacherNoDirectors(@QueryParam("schoolId") int schoolId) {
+		return userBLL.findTeacherNoDirectors(schoolId);
+	}
+	
 }

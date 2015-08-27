@@ -1,5 +1,6 @@
 package co.com.carpcosoftware.schoolmanagement.bll;
 
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.carpcosoftware.schoolmanagement.dao.UserDAO;
+import co.com.carpcosoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.carpcosoftware.schoolmanagement.entity.UserBO;
 import co.com.carpcosoftware.schoolmanagement.entity.UserTypeBO;
+import co.com.carpcosoftware.schoolmanagement.entity.YearBO;
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzuser;
 import co.com.carpcosoftware.schoolmanagement.util.CacheManager;
+import co.com.carpcosoftware.schoolmanagement.util.ImageUtil;
 
 /**
  * User business logic layer
@@ -24,6 +28,8 @@ import co.com.carpcosoftware.schoolmanagement.util.CacheManager;
  */
 @Service
 public class UserBLL implements IBusinessLogicLayer<UserBO> {
+	
+	private static final String USER_TYPE_TEACHER = "PROFE";
 	
 	private static final String CACHE_KEY = "users";
 	
@@ -37,6 +43,12 @@ public class UserBLL implements IBusinessLogicLayer<UserBO> {
 	
 	@Autowired
 	private UserTypeBLL userTypeBLL;
+	
+	@Autowired
+	private ClassRoomBLL classRoomBLL;
+	
+	@Autowired
+	private YearBLL yearBLL;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -150,17 +162,13 @@ public class UserBLL implements IBusinessLogicLayer<UserBO> {
 	}
 	
 	public Set<UserBO> findByType(int schoolId, String userTypeCode){
-		Set<UserBO> userBOSet = null;
+		Set<UserBO> userBOSet = new HashSet<>();
 		Set<UserBO> cacheUserBOSet = this.getObjectsFromCache();
 		UserTypeBO userTypeBO = userTypeBLL.findByCode(userTypeCode);
 		if (cacheUserBOSet != null) {
 			for(UserBO userBO : cacheUserBOSet) {
-				if (userBO.getSchool().getId().equals(schoolId)
-						&& userBO.getUserTypeSet().contains(userTypeBO)) {
-					if (userBOSet == null) {
-						userBOSet = new HashSet<>();
-					}
-	
+				if (this.isUserLinkedToSchool(userBO, schoolId) && 
+						this.isUserLinkedToUserType(userBO, userTypeBO)) {
 					userBOSet.add(userBO);
 				}
 			}
@@ -168,9 +176,75 @@ public class UserBLL implements IBusinessLogicLayer<UserBO> {
 		return userBOSet;
 	}
 	
+	public Set<UserBO> findTeacherNoDirectors(int schoolId){
+		Set<UserBO> userBOSet = new HashSet<>();
+		Set<UserBO> cacheUserBOSet = this.getObjectsFromCache();
+		YearBO yearBO = yearBLL.findCurrentYear();
+		Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findBy(null, schoolId, yearBO.getName(), null, null);
+		UserTypeBO userTypeBO = userTypeBLL.findByCode(USER_TYPE_TEACHER);
+		if (cacheUserBOSet != null) {
+			for(UserBO userBO : cacheUserBOSet) {
+				if (this.isUserLinkedToSchool(userBO, schoolId) 
+						&& this.isUserLinkedToUserType(userBO, userTypeBO)
+						&& !this.isTeacherADirector(classRoomBOSet, userBO)) {
+					userBOSet.add(userBO);
+					LOGGER.info("Teacher that is not a director yet : {}", userBO.toString());
+				}
+			}
+		}
+		return userBOSet;
+	}
+	
+	private boolean isUserLinkedToSchool(UserBO userBO, int schoolId) {
+		return userBO.getSchool().getId().equals(schoolId);
+	}
+	
+	private boolean isUserLinkedToUserType(UserBO userBO, UserTypeBO userTypeBO) {
+		return userBO.getUserTypeSet().contains(userTypeBO);
+	}
+	
+	private boolean isTeacherADirector(Set<ClassRoomBO> classRoomBOSet, UserBO userBO)
+	{
+		boolean isDirector = false;
+		if (classRoomBOSet != null) {
+			for(ClassRoomBO classRoomBO : classRoomBOSet) {
+				if (classRoomBO.getUserBO().equals(userBO)) {
+					isDirector = true;
+					break;
+				}
+			}
+		}
+		return isDirector;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private Set<UserBO> getObjectsFromCache() {
 		return this.cacheManager.getObjectsFromCache(this.cacheManager
 				.getCache(CACHE_KEY));
+	}
+
+	public Bzuser buildUserHibernateEntity(UserBO userBO) {
+		Bzuser bzUser = null;
+		if (userBO != null) {
+			bzUser = new Bzuser();
+			bzUser.setId(userBO.getId());
+			bzUser.setDocumentNumber(userBO.getDocumentNumber());
+			bzUser.setDocumentType(userBO.getDocumentType());
+			bzUser.setName(userBO.getName());
+			bzUser.setLastName(userBO.getLastName());
+			bzUser.setBorn(userBO.getBorn());
+			bzUser.setAddress(userBO.getAddress());
+			bzUser.setPhone1(userBO.getPhone1().longValue());
+			bzUser.setPhone2(userBO.getPhone2() != null ? userBO.getPhone2().longValue() : null);
+			bzUser.setPassword(userBO.getPassword());
+			bzUser.setGender(userBO.getGender());
+			bzUser.setPhoto(ImageUtil.encodeToByteArray((BufferedImage) userBO.getPhoto()));
+			bzUser.setBzuserByIdGuardian1(this.buildUserHibernateEntity(userBO.getGuardian1()));
+			bzUser.setBzuserByIdGuardian2(this.buildUserHibernateEntity(userBO.getGuardian2()));
+			bzUser.setCreation(userBO.getCreation());
+			bzUser.setUpdated(userBO.getUpdated());
+			bzUser.setEnabled(userBO.isEnabled());
+		}
+		return bzUser;
 	}
 }

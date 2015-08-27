@@ -6,6 +6,8 @@ package co.com.carpcosoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.ehcache.Cache;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ public class YearBLL implements IBusinessLogicLayer<YearBO> {
 	
 	private static final String CACHE_KEY = "years";
 
-	private static final Logger LOGGER = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory	
 			.getLogger(YearBLL.class);
 
 	@Autowired
@@ -40,8 +42,7 @@ public class YearBLL implements IBusinessLogicLayer<YearBO> {
 	 */
 	@Override
 	public Set<YearBO> findAll() {
-		return this.cacheManager.isCacheEmpty(CACHE_KEY) ? this
-				.selectAndPutInCache() : this.getObjectsFromCache();
+		return this.selectAll();
 	}
 
 	/* (non-Javadoc)
@@ -49,8 +50,15 @@ public class YearBLL implements IBusinessLogicLayer<YearBO> {
 	 */
 	@Override
 	public YearBO findByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		YearBO yearBO = null;
+		Cache cache = this.cacheManager.getCache(CACHE_KEY);
+		if (cache.getSize() == 0) {
+			yearBO = this.selectByIdentifierAndPutInCache(identifier);
+		} else {
+			yearBO = (YearBO) this.cacheManager.getObjectFromCache(cache, identifier);
+		}
+		LOGGER.info("Year = {} was loaded successfully", yearBO.toString());
+		return yearBO;
 	}
 
 	/* (non-Javadoc)
@@ -100,8 +108,14 @@ public class YearBLL implements IBusinessLogicLayer<YearBO> {
 	 */
 	@Override
 	public YearBO selectByIdentifierAndPutInCache(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		YearBO yearBO = null;
+		Bzyear bzYear = this.yearDAO.selectByIdentifier(identifier);
+		if (bzYear != null) {
+			yearBO = new YearBO(bzYear);
+			this.cacheManager.putObjectInCache(
+				this.cacheManager.getCache(CACHE_KEY), yearBO);
+		}
+		return yearBO;
 	}
 
 	/* (non-Javadoc)
@@ -127,6 +141,33 @@ public class YearBLL implements IBusinessLogicLayer<YearBO> {
 	private Set<YearBO> getObjectsFromCache() {
 		return this.cacheManager.getObjectsFromCache(this.cacheManager
 				.getCache(CACHE_KEY));
+	}
+	
+	public YearBO findCurrentYear() {
+		YearBO currentYear = null;
+		Set<YearBO> yearBOSet = this.selectAll();
+		for(YearBO year : yearBOSet) {
+			if (year.isEnabled()) {
+				currentYear = year;
+				LOGGER.info("Current year loaded: {}", currentYear.toString());
+				break;
+			}
+		}
+		return currentYear;
+	}
+	
+	private Set<YearBO> selectAll() {
+		return this.cacheManager.isCacheEmpty(CACHE_KEY) ? this.selectAndPutInCache() : this.getObjectsFromCache();
+	}
+
+	public Bzyear buildYearHibernateEntity(YearBO yearBO) {
+		Bzyear bzYear = new Bzyear();
+		bzYear.setId(yearBO.getId());
+		bzYear.setName(yearBO.getName());
+		bzYear.setCreation(yearBO.getCreation());
+		bzYear.setUpdated(yearBO.getUpdated());
+		bzYear.setEnabled(yearBO.isEnabled());
+		return bzYear;
 	}
 
 }

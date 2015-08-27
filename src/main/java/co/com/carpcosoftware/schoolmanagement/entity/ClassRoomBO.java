@@ -26,12 +26,24 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 	private static final long serialVersionUID = -4200714585828342829L;
 
 	private GradeBO gradeBO;
-
-	private YearBO yearBO;
-
-	private UserBO userBO;
-	
-	private SchoolBO schoolBO;
+    
+    private SchoolBO schoolBO;
+    
+    private TimeBO timeBO;
+    
+    private UserBO userBO;
+    
+    private YearBO yearBO;
+    
+    private int idGrade;
+    
+    private int idSchool;
+    
+    private int idTime;
+    
+    private int idUser;    
+    
+    private int idYear;    
 
 	public ClassRoomBO() {
 		super();
@@ -45,10 +57,36 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 		this.creation = bzClassRoom.getCreation();
 		this.updated = bzClassRoom.getUpdated();
 		this.enabled = bzClassRoom.isEnabled();
+		this.idGrade = bzClassRoom.getBzgrade().getId();
+		this.idSchool = bzClassRoom.getBzschool().getId();
+		this.idTime = bzClassRoom.getBztime().getId();
+		this.idUser = bzClassRoom.getBzuser().getId();
+		this.idYear = bzClassRoom.getBzyear().getId();
 		this.gradeBO = new GradeBO(bzClassRoom.getBzgrade());
-		this.yearBO = new YearBO(bzClassRoom.getBzyear());
-		this.userBO = new UserBO(bzClassRoom.getBzuser());
 		this.schoolBO = new SchoolBO(bzClassRoom.getBzschool());
+		this.timeBO = new TimeBO(bzClassRoom.getBztime());
+		this.userBO = new UserBO(bzClassRoom.getBzuser());
+		this.yearBO = new YearBO(bzClassRoom.getBzyear());
+	}
+	
+	public int getIdGrade() {
+		return this.idGrade;
+	}
+	
+	public int getIdSchool() {
+		return this.idSchool;
+	}
+	
+	public int getIdTime() {
+		return this.idTime;
+	}
+	
+	public int getIdUser() {
+		return this.idUser;
+	}
+	
+	public int getIdYear() {
+		return this.idYear;
 	}
 
 	/**
@@ -64,6 +102,43 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 	 */
 	public void setGradeBO(GradeBO gradeBO) {
 		this.gradeBO = gradeBO;
+	}
+	
+	/**
+	 * @return the schoolBO
+	 */
+	public SchoolBO getSchoolBO() {
+		return schoolBO;
+	}
+
+	/**
+	 * @param schoolBO the schoolBO to set
+	 */
+	public void setSchoolBO(SchoolBO schoolBO) {
+		this.schoolBO = schoolBO;
+	}
+	
+	public TimeBO getTimeBO() {
+		return timeBO;
+	}
+
+	public void setTimeBO(TimeBO timeBO) {
+		this.timeBO = timeBO;
+	}
+	
+	/**
+	 * @return the user
+	 */
+	public UserBO getUserBO() {
+		return userBO;
+	}
+
+	/**
+	 * @param userBO
+	 *            the user to set
+	 */
+	public void setUserBO(UserBO userBO) {
+		this.userBO = userBO;
 	}
 
 	/**
@@ -81,35 +156,6 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 		this.yearBO = yearBO;
 	}
 
-	/**
-	 * @return the user
-	 */
-	public UserBO getUserBO() {
-		return userBO;
-	}
-
-	/**
-	 * @param userBO
-	 *            the user to set
-	 */
-	public void setUserBO(UserBO userBO) {
-		this.userBO = userBO;
-	}
-	
-	/**
-	 * @return the schoolBO
-	 */
-	public SchoolBO getSchoolBO() {
-		return schoolBO;
-	}
-
-	/**
-	 * @param schoolBO the schoolBO to set
-	 */
-	public void setSchoolBO(SchoolBO schoolBO) {
-		this.schoolBO = schoolBO;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -123,6 +169,7 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 		result = prime * result + ((userBO == null) ? 0 : userBO.hashCode());
 		result = prime * result + ((yearBO == null) ? 0 : yearBO.hashCode());
 		result = prime * result + ((schoolBO == null) ? 0 : schoolBO.hashCode());
+		result = prime * result + ((timeBO == null) ? 0 : timeBO.hashCode());
 		return result;
 	}
 
@@ -160,6 +207,11 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 				return false;
 		} else if (!schoolBO.equals(other.schoolBO))
 			return false;
+		if (timeBO == null) {
+			if (other.timeBO != null)
+				return false;
+		} else if (!timeBO.equals(other.timeBO))
+			return false;
 		return true;
 	}
 
@@ -168,7 +220,7 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 	 */
 	@Override
 	public String toString() {
-		return "ClassRoomBO [gradeBO=" + gradeBO + ", yearBO=" + yearBO
+		return "ClassRoomBO [gradeBO=" + gradeBO + ", yearBO=" + yearBO + ", timeBO=" + timeBO
 				+ ", userBO=" + userBO + ", schoolBO=" + schoolBO + ", id="
 				+ id + ", code=" + code + ", name=" + name + ", creation="
 				+ creation + ", updated=" + updated + ", enabled=" + enabled

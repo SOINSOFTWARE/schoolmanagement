@@ -26,6 +26,7 @@ public abstract class AbstractDAO {
 	public static final String TABLE_NAME_CLASSROOM = "Bzclassroom";
 	public static final String TABLE_NAME_GRADE = "Bzgrade";
 	public static final String TABLE_NAME_SCHOOL = "Bzschool";
+	public static final String TABLE_NAME_TIME = "Bztime";	
 	public static final String TABLE_NAME_USER = "Bzuser";
 	public static final String TABLE_NAME_USERTYPE = "Cnusertype";
 	public static final String TABLE_NAME_YEAR = "Bzyear";	
@@ -65,6 +66,12 @@ public abstract class AbstractDAO {
 	public Query createQuery(String queryStatement) {
 		return this.openSession().createQuery(queryStatement.toString());
         
+	}
+	
+	public void save(java.io.Serializable object) {
+		Session session = this.openSession();
+		session.save(object);
+		session.getTransaction().commit();
 	}
 	
 	/**

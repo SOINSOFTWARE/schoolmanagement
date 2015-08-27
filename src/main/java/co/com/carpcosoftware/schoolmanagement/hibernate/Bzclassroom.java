@@ -14,6 +14,7 @@ public class Bzclassroom implements java.io.Serializable {
 	private Integer id;
 	private Bzgrade bzgrade;
 	private Bzschool bzschool;
+	private Bztime bztime;
 	private Bzuser bzuser;
 	private Bzyear bzyear;
 	private String code;
@@ -27,11 +28,12 @@ public class Bzclassroom implements java.io.Serializable {
 	public Bzclassroom() {
 	}
 
-	public Bzclassroom(Bzgrade bzgrade, Bzschool bzschool, Bzuser bzuser,
-			Bzyear bzyear, String code, String name, Date creation,
-			Date updated, boolean enabled) {
+	public Bzclassroom(Bzgrade bzgrade, Bzschool bzschool, Bztime bztime,
+			Bzuser bzuser, Bzyear bzyear, String code, String name, 
+			Date creation, Date updated, boolean enabled) {
 		this.bzgrade = bzgrade;
 		this.bzschool = bzschool;
+		this.bztime = bztime;
 		this.bzuser = bzuser;
 		this.bzyear = bzyear;
 		this.code = code;
@@ -41,11 +43,12 @@ public class Bzclassroom implements java.io.Serializable {
 		this.enabled = enabled;
 	}
 
-	public Bzclassroom(Bzgrade bzgrade, Bzschool bzschool, Bzuser bzuser,
+	public Bzclassroom(Bzgrade bzgrade, Bzschool bzschool, Bztime bztime, Bzuser bzuser,
 			Bzyear bzyear, String code, String name, Date creation,
 			Date updated, boolean enabled, Set bzclasses, Set bzclassroomxusers) {
 		this.bzgrade = bzgrade;
 		this.bzschool = bzschool;
+		this.bztime = bztime;
 		this.bzuser = bzuser;
 		this.bzyear = bzyear;
 		this.code = code;
@@ -79,6 +82,14 @@ public class Bzclassroom implements java.io.Serializable {
 
 	public void setBzschool(Bzschool bzschool) {
 		this.bzschool = bzschool;
+	}
+	
+	public Bztime getBztime() {
+		return this.bztime;
+	}
+
+	public void setBztime(Bztime bztime) {
+		this.bztime = bztime;
 	}
 
 	public Bzuser getBzuser() {

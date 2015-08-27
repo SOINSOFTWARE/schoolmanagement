@@ -13,6 +13,7 @@
   <table-filter match-name="bzschool"/>
   <table-filter match-name="bzschoolxuser"/>
   <table-filter match-name="bzsubject"/>
+  <table-filter match-name="bztime"/>
   <table-filter match-name="bzuser"/>
   <table-filter match-name="bzuserxusertype"/>
   <table-filter match-name="bzyear"/>

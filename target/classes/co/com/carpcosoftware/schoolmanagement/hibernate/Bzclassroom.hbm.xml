@@ -20,6 +20,9 @@
         <many-to-one name="bzyear" class="co.com.carpcosoftware.schoolmanagement.hibernate.Bzyear" fetch="select">
             <column name="idYear" not-null="true" />
         </many-to-one>
+        <many-to-one name="bztime" class="co.com.carpcosoftware.schoolmanagement.hibernate.Bztime" fetch="select">
+            <column name="idTime" not-null="true" />
+        </many-to-one>
         <property name="code" type="string">
             <column name="code" length="5" not-null="true" />
         </property>

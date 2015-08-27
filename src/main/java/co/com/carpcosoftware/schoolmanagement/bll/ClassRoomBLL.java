@@ -6,6 +6,9 @@ package co.com.carpcosoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.ehcache.Cache;
+
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,21 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 
 	@Autowired
 	private ClassRoomDAO classRoomDAO;
+	
+	@Autowired
+	private GradeBLL gradeBLL;
+	
+	@Autowired
+	private SchoolBLL schoolBLL;
+	
+	@Autowired
+	private TimeBLL timeBLL;
+	
+	@Autowired
+	private UserBLL userBLL;
+	
+	@Autowired
+	private YearBLL yearBLL;
 
 	@Autowired
 	protected CacheManager cacheManager;
@@ -43,8 +61,18 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 
 	@Override
 	public ClassRoomBO findByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		ClassRoomBO classRoomBO = null;
+		Cache cache = this.cacheManager.getCache(CACHE_KEY);
+		if (cache.getSize() > 0) {
+			classRoomBO = (ClassRoomBO) this.cacheManager.getObjectFromCache(cache, identifier);
+		}
+		if (classRoomBO == null) {
+			classRoomBO = this.selectByIdentifierAndPutInCache(identifier);
+		}
+		if (classRoomBO != null) {
+			LOGGER.info("classRoom = {} was loaded successfully", classRoomBO.toString());
+		}
+		return classRoomBO;
 	}
 
 	@Override
@@ -55,8 +83,19 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 
 	@Override
 	public boolean insertRecord(ClassRoomBO newRecord) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean success = false;
+		newRecord.setCreation(DateTime.now().toDate());
+		newRecord.setUpdated(DateTime.now().toDate());
+		newRecord.setEnabled(true);
+		newRecord.setGradeBO(gradeBLL.findByIdentifier(newRecord.getIdGrade()));
+		newRecord.setSchoolBO(schoolBLL.findByIdentifier(newRecord.getIdSchool()));
+		newRecord.setTimeBO(timeBLL.findByIdentifier(newRecord.getIdTime()));
+		newRecord.setUserBO(userBLL.findByIdentifier(newRecord.getIdUser()));
+		newRecord.setYearBO(yearBLL.findByIdentifier(newRecord.getIdYear()));
+		Bzclassroom bzClassRoom = this.buildClassRoomHibernateEntity(newRecord);
+		success = this.classRoomDAO.insert(bzClassRoom); 
+		this.AddNewInsertedToCache(bzClassRoom);
+		return success;
 	}
 
 	@Override
@@ -79,8 +118,14 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 
 	@Override
 	public ClassRoomBO selectByIdentifierAndPutInCache(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		ClassRoomBO classRoomBO = null;
+		Bzclassroom bzClassRoom = this.classRoomDAO.selectByIdentifier(identifier);
+		if (bzClassRoom != null) {
+			classRoomBO = new ClassRoomBO(bzClassRoom);
+			this.cacheManager.putObjectInCache(
+				this.cacheManager.getCache(CACHE_KEY), classRoomBO);
+		}
+		return classRoomBO;
 	}
 
 	@Override
@@ -99,7 +144,7 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		return classRoomBOSet;
 	}
 
-	public Set<ClassRoomBO> findBy(Integer classRoomId, int schoolId, String year, Integer grade) {
+	public Set<ClassRoomBO> findBy(Integer classRoomId, int schoolId, String year, Integer grade, Integer time) {
 		Set<ClassRoomBO> classRoomBOSet = null;
 		Set<ClassRoomBO> cacheClassRoomBOSet = this.getObjectsFromCache();
 		if (cacheClassRoomBOSet != null) {
@@ -107,12 +152,14 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 				if (classRoomBO.getSchoolBO().getId().equals(schoolId)
 						&& (year == null || classRoomBO.getYearBO().getName().equals(year))
 						&& (grade == null || classRoomBO.getGradeBO().getId().equals(grade))
+						&& (time == null || classRoomBO.getTimeBO().getId().equals(time))
 						&& (classRoomId == null || classRoomBO.getId().equals(classRoomId))) {
 					if (classRoomBOSet == null) {
 						classRoomBOSet = new HashSet<>();
 					}
 	
 					classRoomBOSet.add(classRoomBO);
+					LOGGER.info("ClassRoomBO object loaded: {}", classRoomBO);
 				}
 			}
 		}
@@ -123,5 +170,26 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 	private Set<ClassRoomBO> getObjectsFromCache() {
 		return this.cacheManager.getObjectsFromCache(this.cacheManager
 				.getCache(CACHE_KEY));
+	}
+	
+	public Bzclassroom buildClassRoomHibernateEntity(ClassRoomBO classRoomBO) {
+		Bzclassroom bzClassRoom = new Bzclassroom();
+		bzClassRoom.setCode(classRoomBO.getCode());
+		bzClassRoom.setName(classRoomBO.getName());
+		bzClassRoom.setCreation(classRoomBO.getCreation());
+		bzClassRoom.setUpdated(classRoomBO.getUpdated());
+		bzClassRoom.setEnabled(classRoomBO.isEnabled());
+		bzClassRoom.setBzgrade(gradeBLL.buildGradeHibernateEntity(classRoomBO.getGradeBO()));
+		bzClassRoom.setBzschool(schoolBLL.buildSchoolHibernateEntity(classRoomBO.getSchoolBO()));
+		bzClassRoom.setBztime(timeBLL.buildTimeHibernateEntity(classRoomBO.getTimeBO()));
+		bzClassRoom.setBzuser(userBLL.buildUserHibernateEntity(classRoomBO.getUserBO()));
+		bzClassRoom.setBzyear(yearBLL.buildYearHibernateEntity(classRoomBO.getYearBO()));
+		return bzClassRoom;
+	}
+	
+	private void AddNewInsertedToCache(Bzclassroom bzClassRoom) {
+		ClassRoomBO classRoomBO = this.findByIdentifier(bzClassRoom.getId());
+		this.cacheManager.putObjectInCache(
+				this.cacheManager.getCache(CACHE_KEY), classRoomBO);
 	}
 }

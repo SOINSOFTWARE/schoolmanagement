@@ -6,6 +6,8 @@ package co.com.carpcosoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.ehcache.Cache;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,15 @@ public class GradeBLL implements IBusinessLogicLayer<GradeBO> {
 	 */
 	@Override
 	public GradeBO findByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		GradeBO gradeBO = null;
+		Cache cache = this.cacheManager.getCache(CACHE_KEY);
+		if (cache.getSize() == 0) {
+			gradeBO = this.selectByIdentifierAndPutInCache(identifier);
+		} else {
+			gradeBO = (GradeBO) this.cacheManager.getObjectFromCache(cache, identifier);
+		}
+		LOGGER.info("Grade = {} was loaded successfully", gradeBO.toString());
+		return gradeBO;
 	}
 
 	/* (non-Javadoc)
@@ -100,8 +109,14 @@ public class GradeBLL implements IBusinessLogicLayer<GradeBO> {
 	 */
 	@Override
 	public GradeBO selectByIdentifierAndPutInCache(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		GradeBO gradeBO = null;
+		Bzgrade bzGrade = this.gradeDAO.selectByIdentifier(identifier);
+		if (bzGrade != null) {
+			gradeBO = new GradeBO(bzGrade);
+			this.cacheManager.putObjectInCache(
+				this.cacheManager.getCache(CACHE_KEY), gradeBO);
+		}
+		return gradeBO;
 	}
 
 	/* (non-Javadoc)
@@ -127,6 +142,17 @@ public class GradeBLL implements IBusinessLogicLayer<GradeBO> {
 	private Set<GradeBO> getObjectsFromCache() {
 		return this.cacheManager.getObjectsFromCache(this.cacheManager
 				.getCache(CACHE_KEY));
+	}
+
+	public Bzgrade buildGradeHibernateEntity(GradeBO gradeBO) {
+		Bzgrade bzGrade = new Bzgrade();
+		bzGrade.setId(gradeBO.getId());
+		bzGrade.setCode(gradeBO.getCode());
+		bzGrade.setName(gradeBO.getName());
+		bzGrade.setCreation(gradeBO.getCreation());
+		bzGrade.setUpdated(gradeBO.getUpdated());
+		bzGrade.setEnabled(gradeBO.isEnabled());
+		return bzGrade;
 	}
 
 }
