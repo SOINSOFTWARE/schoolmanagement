@@ -47,45 +47,8 @@ public class UserTypeDAO extends AbstractDAO implements IDataAccesable<Cnusertyp
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public boolean insert(Cnusertype newRecord) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean update(Cnusertype record) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected String getSelectStatementWithoutWhere() {
-		StringBuilder sql = new StringBuilder();
-		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_USERTYPE);		
-		return sql.toString();
-	}
-
-	@Override
-	protected String getInsertStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getUpdateStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getSelectStatementByIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
+	@Override
 	public Cnusertype selectByCode(String code) {
 		Cnusertype cnUserType = null;
 		Chronometer chrono = this.startNewChronometer();
@@ -100,13 +63,33 @@ public class UserTypeDAO extends AbstractDAO implements IDataAccesable<Cnusertyp
         }
 		return cnUserType;
 	}
+
+	@Override
+	public boolean save(Cnusertype record) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String getSelectStatementWithoutWhere() {
+		StringBuilder sql = new StringBuilder();
+		sql.append(STATEMENT_FROM);
+		sql.append(TABLE_NAME_USERTYPE);		
+		return sql.toString();
+	}
+
+	@Override
+	protected String getSelectStatementByIdentifier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	private String getSelectStatementByCode() {
+	@Override
+	protected String getSelectStatementByCode() {
 		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_CODE);
 		sql.append(PARAMETER + COLUMN_CODE);
 		return sql.toString();
-	}
-	
+	}	
 }

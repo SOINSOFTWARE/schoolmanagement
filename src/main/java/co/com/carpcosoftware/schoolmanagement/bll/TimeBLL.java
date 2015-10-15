@@ -60,6 +60,13 @@ public class TimeBLL implements IBusinessLogicLayer<TimeBO> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean saveRecord(TimeBO record) {
+		return record.getId() == 0 ? 
+				this.insertRecord(record) : 
+				this.updateRecord(record);
+	}
 
 	@Override
 	public boolean insertRecord(TimeBO newRecord) {

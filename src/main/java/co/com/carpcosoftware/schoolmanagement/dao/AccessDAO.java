@@ -26,13 +26,13 @@ public class AccessDAO extends AbstractDAO implements IDataAccesable<AccessBO> {
 	}
 
 	@Override
-	public boolean insert(AccessBO newRecord) {
+	public AccessBO selectByCode(String code) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override
-	public boolean update(AccessBO record) {
+	public boolean save(AccessBO record) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -44,21 +44,14 @@ public class AccessDAO extends AbstractDAO implements IDataAccesable<AccessBO> {
 	}
 
 	@Override
-	protected String getInsertStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getUpdateStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected String getSelectStatementByIdentifier() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	protected String getSelectStatementByCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

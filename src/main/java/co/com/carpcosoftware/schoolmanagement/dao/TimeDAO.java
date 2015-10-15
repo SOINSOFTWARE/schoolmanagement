@@ -55,15 +55,15 @@ public class TimeDAO extends AbstractDAO implements IDataAccesable<Bztime> {
         }
 		return bzTime;
 	}
-
+	
 	@Override
-	public boolean insert(Bztime newRecord) {
+	public Bztime selectByCode(String code) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override
-	public boolean update(Bztime record) {
+	public boolean save(Bztime record) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -86,15 +86,8 @@ public class TimeDAO extends AbstractDAO implements IDataAccesable<Bztime> {
 	}
 
 	@Override
-	protected String getInsertStatement() {
+	protected String getSelectStatementByCode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	protected String getUpdateStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

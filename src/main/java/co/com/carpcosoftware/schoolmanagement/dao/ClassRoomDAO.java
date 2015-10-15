@@ -55,24 +55,25 @@ public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassr
         }
 		return bzClassRoom;
 	}
+	
+	@Override
+	public Bzclassroom selectByCode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
-	public boolean insert(Bzclassroom newRecord) {
+	public boolean save(Bzclassroom record) {
 		Chronometer chrono = this.startNewChronometer();
 		try {
-			this.save(newRecord);
+			boolean isNew = (record.getId() == 0) ? true : false;
+			this.save(record, isNew);
 		} catch (HibernateException ex) {
         	LOGGER.error(ex.getMessage());
         } finally {
             chrono.stop();
             this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", Insert function");
         }
-		return false;
-	}
-
-	@Override
-	public boolean update(Bzclassroom record) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -94,13 +95,7 @@ public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassr
 	}
 
 	@Override
-	protected String getInsertStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getUpdateStatement() {
+	protected String getSelectStatementByCode() {
 		// TODO Auto-generated method stub
 		return null;
 	}

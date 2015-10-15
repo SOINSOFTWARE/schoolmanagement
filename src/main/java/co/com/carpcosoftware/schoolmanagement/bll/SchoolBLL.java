@@ -84,6 +84,13 @@ public class SchoolBLL implements IBusinessLogicLayer<SchoolBO> {
 		return (SchoolBO) this.cacheManager.getObjectFromCache(
 				this.cacheManager.getCache(CACHE_KEY), code);
 	}
+	
+	@Override
+	public boolean saveRecord(SchoolBO record) {
+		return record.getId() == 0 ? 
+				this.insertRecord(record) : 
+				this.updateRecord(record);
+	}
 
 	@Override
 	public boolean insertRecord(SchoolBO newRecord) {

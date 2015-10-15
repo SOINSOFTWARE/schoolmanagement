@@ -68,11 +68,21 @@ public abstract class AbstractDAO {
         
 	}
 	
-	public void save(java.io.Serializable object) {
-		Session session = this.openSession();
-		session.save(object);
-		session.getTransaction().commit();
-	}
+	/**
+     * Saves and commit data to database
+     * 
+     * @param object New object to be saved.
+     * @param isNew Indicates if the record is new or not
+     */
+    public void save(java.io.Serializable object, boolean isNew) {
+        Session session = this.openSession();
+        if (isNew) {
+            session.save(object);
+        } else {
+            session.update(object);
+        }
+        session.getTransaction().commit();
+    }
 	
 	/**
 	 * Creates and starts new {@link Chronometer} object
@@ -108,18 +118,11 @@ public abstract class AbstractDAO {
 	 * @return Select statement
 	 */
 	protected abstract String getSelectStatementByIdentifier();
-
+	
 	/**
-	 * Gets insert statement
+	 * Gets select statement that must be used in select by code query
 	 * 
-	 * @return Insert statement
+	 * @return Select statement
 	 */
-	protected abstract String getInsertStatement();
-
-	/**
-	 * Gets update statement
-	 * 
-	 * @return Update statement
-	 */
-	protected abstract String getUpdateStatement();
+	protected abstract String getSelectStatementByCode();
 }

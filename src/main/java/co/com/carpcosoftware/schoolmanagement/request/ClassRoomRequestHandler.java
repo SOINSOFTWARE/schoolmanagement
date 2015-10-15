@@ -61,9 +61,7 @@ public class ClassRoomRequestHandler {
 		ClassRoomBO newClassRoomBO = new ClassRoomMapper()
 				.geObjectFromJSON(jsonObject);
 		if (newClassRoomBO != null) {
-			success = newClassRoomBO.getId() == 0 ? 
-					classRoomBLL.insertRecord(newClassRoomBO) : 
-					classRoomBLL.updateRecord(newClassRoomBO);
+			success = classRoomBLL.saveRecord(newClassRoomBO);
 		}
 		if (success) {
 			Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findBy(null, newClassRoomBO.getIdSchool(), 
@@ -74,5 +72,17 @@ public class ClassRoomRequestHandler {
 			}
 		}
 		return classRoomBO;
+	}
+	
+	@GET
+	@Path("validate")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String findByIdentifier(@QueryParam("code") String code) {
+		boolean found = false;
+		ClassRoomBO classRoomBO = classRoomBLL.findByCode(code);
+		if (classRoomBO != null) {
+			found = true;
+		}
+		return Boolean.toString(found);
 	}
 }

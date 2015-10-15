@@ -23,28 +23,25 @@ public interface IDataAccesable<T> {
 	public Set<T> select();
 
 	/**
-	 * Select a record using identifier
+	 * Select a record using its identifier column
 	 * 
-	 * @param identifier
-	 *            The identifier from database
-	 * @return A record if identifier is found in database, null otherwise
+	 * @param identifier Value of identifier column from database
+	 * @return A record if identifier value is found in database, null otherwise
 	 */
 	public T selectByIdentifier(Integer identifier);
+	
+	/**
+	 * Selects a record using its code column
+	 * 
+	 * @param code Value of code column from database
+	 * @return A record if code value is found in database, null otherwise
+	 */
+	public T selectByCode(String code);
 
 	/**
-	 * Insert a new record in database
+	 * Inserts or Updates a record into database
 	 * 
-	 * @param newRecord
-	 *            Object to be inserted
+	 * @param record Object to be saved
 	 */
-	public boolean insert(T newRecord);
-
-	/**
-	 * Update a record in database
-	 * 
-	 * @param record
-	 *            Object to be updated
-	 */
-	public boolean update(T record);
-
+	public boolean save(T record);
 }

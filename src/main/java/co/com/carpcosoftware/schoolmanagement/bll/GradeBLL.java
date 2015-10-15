@@ -70,6 +70,13 @@ public class GradeBLL implements IBusinessLogicLayer<GradeBO> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean saveRecord(GradeBO record) {
+		return record.getId() == 0 ? 
+				this.insertRecord(record) : 
+				this.updateRecord(record);
+	}
 
 	/* (non-Javadoc)
 	 * @see co.com.carpcosoftware.schoolmanagement.bll.IBusinessLogicLayer#insertRecord(java.lang.Object)

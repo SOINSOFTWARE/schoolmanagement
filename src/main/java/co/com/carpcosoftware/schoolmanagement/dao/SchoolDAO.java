@@ -57,12 +57,13 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 	}
 
 	@Override
-	public boolean insert(Bzschool newRecord) {
-		return false;
+	public Bzschool selectByCode(String code) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public boolean update(Bzschool record) {
+	public boolean save(Bzschool record) {
 		return false;
 	}
 	
@@ -82,16 +83,10 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 		sql.append(PARAMETER + COLUMN_IDENTIFIER);
 		return sql.toString();
 	}
-	
+
 	@Override
-	protected String getInsertStatement() {
-		StringBuilder sql = new StringBuilder();
-		return sql.toString();
-	}
-	
-	@Override
-	protected String getUpdateStatement() {
-		StringBuilder sql = new StringBuilder();
-		return sql.toString();
+	protected String getSelectStatementByCode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

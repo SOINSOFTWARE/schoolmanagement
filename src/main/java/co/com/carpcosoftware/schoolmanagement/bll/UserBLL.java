@@ -84,6 +84,13 @@ public class UserBLL implements IBusinessLogicLayer<UserBO> {
 		}
 		return userBO;
 	}
+	
+	@Override
+	public boolean saveRecord(UserBO record) {
+		return record.getId() == 0 ? 
+				this.insertRecord(record) : 
+				this.updateRecord(record);
+	}
 
 	@Override
 	public boolean insertRecord(UserBO newRecord) {

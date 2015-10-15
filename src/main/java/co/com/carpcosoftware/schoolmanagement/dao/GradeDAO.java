@@ -52,20 +52,17 @@ public class GradeDAO extends AbstractDAO implements IDataAccesable<Bzgrade> {
 		return null;
 	}
 
+	@Override
+	public Bzgrade selectByCode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see co.com.carpcosoftware.schoolmanagement.dao.IDataAccesable#insert(java.lang.Object)
 	 */
 	@Override
-	public boolean insert(Bzgrade newRecord) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.IDataAccesable#update(java.lang.Object)
-	 */
-	@Override
-	public boolean update(Bzgrade record) {
+	public boolean save(Bzgrade record) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -90,22 +87,9 @@ public class GradeDAO extends AbstractDAO implements IDataAccesable<Bzgrade> {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.AbstractDAO#getInsertStatement()
-	 */
 	@Override
-	protected String getInsertStatement() {
+	protected String getSelectStatementByCode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.AbstractDAO#getUpdateStatement()
-	 */
-	@Override
-	protected String getUpdateStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

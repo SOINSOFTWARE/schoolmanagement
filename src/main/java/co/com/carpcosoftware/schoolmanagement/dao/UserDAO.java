@@ -55,6 +55,12 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		return bzUser;
 	}
 	
+	@Override
+	public Bzuser selectByCode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public Bzuser selectByDocumentNumber(String documentNumber) {
 		Bzuser bzUser = null;
 		Chronometer chrono = this.startNewChronometer();
@@ -71,13 +77,7 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 	}
 
 	@Override
-	public boolean insert(Bzuser newRecord) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean update(Bzuser record) {
+	public boolean save(Bzuser record) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -91,24 +91,18 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 	}
 
 	@Override
-	protected String getInsertStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getUpdateStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected String getSelectStatementByIdentifier() {
 		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_IDENTIFIER);
 		sql.append(PARAMETER + COLUMN_IDENTIFIER);
 		return sql.toString();
+	}
+	
+	@Override
+	protected String getSelectStatementByCode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	private String getSelectStatementByDocumentNumber() {
@@ -118,5 +112,4 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		sql.append(PARAMETER + COLUMN_DOCUMENT_NUMBER);
 		return sql.toString();
 	}
-
 }

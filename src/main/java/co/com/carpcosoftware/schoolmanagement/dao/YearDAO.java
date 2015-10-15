@@ -57,13 +57,13 @@ public class YearDAO extends AbstractDAO implements IDataAccesable<Bzyear> {
 	}
 
 	@Override
-	public boolean insert(Bzyear newRecord) {
+	public Bzyear selectByCode(String code) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override
-	public boolean update(Bzyear record) {
+	public boolean save(Bzyear record) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -86,15 +86,8 @@ public class YearDAO extends AbstractDAO implements IDataAccesable<Bzyear> {
 	}
 
 	@Override
-	protected String getInsertStatement() {
+	protected String getSelectStatementByCode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	protected String getUpdateStatement() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -39,6 +39,8 @@ public interface IBusinessLogicLayer<T> {
 	 * @return A record if code is found, null otherwise
 	 */
 	public T findByCode(String code);
+	
+	public boolean saveRecord(T record);
 
 	/**
 	 * Insert a new record

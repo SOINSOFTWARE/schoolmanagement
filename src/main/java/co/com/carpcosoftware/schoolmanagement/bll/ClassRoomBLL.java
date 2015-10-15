@@ -55,6 +55,7 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 
 	@Override
 	public Set<ClassRoomBO> findAll() {
+		
 		return this.cacheManager.isCacheEmpty(CACHE_KEY) ? this
 				.selectAndPutInCache() : this.getObjectsFromCache();
 	}
@@ -77,8 +78,15 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 
 	@Override
 	public ClassRoomBO findByCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		return (ClassRoomBO) this.cacheManager.getObjectFromCache(
+				this.cacheManager.getCache(CACHE_KEY), code);
+	}
+	
+	@Override
+	public boolean saveRecord(ClassRoomBO record) {
+		return record.getId() == 0 ? 
+				this.insertRecord(record) : 
+				this.updateRecord(record);
 	}
 
 	@Override
@@ -93,15 +101,19 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		newRecord.setUserBO(userBLL.findByIdentifier(newRecord.getIdUser()));
 		newRecord.setYearBO(yearBLL.findByIdentifier(newRecord.getIdYear()));
 		Bzclassroom bzClassRoom = this.buildClassRoomHibernateEntity(newRecord);
-		success = this.classRoomDAO.insert(bzClassRoom); 
-		this.AddNewInsertedToCache(bzClassRoom);
+		success = this.classRoomDAO.save(bzClassRoom); 
+		this.putRecordInCache(bzClassRoom);
 		return success;
 	}
 
 	@Override
 	public boolean updateRecord(ClassRoomBO record) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean success = false;
+		record.setUpdated(DateTime.now().toDate());
+		Bzclassroom bzClassRoom = this.buildClassRoomHibernateEntity(record);
+		success = this.classRoomDAO.save(bzClassRoom); 
+		this.putRecordInCache(bzClassRoom);
+		return success;
 	}
 
 	@Override
@@ -187,7 +199,7 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		return bzClassRoom;
 	}
 	
-	private void AddNewInsertedToCache(Bzclassroom bzClassRoom) {
+	private void putRecordInCache(Bzclassroom bzClassRoom) {
 		ClassRoomBO classRoomBO = this.findByIdentifier(bzClassRoom.getId());
 		this.cacheManager.putObjectInCache(
 				this.cacheManager.getCache(CACHE_KEY), classRoomBO);
