@@ -1,8 +1,14 @@
 package co.com.carpcosoftware.schoolmanagement.dao;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import co.com.carpcosoftware.schoolmanagement.entity.AccessBO;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+
+import co.com.carpcosoftware.schoolmanagement.hibernate.Cnaccess;
+import co.com.carpcosoftware.schoolmanagement.util.Chronometer;
 
 /**
  * Access data access object
@@ -11,47 +17,79 @@ import co.com.carpcosoftware.schoolmanagement.entity.AccessBO;
  * @version 1.0
  * @since 31/03/2015
  */
-public class AccessDAO extends AbstractDAO implements IDataAccesable<AccessBO> {
+@Repository
+public class AccessDAO extends AbstractDAO implements IDataAccesable<Cnaccess> {
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Set<AccessBO> select() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Cnaccess> select() {
+		Set<Cnaccess> cnAccessSet = null;
+		Chronometer chrono = this.startNewChronometer();
+        
+        try {
+            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
+            cnAccessSet = new HashSet<>(query.list());
+        } catch (HibernateException ex) {
+        	LOGGER.error(ex.getMessage());
+        } finally {
+            chrono.stop();
+            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", Select function");
+        }
+        
+        return cnAccessSet;
 	}
 
 	@Override
-	public AccessBO selectByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+	public Cnaccess selectByIdentifier(Integer identifier) {
+		Cnaccess cnAccess = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
+        	query.setParameter(COLUMN_IDENTIFIER, identifier);
+        	cnAccess = (Cnaccess) query.list().get(0);
+        } catch (HibernateException ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", selectByIdentifier function");
+        }
+		return cnAccess;
 	}
 
 	@Override
-	public AccessBO selectByCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+	public Cnaccess selectByCode(String code) {
+		Cnaccess cnAccess = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+        	Query query = this.createQuery(this.getSelectStatementByCode());
+        	query.setParameter(COLUMN_CODE, code);
+        	cnAccess = (Cnaccess) query.list().get(0);
+        } catch (HibernateException ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", selectByCode function");
+        }
+		return cnAccess;
 	}
 
 	@Override
-	public boolean save(AccessBO record) {
-		// TODO Auto-generated method stub
-		return false;
+	public void save(Cnaccess record) {
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			boolean isNew = (record.getId() == 0) ? true : false;
+			this.save(record, isNew);
+		} catch (HibernateException ex) {
+        	LOGGER.error(ex.getMessage());
+        } finally {
+            chrono.stop();
+            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", save function");
+        }
 	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getSelectStatementByIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getSelectStatementByCode() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sql = new StringBuilder();
+		sql.append(STATEMENT_FROM);
+		sql.append(TABLE_NAME_ACCESS);
+		return sql.toString();
 	}
 }

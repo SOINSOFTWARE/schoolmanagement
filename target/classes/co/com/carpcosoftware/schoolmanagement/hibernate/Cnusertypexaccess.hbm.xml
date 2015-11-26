@@ -3,8 +3,8 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 19-abr-2015 18:35:40 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="co.com.carpcosoftware.schoolmanagement.hibernate.Cnuserttypexaccess" table="cnuserttypexaccess" catalog="schoolmanagement" optimistic-lock="version">
-        <composite-id name="id" class="co.com.carpcosoftware.schoolmanagement.hibernate.CnuserttypexaccessId">
+    <class name="co.com.carpcosoftware.schoolmanagement.hibernate.Cnusertypexaccess" table="cnusertypexaccess" catalog="schoolmanagement" optimistic-lock="version">
+        <composite-id name="id" class="co.com.carpcosoftware.schoolmanagement.hibernate.CnusertypexaccessId">
             <key-property name="idUserType" type="int">
                 <column name="idUserType" />
             </key-property>

@@ -3,8 +3,6 @@
  */
 package co.com.carpcosoftware.schoolmanagement.entity;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzyear;
@@ -17,7 +15,7 @@ import co.com.carpcosoftware.schoolmanagement.hibernate.Bzyear;
  * @since 31/03/2015
  */
 @XmlRootElement(name = "years")
-public class YearBO extends AbstractBO implements Serializable, Comparable<YearBO> {
+public class YearBO extends AbstractBO implements Comparable<YearBO> {
 
 	/**
 	 * Auto generated serial version
@@ -54,5 +52,4 @@ public class YearBO extends AbstractBO implements Serializable, Comparable<YearB
 		Integer otherName = Integer.parseInt(other.getName());
 		return thisName.compareTo(otherName) * -1;
 	}
-
 }

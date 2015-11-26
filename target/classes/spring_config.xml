@@ -23,7 +23,7 @@
 				<value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzuserxusertype.hbm.xml</value>
 			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bznotevalue.hbm.xml</value>
 			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnaccess.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnuserttypexaccess.hbm.xml</value>
+			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnusertypexaccess.hbm.xml</value>
 			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzschool.hbm.xml</value>
 			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bznotedefinition.hbm.xml</value>
 			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzgrade.hbm.xml</value>

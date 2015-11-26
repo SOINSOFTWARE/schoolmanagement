@@ -1,6 +1,3 @@
-/**
- * 
- */
 package co.com.carpcosoftware.schoolmanagement.dao;
 
 import java.util.HashSet;
@@ -10,72 +7,68 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
-import co.com.carpcosoftware.schoolmanagement.hibernate.Cnusertype;
+import co.com.carpcosoftware.schoolmanagement.hibernate.Bzsubject;
 import co.com.carpcosoftware.schoolmanagement.util.Chronometer;
 
 /**
- * User type data access object
- * 
- * @author Carlos Andres Rodriguez
+ * @author Carlos Rodriguez
  * @version 1.0
- * @since 31/03/2015
+ * @since 20/10/2015
  */
 @Repository
-public class UserTypeDAO extends AbstractDAO implements IDataAccesable<Cnusertype> {
+public class SubjectDAO extends AbstractDAO implements IDataAccesable<Bzsubject> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Cnusertype> select() {
-		Set<Cnusertype> CnusertypeSet = null;
+	public Set<Bzsubject> select() {
+		Set<Bzsubject> bzSubjectSet = null;
 		Chronometer chrono = this.startNewChronometer();
-        
+		
         try {
-            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            CnusertypeSet = new HashSet<>(query.list());
+        	Query query = this.createQuery(this.getSelectStatementWithoutWhere());
+        	bzSubjectSet = new HashSet<>(query.list());
         } catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
+            LOGGER.error(ex.getMessage());
         } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, UserTypeDAO.class.getName() + ", Select function");
+            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", Select function");
         }
-        
-        return CnusertypeSet;
+		return bzSubjectSet;
 	}
 
 	@Override
-	public Cnusertype selectByIdentifier(Integer identifier) {
-		Cnusertype cnUserType = null;
+	public Bzsubject selectByIdentifier(Integer identifier) {
+		Bzsubject bzSubject = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
         	Query query = this.createQuery(this.getSelectStatementByIdentifier());
         	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	cnUserType = (Cnusertype) query.list().get(0);
+        	bzSubject = (Bzsubject) query.list().get(0);
         } catch (HibernateException ex) {
             LOGGER.error(ex.getMessage());
         } finally {
-            this.stopChronometerAndLogMessage(chrono, UserTypeDAO.class.getName() + ", selectByIdentifier function");
+            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", selectByIdentifier function");
         }
-		return cnUserType;
+		return bzSubject;
 	}
-	
+
 	@Override
-	public Cnusertype selectByCode(String code) {
-		Cnusertype cnUserType = null;
+	public Bzsubject selectByCode(String code) {
+		Bzsubject bzSubject = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
         	Query query = this.createQuery(this.getSelectStatementByCode());
         	query.setParameter(COLUMN_CODE, code);
-        	cnUserType = (Cnusertype) query.list().get(0);
+        	bzSubject = (Bzsubject) query.list().get(0);
         } catch (HibernateException ex) {
             LOGGER.error(ex.getMessage());
         } finally {
-            this.stopChronometerAndLogMessage(chrono, UserTypeDAO.class.getName() + ", selectByCode function");
+            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", selectByCode function");
         }
-		return cnUserType;
+		return bzSubject;
 	}
 
 	@Override
-	public void save(Cnusertype record) {
+	public void save(Bzsubject record) {
 		Chronometer chrono = this.startNewChronometer();
 		try {
 			boolean isNew = (record.getId() == 0) ? true : false;
@@ -84,7 +77,7 @@ public class UserTypeDAO extends AbstractDAO implements IDataAccesable<Cnusertyp
         	LOGGER.error(ex.getMessage());
         } finally {
             chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, UserTypeDAO.class.getName() + ", save function");
+            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", save function");
         }
 	}
 
@@ -92,7 +85,8 @@ public class UserTypeDAO extends AbstractDAO implements IDataAccesable<Cnusertyp
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_USERTYPE);		
+		sql.append(TABLE_NAME_SUBJECT);
 		return sql.toString();
 	}
+
 }

@@ -65,7 +65,7 @@ public class ClassRoomRequestHandler {
 		}
 		if (success) {
 			Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findBy(null, newClassRoomBO.getIdSchool(), 
-					newClassRoomBO.getYearBO().getName(), newClassRoomBO.getIdGrade(), 
+					newClassRoomBO.getYear().getName(), newClassRoomBO.getIdGrade(), 
 					newClassRoomBO.getIdTime());
 			if (classRoomBOSet != null && !classRoomBOSet.isEmpty()) {
 				classRoomBO = classRoomBOSet.iterator().next();

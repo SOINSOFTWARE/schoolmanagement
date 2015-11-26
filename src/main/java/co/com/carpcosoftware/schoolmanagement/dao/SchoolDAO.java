@@ -58,13 +58,32 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 
 	@Override
 	public Bzschool selectByCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		Bzschool bzSchool = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+        	Query query = this.createQuery(this.getSelectStatementByCode());
+        	query.setParameter(COLUMN_CODE, code);
+            bzSchool = (Bzschool) query.list().get(0);
+        } catch (HibernateException ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName() + ", selectByCode function");
+        }
+		return bzSchool;
 	}
 
 	@Override
-	public boolean save(Bzschool record) {
-		return false;
+	public void save(Bzschool record) {
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			boolean isNew = (record.getId() == 0) ? true : false;
+			this.save(record, isNew);
+		} catch (HibernateException ex) {
+        	LOGGER.error(ex.getMessage());
+        } finally {
+            chrono.stop();
+            this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName() + ", save function");
+        }
 	}
 	
 	@Override
@@ -73,20 +92,5 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 		sql.append(STATEMENT_FROM);
 		sql.append(TABLE_NAME_SCHOOL);		
 		return sql.toString();
-	}
-	
-	@Override
-	protected String getSelectStatementByIdentifier() {
-		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
-		sql.append(STATEMENT_WHERE);
-		sql.append(COLUMN_IDENTIFIER);
-		sql.append(PARAMETER + COLUMN_IDENTIFIER);
-		return sql.toString();
-	}
-
-	@Override
-	protected String getSelectStatementByCode() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

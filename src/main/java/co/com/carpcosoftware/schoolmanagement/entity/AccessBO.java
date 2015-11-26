@@ -3,8 +3,6 @@
  */
 package co.com.carpcosoftware.schoolmanagement.entity;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import co.com.carpcosoftware.schoolmanagement.hibernate.Cnaccess;
@@ -17,31 +15,27 @@ import co.com.carpcosoftware.schoolmanagement.hibernate.Cnaccess;
  * @since 24/03/2015
  */
 @XmlRootElement(name = "access")
-public class AccessBO extends AbstractBO implements Serializable {
+public class AccessBO extends AbstractWithCodeBO {
 
-	/**
-	 * Auto generated serial version
-	 */
 	private static final long serialVersionUID = -5197649029321484212L;
-	
-	/**
-	 * Default constructor
-	 */
-	public AccessBO() {	
+
+	public AccessBO() {
 		super();
 	}
 
-	public AccessBO(Cnaccess cnaccess) {
+	public AccessBO(Cnaccess cnAccess) {
 		super();
-		this.id = cnaccess.getId();
-		this.code = cnaccess.getCode();
-		this.name = cnaccess.getName();
-		this.creation = cnaccess.getCreation();
-		this.updated = cnaccess.getUpdated();
-		this.enabled = cnaccess.isEnabled();
+		this.id = cnAccess.getId();
+		this.code = cnAccess.getCode();
+		this.name = cnAccess.getName();
+		this.creation = cnAccess.getCreation();
+		this.updated = cnAccess.getUpdated();
+		this.enabled = cnAccess.isEnabled();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -49,5 +43,5 @@ public class AccessBO extends AbstractBO implements Serializable {
 		return "AccessBO [id=" + id + ", code=" + code + ", name=" + name
 				+ ", creation=" + creation + ", updated=" + updated
 				+ ", enabled=" + enabled + "]";
-	}	
+	}
 }

@@ -5,7 +5,6 @@ package co.com.carpcosoftware.schoolmanagement.entity;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,6 +13,7 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclass;
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzschoolxuser;
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzuser;
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzuserxusertype;
@@ -26,92 +26,43 @@ import co.com.carpcosoftware.schoolmanagement.util.ImageUtil;
  * @version 1.0
  * @since 24/03/2015
  */
-@XmlRootElement(name="users")
-public class UserBO extends AbstractBO implements Serializable, Comparable<UserBO> {
+@XmlRootElement(name = "users")
+public class UserBO extends AbstractBO implements Comparable<UserBO> {
 
-	/**
-	 * Auto generated serial version
-	 */
 	private static final long serialVersionUID = 1337704244736040283L;
 
-	/**
-	 * Document number 
-	 */
 	private String documentNumber;
 
-	/**
-	 * Document type
-	 */
 	private String documentType;
 
-	/**
-	 * Last name
-	 */
 	private String lastName;
 
-	/**
-	 * Born date
-	 */
 	private Date born;
 
-	/**
-	 * Address
-	 */
 	private String address;
 
-	/**
-	 * First phone number
-	 */
 	private BigInteger phone1;
 
-	/**
-	 * Second phone number
-	 */
 	private BigInteger phone2;
 
-	/**
-	 * Password used by user to login in page
-	 */
 	private String password;
 
-	/**
-	 * Gender
-	 */
 	private String gender;
 
-	/**
-	 * Photo
-	 */
 	private Image photo;
-	
-	/**
-	 * Photo turned into a byte array as string
-	 */
+
 	private String photoAsString;
 
-	/**
-	 * First user's guardian
-	 */
 	private UserBO guardian1;
 
-	/**
-	 * Second user's guardian
-	 */
 	private UserBO guardian2;
 
-	/**
-	 * {@link SchoolBO}
-	 */
 	private SchoolBO school;
 
-	/**
-	 * {@link UserTypeBO} set
-	 */
 	private Set<UserTypeBO> userTypeSet;
-	
-	/**
-	 * Default constructor
-	 */
+
+	private Set<ClassBO> classSet;
+
 	public UserBO() {
 		super();
 	}
@@ -119,172 +70,121 @@ public class UserBO extends AbstractBO implements Serializable, Comparable<UserB
 	public UserBO(Bzuser bzUser) {
 		super();
 		this.id = bzUser.getId();
-	    this.documentNumber = bzUser.getDocumentNumber();
-	    this.documentType = bzUser.getDocumentType();
-	    this.name = bzUser.getName();
-	    this.lastName = bzUser.getLastName();
-	    this.born = bzUser.getBorn();
-	    this.address = bzUser.getAddress();
-	    this.phone1 = BigInteger.valueOf(bzUser.getPhone1());
-	    this.phone2 = bzUser.getPhone2() != null ? BigInteger.valueOf(bzUser.getPhone2()) : null;
-	    this.password = bzUser.getPassword();
-	    this.gender = bzUser.getGender();
-	    this.photo = ImageUtil.byteArrayToBufferedImage(bzUser.getPhoto());
-	    this.guardian1 = bzUser.getBzuserByIdGuardian1() != null
-	            ? new UserBO(bzUser.getBzuserByIdGuardian1()) : null;
-	    this.guardian2 = bzUser.getBzuserByIdGuardian2() != null
-	            ? new UserBO(bzUser.getBzuserByIdGuardian2()) : null;
-	    this.school = new SchoolBO(
-	            ((Bzschoolxuser)bzUser.getBzschoolxusers().iterator().next()).getBzschool());
-	    this.creation = bzUser.getCreation();
-	    this.updated = bzUser.getUpdated();
-	    this.enabled = bzUser.isEnabled();
-	    
-	    @SuppressWarnings("unchecked")
-		Set<Bzuserxusertype> bzUserXUserTypeSet = bzUser.getBzuserxusertypes();
-	    if (bzUserXUserTypeSet != null) {
-	    	this.userTypeSet = new HashSet<>();
-	    	bzUserXUserTypeSet.stream().forEach((bzUserXUserType) -> {
-	  	      userTypeSet.add(new UserTypeBO(bzUserXUserType.getCnusertype()));
-	  	    });
-	    }
-	    
-	    if (this.photo != null) {
-			this.photoAsString = ImageUtil.encodeToByteArray((BufferedImage) this.photo).toString();
+		this.documentNumber = bzUser.getDocumentNumber();
+		this.documentType = bzUser.getDocumentType();
+		this.name = bzUser.getName();
+		this.lastName = bzUser.getLastName();
+		this.born = bzUser.getBorn();
+		this.address = bzUser.getAddress();
+		this.phone1 = BigInteger.valueOf(bzUser.getPhone1());
+		this.phone2 = bzUser.getPhone2() != null ? BigInteger.valueOf(bzUser
+				.getPhone2()) : null;
+		this.password = bzUser.getPassword();
+		this.gender = bzUser.getGender();
+		this.photo = ImageUtil.byteArrayToBufferedImage(bzUser.getPhoto());
+		this.guardian1 = bzUser.getBzuserByIdGuardian1() != null ? new UserBO(
+				bzUser.getBzuserByIdGuardian1()) : null;
+		this.guardian2 = bzUser.getBzuserByIdGuardian2() != null ? new UserBO(
+				bzUser.getBzuserByIdGuardian2()) : null;
+		this.school = new SchoolBO(((Bzschoolxuser) bzUser.getBzschoolxusers()
+				.iterator().next()).getBzschool());
+		this.creation = bzUser.getCreation();
+		this.updated = bzUser.getUpdated();
+		this.enabled = bzUser.isEnabled();
+
+		Set<?> bzUserXUserTypeSet = bzUser.getBzuserxusertypes();
+		if (bzUserXUserTypeSet != null && !bzUserXUserTypeSet.isEmpty()) {
+			this.userTypeSet = new HashSet<>();
+			bzUserXUserTypeSet.stream().forEach(
+					(bzUserXUserType) -> {
+						userTypeSet.add(new UserTypeBO(
+								((Bzuserxusertype) bzUserXUserType)
+										.getCnusertype()));
+					});
+		}
+
+		Set<?> bzClassSet = bzUser.getBzclasses();
+		if (bzClassSet != null && !bzClassSet.isEmpty()) {
+			this.classSet = new HashSet<>();
+			bzClassSet.stream().forEach((bzClass) -> {
+				classSet.add(new ClassBO(((Bzclass) bzClass)));
+			});
+		}
+
+		if (this.photo != null) {
+			this.photoAsString = ImageUtil.encodeToByteArray(
+					(BufferedImage) this.photo).toString();
 		}
 	}
 
-	/**
-	 * @return the documentNumber
-	 */
 	public String getDocumentNumber() {
 		return documentNumber;
 	}
 
-	/**
-	 * @param documentNumber
-	 *            the documentNumber to set
-	 */
 	public void setDocumentNumber(String documentNumber) {
 		this.documentNumber = documentNumber;
 	}
 
-	/**
-	 * @return the documentType
-	 */
 	public String getDocumentType() {
 		return documentType;
 	}
 
-	/**
-	 * @param documentType
-	 *            the documentType to set
-	 */
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
 
-	/**
-	 * @return the lastName
-	 */
 	public String getLastName() {
 		return lastName;
 	}
 
-	/**
-	 * @param lastName
-	 *            the lastName to set
-	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	/**
-	 * @return the born
-	 */
 	public Date getBorn() {
 		return born;
 	}
 
-	/**
-	 * @param born
-	 *            the born to set
-	 */
 	public void setBorn(Date born) {
 		this.born = born;
 	}
 
-	/**
-	 * @return the address
-	 */
 	public String getAddress() {
 		return address;
 	}
 
-	/**
-	 * @param address
-	 *            the address to set
-	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	/**
-	 * @return the phone1
-	 */
 	public BigInteger getPhone1() {
 		return phone1;
 	}
 
-	/**
-	 * @param phone1
-	 *            the phone1 to set
-	 */
 	public void setPhone1(BigInteger phone1) {
 		this.phone1 = phone1;
 	}
 
-	/**
-	 * @return the phone2
-	 */
 	public BigInteger getPhone2() {
 		return phone2;
 	}
 
-	/**
-	 * @param phone2
-	 *            the phone2 to set
-	 */
 	public void setPhone2(BigInteger phone2) {
 		this.phone2 = phone2;
 	}
 
-	/**
-	 * @return the password
-	 */
 	public String getPassword() {
 		return password;
 	}
 
-	/**
-	 * @param password
-	 *            the password to set
-	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	/**
-	 * @return the gender
-	 */
 	public String getGender() {
 		return gender;
 	}
 
-	/**
-	 * @param gender
-	 *            the gender to set
-	 */
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
@@ -297,16 +197,10 @@ public class UserBO extends AbstractBO implements Serializable, Comparable<UserB
 		this.photo = photo;
 	}
 
-	/**
-	 * @return the photoAsString
-	 */
 	public String getPhotoAsString() {
 		return photoAsString;
 	}
 
-	/**
-	 * @param photoAsString the photoAsString to set
-	 */
 	public void setPhotoAsString(String photoAsString) {
 		this.photoAsString = photoAsString;
 	}
@@ -335,25 +229,25 @@ public class UserBO extends AbstractBO implements Serializable, Comparable<UserB
 		this.school = school;
 	}
 
-	/**
-	 * @return the userTypeSet
-	 */
 	public Set<UserTypeBO> getUserTypeSet() {
 		return userTypeSet;
 	}
 
-	/**
-	 * @param userTypeSet
-	 *            the userTypeSet to set
-	 */
 	public void setUserTypeSet(Set<UserTypeBO> userTypeSet) {
 		this.userTypeSet = userTypeSet;
+	}
+
+	public Set<ClassBO> getClassSet() {
+		return classSet;
+	}
+
+	public void setClassSet(Set<ClassBO> classSet) {
+		this.classSet = classSet;
 	}
 
 	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 73 * hash + Objects.hashCode(this.id);
 		hash = 73 * hash + Objects.hashCode(this.documentNumber);
 		return hash;
 	}
@@ -370,10 +264,12 @@ public class UserBO extends AbstractBO implements Serializable, Comparable<UserB
 		if (!Objects.equals(this.documentNumber, other.documentNumber)) {
 			return false;
 		}
-		return Objects.equals(this.documentType, other.documentType);
-	}	
-	
-	/* (non-Javadoc)
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

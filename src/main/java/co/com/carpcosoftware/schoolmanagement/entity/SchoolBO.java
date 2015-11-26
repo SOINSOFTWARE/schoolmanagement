@@ -3,8 +3,6 @@
  */
 package co.com.carpcosoftware.schoolmanagement.entity;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzschool;
@@ -17,11 +15,8 @@ import co.com.carpcosoftware.schoolmanagement.hibernate.Bzschool;
  * @since 09/03/2015
  */
 @XmlRootElement(name="schools")
-public class SchoolBO extends AbstractBO implements Serializable {
+public class SchoolBO extends AbstractWithCodeBO {
 
-	/**
-	 * Auto generated serial version
-	 */
 	private static final long serialVersionUID = -318874995739938197L;
 	
 	public SchoolBO() {

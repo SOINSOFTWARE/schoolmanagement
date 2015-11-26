@@ -43,5 +43,5 @@ public interface IDataAccesable<T> {
 	 * 
 	 * @param record Object to be saved
 	 */
-	public boolean save(T record);
+	public void save(T record);
 }

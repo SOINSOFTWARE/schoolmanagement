@@ -1,7 +1,5 @@
 package co.com.carpcosoftware.schoolmanagement.entity;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzgrade;
@@ -14,12 +12,8 @@ import co.com.carpcosoftware.schoolmanagement.hibernate.Bzgrade;
  * @since 31/03/2015
  */
 @XmlRootElement(name = "grades")
-public class GradeBO extends AbstractBO implements Serializable,
-		Comparable<GradeBO> {
+public class GradeBO extends AbstractWithCodeBO implements Comparable<GradeBO> {
 
-	/**
-	 * Auto generated serial version
-	 */
 	private static final long serialVersionUID = 5622827774843357933L;
 
 	public GradeBO() {
@@ -54,5 +48,4 @@ public class GradeBO extends AbstractBO implements Serializable,
 		Integer otherCode = Integer.parseInt(other.getCode());
 		return thisCode.compareTo(otherCode);
 	}
-
 }

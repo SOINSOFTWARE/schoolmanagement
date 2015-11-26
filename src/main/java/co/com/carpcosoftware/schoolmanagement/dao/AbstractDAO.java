@@ -23,21 +23,33 @@ import co.com.carpcosoftware.schoolmanagement.util.ServiceLocator;
  */
 public abstract class AbstractDAO {
 	
+	public static final String TABLE_NAME_ACCESS = "Cnaccess";
+	public static final String TABLE_NAME_CLASS = "Bzclass";
 	public static final String TABLE_NAME_CLASSROOM = "Bzclassroom";
+	public static final String TABLE_NAME_CLASSROOM_X_USER = "Bzclassroomxuser";
 	public static final String TABLE_NAME_GRADE = "Bzgrade";
+	public static final String TABLE_NAME_NOTEDEFINITION = "Bznotedefinition";
+	public static final String TABLE_NAME_NOTEVALUE = "Bznotevalue";
+	public static final String TABLE_NAME_PERIOD = "Bzperiod";
 	public static final String TABLE_NAME_SCHOOL = "Bzschool";
+	public static final String TABLE_NAME_SCHOOL_X_USER = "Bzschoolxuser";
+	public static final String TABLE_NAME_SUBJECT = "Bzsubject";
 	public static final String TABLE_NAME_TIME = "Bztime";	
 	public static final String TABLE_NAME_USER = "Bzuser";
+	public static final String TABLE_NAME_USER_X_USERTYPE = "Bzuserxusertype";
 	public static final String TABLE_NAME_USERTYPE = "Cnusertype";
+	public static final String TABLE_NAME_USERTYPE_X_ACCESS = "Cnusertypexaccess";
 	public static final String TABLE_NAME_YEAR = "Bzyear";	
 	
 	public static final String COLUMN_CODE = "code";
 	public static final String COLUMN_IDENTIFIER = "id";
+	public static final String COLUMN_ENABLED = "enabled";
 	public static final String PARAMETER = "= :";
 
 	protected static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractDAO.class);
 
+	protected static final String STATEMENT_AND = " and ";
 	protected static final String STATEMENT_SELECT = " select ";
 	protected static final String STATEMENT_FROM = " from ";
 	protected static final String STATEMENT_JOIN = " join ";
@@ -48,15 +60,25 @@ public abstract class AbstractDAO {
 	protected static final String STATEMENT_UPDATE_SET = " set ";
 	
 	/**
-	 * Opens a new {@link Session} using session factory bean
-	 * @return {@link Session} object
+	 * Creates and starts new {@link Chronometer} object
+	 * @return {@link Chronometer} object
 	 */
-	private Session openSession() {
-		SessionFactory sessioFactory = ServiceLocator.getBean("sessionFactory");
-		Session session = sessioFactory.openSession();
-		session.beginTransaction();
-        return session;
-    }
+	public Chronometer startNewChronometer() {
+		Chronometer chrono = new Chronometer();		
+		chrono.start();
+		return chrono;
+	}
+	
+	/**
+	 * Stops {@link Chronometer} object that was pass as parameter and also
+	 * logs a new message to notify amount of time that chronometer was running
+	 * @param chronometer {@link Chronometer} object previously started
+	 * @param message Message to be logged
+	 */
+	public void stopChronometerAndLogMessage(Chronometer chronometer, String message) {
+		chronometer.stop();
+		LOGGER.info(message + ". Executed in: {}", chronometer.getTime());
+	}
 	
 	/**
 	 * Creates a new {@link Query} using the {@link Session} previously opened
@@ -83,29 +105,8 @@ public abstract class AbstractDAO {
         }
         session.getTransaction().commit();
     }
-	
-	/**
-	 * Creates and starts new {@link Chronometer} object
-	 * @return {@link Chronometer} object
-	 */
-	public Chronometer startNewChronometer() {
-		Chronometer chrono = new Chronometer();		
-		chrono.start();
-		return chrono;
-	}
-	
-	/**
-	 * Stops {@link Chronometer} object that was pass as parameter and also
-	 * logs a new message to notify amount of time that chronometer was running
-	 * @param chronometer {@link Chronometer} object previously started
-	 * @param message Message to be logged
-	 */
-	public void stopChronometerAndLogMessage(Chronometer chronometer, String message) {
-		chronometer.stop();
-		LOGGER.info(message + ". Executed in: {}", chronometer.getTime());
-	}
-
-	/**
+    
+    /**
 	 * Gets select statement that must be used in queries
 	 * 
 	 * @return Select statement
@@ -117,12 +118,39 @@ public abstract class AbstractDAO {
 	 * 
 	 * @return Select statement
 	 */
-	protected abstract String getSelectStatementByIdentifier();
+	protected String getSelectStatementByIdentifier() {
+		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
+		sql.append(STATEMENT_WHERE);
+		sql.append(COLUMN_IDENTIFIER);
+		sql.append(PARAMETER + COLUMN_IDENTIFIER);
+		sql.append(STATEMENT_AND);
+		sql.append(COLUMN_ENABLED + " = 1");
+		return sql.toString();
+	}
 	
 	/**
 	 * Gets select statement that must be used in select by code query
 	 * 
 	 * @return Select statement
 	 */
-	protected abstract String getSelectStatementByCode();
+	protected String getSelectStatementByCode() {
+		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
+		sql.append(STATEMENT_WHERE);
+		sql.append(COLUMN_CODE);
+		sql.append(PARAMETER + COLUMN_CODE);
+		sql.append(STATEMENT_AND);
+		sql.append(COLUMN_ENABLED + " = 1");
+		return sql.toString();
+	}
+	
+	/**
+	 * Opens a new {@link Session} using session factory bean
+	 * @return {@link Session} object
+	 */
+	private Session openSession() {
+		SessionFactory sessioFactory = ServiceLocator.getBean("sessionFactory");
+		Session session = sessioFactory.openSession();
+		session.beginTransaction();
+        return session;
+    }
 }

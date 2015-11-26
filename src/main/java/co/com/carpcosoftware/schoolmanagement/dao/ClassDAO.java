@@ -1,6 +1,3 @@
-/**
- * 
- */
 package co.com.carpcosoftware.schoolmanagement.dao;
 
 import java.util.HashSet;
@@ -10,77 +7,68 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
-import co.com.carpcosoftware.schoolmanagement.hibernate.Bzgrade;
+import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclass;
 import co.com.carpcosoftware.schoolmanagement.util.Chronometer;
 
 /**
  * @author Carlos Rodriguez
  * @version 1.0
- * @since 29/06/2015
+ * @since 14/10/2015
  */
 @Repository
-public class GradeDAO extends AbstractDAO implements IDataAccesable<Bzgrade> {
+public class ClassDAO extends AbstractDAO implements IDataAccesable<Bzclass> {
 
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.IDataAccesable#select()
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Bzgrade> select() {
-		Set<Bzgrade> bzGradeSet = null;
+	public Set<Bzclass> select() {
+		Set<Bzclass> bzClassSet = null;
 		Chronometer chrono = this.startNewChronometer();        
         try {
             Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzGradeSet = new HashSet<>(query.list());
+            bzClassSet = new HashSet<>(query.list());
         } catch (HibernateException ex) {
         	LOGGER.error(ex.getMessage());
         } finally {
             chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, GradeDAO.class.getName() + ", Select function");
+            this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName() + ", Select function");
         }        
-        return bzGradeSet;
+        return bzClassSet;
 	}
 
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.IDataAccesable#selectByIdentifier(java.lang.Integer)
-	 */
 	@Override
-	public Bzgrade selectByIdentifier(Integer identifier) {
-		Bzgrade bzGrade = null;
+	public Bzclass selectByIdentifier(Integer identifier) {
+		Bzclass bzClass = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
         	Query query = this.createQuery(this.getSelectStatementByIdentifier());
         	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	bzGrade = (Bzgrade) query.list().get(0);
+        	bzClass = (Bzclass) query.list().get(0);
         } catch (HibernateException ex) {
             LOGGER.error(ex.getMessage());
         } finally {
-            this.stopChronometerAndLogMessage(chrono, GradeDAO.class.getName() + ", selectByIdentifier function");
+            this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName() + ", selectByIdentifier function");
         }
-		return bzGrade;
+		return bzClass;
 	}
 
 	@Override
-	public Bzgrade selectByCode(String code) {
-		Bzgrade bzGrade = null;
+	public Bzclass selectByCode(String code) {
+		Bzclass bzClass = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
         	Query query = this.createQuery(this.getSelectStatementByCode());
         	query.setParameter(COLUMN_CODE, code);
-        	bzGrade = (Bzgrade) query.list().get(0);
+        	bzClass = (Bzclass) query.list().get(0);
         } catch (HibernateException ex) {
             LOGGER.error(ex.getMessage());
         } finally {
-            this.stopChronometerAndLogMessage(chrono, GradeDAO.class.getName() + ", selectByCode function");
+            this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName() + ", selectByCode function");
         }
-		return bzGrade;
+		return bzClass;
 	}
 
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.IDataAccesable#insert(java.lang.Object)
-	 */
 	@Override
-	public void save(Bzgrade record) {
+	public void save(Bzclass record) {
 		Chronometer chrono = this.startNewChronometer();
 		try {
 			boolean isNew = (record.getId() == 0) ? true : false;
@@ -89,18 +77,16 @@ public class GradeDAO extends AbstractDAO implements IDataAccesable<Bzgrade> {
         	LOGGER.error(ex.getMessage());
         } finally {
             chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, GradeDAO.class.getName() + ", save function");
-        }
+            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", save function");
+        }		
 	}
 
-	/* (non-Javadoc)
-	 * @see co.com.carpcosoftware.schoolmanagement.dao.AbstractDAO#getSelectStatementWithoutWhere()
-	 */
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_GRADE);		
+		sql.append(TABLE_NAME_CLASS);		
 		return sql.toString();
 	}
+
 }

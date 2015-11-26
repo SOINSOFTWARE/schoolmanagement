@@ -215,7 +215,7 @@ public class UserBLL implements IBusinessLogicLayer<UserBO> {
 		boolean isDirector = false;
 		if (classRoomBOSet != null) {
 			for(ClassRoomBO classRoomBO : classRoomBOSet) {
-				if (classRoomBO.getUserBO().equals(userBO)) {
+				if (classRoomBO.getTeacher().equals(userBO)) {
 					isDirector = true;
 					break;
 				}

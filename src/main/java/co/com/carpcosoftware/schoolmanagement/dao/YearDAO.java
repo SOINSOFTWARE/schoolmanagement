@@ -58,14 +58,32 @@ public class YearDAO extends AbstractDAO implements IDataAccesable<Bzyear> {
 
 	@Override
 	public Bzyear selectByCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		Bzyear bzYear = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+        	Query query = this.createQuery(this.getSelectStatementByCode());
+        	query.setParameter(COLUMN_CODE, code);
+        	bzYear = (Bzyear) query.list().get(0);
+        } catch (HibernateException ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            this.stopChronometerAndLogMessage(chrono, YearDAO.class.getName() + ", selectByCode function");
+        }
+		return bzYear;
 	}
 
 	@Override
-	public boolean save(Bzyear record) {
-		// TODO Auto-generated method stub
-		return false;
+	public void save(Bzyear record) {
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			boolean isNew = (record.getId() == 0) ? true : false;
+			this.save(record, isNew);
+		} catch (HibernateException ex) {
+        	LOGGER.error(ex.getMessage());
+        } finally {
+            chrono.stop();
+            this.stopChronometerAndLogMessage(chrono, YearDAO.class.getName() + ", save function");
+        }
 	}
 
 	@Override
@@ -74,20 +92,5 @@ public class YearDAO extends AbstractDAO implements IDataAccesable<Bzyear> {
 		sql.append(STATEMENT_FROM);
 		sql.append(TABLE_NAME_YEAR);		
 		return sql.toString();
-	}
-
-	@Override
-	protected String getSelectStatementByIdentifier() {
-		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
-		sql.append(STATEMENT_WHERE);
-		sql.append(COLUMN_IDENTIFIER);
-		sql.append(PARAMETER + COLUMN_IDENTIFIER);
-		return sql.toString();
-	}
-
-	@Override
-	protected String getSelectStatementByCode() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

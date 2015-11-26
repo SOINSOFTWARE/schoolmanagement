@@ -3,11 +3,14 @@
  */
 package co.com.carpcosoftware.schoolmanagement.entity;
 
-import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclass;
 import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclassroom;
+import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclassroomxuser;
 
 /**
  * Class room business object
@@ -17,33 +20,34 @@ import co.com.carpcosoftware.schoolmanagement.hibernate.Bzclassroom;
  * @since 31/03/2015
  */
 @XmlRootElement(name = "classrooms")
-public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
-		Serializable {
+public class ClassRoomBO extends AbstractWithCodeBO implements
+		Comparable<ClassRoomBO> {
 
-	/**
-	 * Auto generated serial version
-	 */
 	private static final long serialVersionUID = -4200714585828342829L;
 
-	private GradeBO gradeBO;
-    
-    private SchoolBO schoolBO;
-    
-    private TimeBO timeBO;
-    
-    private UserBO userBO;
-    
-    private YearBO yearBO;
-    
-    private int idGrade;
-    
-    private int idSchool;
-    
-    private int idTime;
-    
-    private int idUser;    
-    
-    private int idYear;    
+	private GradeBO grade;
+
+	private SchoolBO school;
+
+	private TimeBO time;
+
+	private UserBO teacher;
+
+	private YearBO year;
+
+	private int idGrade;
+
+	private int idSchool;
+
+	private int idTime;
+
+	private int idUser;
+
+	private int idYear;
+
+	private Set<ClassBO> classSet;
+
+	private Set<UserBO> studentSet;
 
 	public ClassRoomBO() {
 		super();
@@ -62,175 +66,128 @@ public class ClassRoomBO extends AbstractBO implements Comparable<ClassRoomBO>,
 		this.idTime = bzClassRoom.getBztime().getId();
 		this.idUser = bzClassRoom.getBzuser().getId();
 		this.idYear = bzClassRoom.getBzyear().getId();
-		this.gradeBO = new GradeBO(bzClassRoom.getBzgrade());
-		this.schoolBO = new SchoolBO(bzClassRoom.getBzschool());
-		this.timeBO = new TimeBO(bzClassRoom.getBztime());
-		this.userBO = new UserBO(bzClassRoom.getBzuser());
-		this.yearBO = new YearBO(bzClassRoom.getBzyear());
+		this.grade = new GradeBO(bzClassRoom.getBzgrade());
+		this.school = new SchoolBO(bzClassRoom.getBzschool());
+		this.time = new TimeBO(bzClassRoom.getBztime());
+		this.teacher = new UserBO(bzClassRoom.getBzuser());
+		this.year = new YearBO(bzClassRoom.getBzyear());
+
+		Set<?> bzClassSet = bzClassRoom.getBzclasses();
+		if (bzClassSet != null && !bzClassSet.isEmpty()) {
+			this.classSet = new HashSet<>();
+			bzClassSet.stream().forEach((bzClass) -> {
+				classSet.add(new ClassBO(((Bzclass) bzClass)));
+			});
+		}
+
+		Set<?> bzClassRoomXUserSet = bzClassRoom.getBzclassroomxusers();
+		if (bzClassRoomXUserSet != null && !bzClassRoomXUserSet.isEmpty()) {
+			this.studentSet = new HashSet<>();
+			bzClassRoomXUserSet.stream().forEach(
+					(bzClassRoomXUser) -> {
+						studentSet.add(new UserBO(
+								((Bzclassroomxuser) bzClassRoomXUser)
+										.getBzuser()));
+					});
+		}
 	}
-	
+
 	public int getIdGrade() {
 		return this.idGrade;
 	}
-	
+
 	public int getIdSchool() {
 		return this.idSchool;
 	}
-	
+
 	public int getIdTime() {
 		return this.idTime;
 	}
-	
+
 	public int getIdUser() {
 		return this.idUser;
 	}
-	
+
 	public int getIdYear() {
 		return this.idYear;
 	}
 
-	/**
-	 * @return the grade
-	 */
-	public GradeBO getGradeBO() {
-		return gradeBO;
+	public GradeBO getGrade() {
+		return grade;
 	}
 
-	/**
-	 * @param gradeBO
-	 *            the grade to set
-	 */
-	public void setGradeBO(GradeBO gradeBO) {
-		this.gradeBO = gradeBO;
-	}
-	
-	/**
-	 * @return the schoolBO
-	 */
-	public SchoolBO getSchoolBO() {
-		return schoolBO;
+	public void setGrade(GradeBO grade) {
+		this.grade = grade;
 	}
 
-	/**
-	 * @param schoolBO the schoolBO to set
-	 */
-	public void setSchoolBO(SchoolBO schoolBO) {
-		this.schoolBO = schoolBO;
-	}
-	
-	public TimeBO getTimeBO() {
-		return timeBO;
+	public SchoolBO getSchool() {
+		return school;
 	}
 
-	public void setTimeBO(TimeBO timeBO) {
-		this.timeBO = timeBO;
-	}
-	
-	/**
-	 * @return the user
-	 */
-	public UserBO getUserBO() {
-		return userBO;
+	public void setSchool(SchoolBO school) {
+		this.school = school;
 	}
 
-	/**
-	 * @param userBO
-	 *            the user to set
-	 */
-	public void setUserBO(UserBO userBO) {
-		this.userBO = userBO;
+	public TimeBO getTime() {
+		return time;
 	}
 
-	/**
-	 * @return the year
-	 */
-	public YearBO getYearBO() {
-		return yearBO;
+	public void setTime(TimeBO time) {
+		this.time = time;
 	}
 
-	/**
-	 * @param yearBO
-	 *            the year to set
-	 */
-	public void setYearBO(YearBO yearBO) {
-		this.yearBO = yearBO;
+	public UserBO getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(UserBO user) {
+		this.teacher = user;
+	}
+
+	public YearBO getYear() {
+		return year;
+	}
+
+	public void setYear(YearBO year) {
+		this.year = year;
+	}
+
+	public Set<ClassBO> getClassSet() {
+		return classSet;
+	}
+
+	public void setClassSet(Set<ClassBO> classSet) {
+		this.classSet = classSet;
+	}
+
+	public Set<UserBO> getStudentSet() {
+		return studentSet;
+	}
+
+	public void setStudentSet(Set<UserBO> studentSet) {
+		this.studentSet = studentSet;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((gradeBO == null) ? 0 : gradeBO.hashCode());
-		result = prime * result + ((userBO == null) ? 0 : userBO.hashCode());
-		result = prime * result + ((yearBO == null) ? 0 : yearBO.hashCode());
-		result = prime * result + ((schoolBO == null) ? 0 : schoolBO.hashCode());
-		result = prime * result + ((timeBO == null) ? 0 : timeBO.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ClassRoomBO other = (ClassRoomBO) obj;
-		if (gradeBO == null) {
-			if (other.gradeBO != null)
-				return false;
-		} else if (!gradeBO.equals(other.gradeBO))
-			return false;
-		if (userBO == null) {
-			if (other.userBO != null)
-				return false;
-		} else if (!userBO.equals(other.userBO))
-			return false;
-		if (yearBO == null) {
-			if (other.yearBO != null)
-				return false;
-		} else if (!yearBO.equals(other.yearBO))
-			return false;
-		if (schoolBO == null) {
-			if (other.schoolBO != null)
-				return false;
-		} else if (!schoolBO.equals(other.schoolBO))
-			return false;
-		if (timeBO == null) {
-			if (other.timeBO != null)
-				return false;
-		} else if (!timeBO.equals(other.timeBO))
-			return false;
-		return true;
-	}
-
-	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "ClassRoomBO [gradeBO=" + gradeBO + ", yearBO=" + yearBO + ", timeBO=" + timeBO
-				+ ", userBO=" + userBO + ", schoolBO=" + schoolBO + ", id="
-				+ id + ", code=" + code + ", name=" + name + ", creation="
-				+ creation + ", updated=" + updated + ", enabled=" + enabled
-				+ "]";
+		return "ClassRoomBO [gradeBO=" + grade.toString() + ", yearBO="
+				+ year.toString() + ", timeBO=" + time.toString()
+				+ ", userBO=" + teacher.toString() + ", schoolBO="
+				+ school.toString() + ", id=" + id + ", code=" + code
+				+ ", name=" + name + ", creation=" + creation + ", updated="
+				+ updated + ", enabled=" + enabled + "]";
 	}
 
 	@Override
 	public int compareTo(ClassRoomBO other) {
-		Integer thisGradeCode = Integer.parseInt(this.gradeBO.getCode());
-		Integer otherGradeCode = Integer.parseInt(other.getGradeBO().getCode());
-		return thisGradeCode.compareTo(otherGradeCode) + this.code.compareTo(other.getCode());
+		Integer thisGradeCode = Integer.parseInt(this.grade.getCode());
+		Integer otherGradeCode = Integer.parseInt(other.getGrade().getCode());
+		return thisGradeCode.compareTo(otherGradeCode)
+				+ this.code.compareTo(other.getCode());
 	}
 }

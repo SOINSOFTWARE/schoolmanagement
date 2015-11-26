@@ -18,6 +18,6 @@
   <table-filter match-name="bzuserxusertype"/>
   <table-filter match-name="bzyear"/>
   <table-filter match-name="cnaccess"/>
-  <table-filter match-name="cnuserttypexaccess"/>
+  <table-filter match-name="cnusertypexaccess"/>
   <table-filter match-name="cnusertype"/>
 </hibernate-reverse-engineering>

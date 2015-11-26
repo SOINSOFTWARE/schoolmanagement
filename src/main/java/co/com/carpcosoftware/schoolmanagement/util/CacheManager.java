@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import co.com.carpcosoftware.schoolmanagement.entity.AbstractBO;
+import co.com.carpcosoftware.schoolmanagement.entity.AbstractWithCodeBO;
 
 /**
  * Cache manager that will allow store objects
@@ -163,7 +164,7 @@ public class CacheManager {
 			Object objectFromCache = this.getObjectFromCache(cache,
 					(Integer) key);
 			if (objectFromCache != null
-					&& ((AbstractBO) objectFromCache).getCode().equals(code)) {
+					&& ((AbstractWithCodeBO) objectFromCache).getCode().equals(code)) {
 				object = objectFromCache;
 				break;
 			}

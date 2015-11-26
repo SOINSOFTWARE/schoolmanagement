@@ -58,14 +58,32 @@ public class TimeDAO extends AbstractDAO implements IDataAccesable<Bztime> {
 	
 	@Override
 	public Bztime selectByCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		Bztime bzTime = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+        	Query query = this.createQuery(this.getSelectStatementByCode());
+        	query.setParameter(COLUMN_CODE, code);
+        	bzTime = (Bztime) query.list().get(0);
+        } catch (HibernateException ex) {
+            LOGGER.error(ex.getMessage());
+        } finally {
+            this.stopChronometerAndLogMessage(chrono, TimeDAO.class.getName() + ", selectByCode function");
+        }
+		return bzTime;
 	}
 
 	@Override
-	public boolean save(Bztime record) {
-		// TODO Auto-generated method stub
-		return false;
+	public void save(Bztime record) {
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			boolean isNew = (record.getId() == 0) ? true : false;
+			this.save(record, isNew);
+		} catch (HibernateException ex) {
+        	LOGGER.error(ex.getMessage());
+        } finally {
+            chrono.stop();
+            this.stopChronometerAndLogMessage(chrono, TimeDAO.class.getName() + ", save function");
+        }
 	}
 
 	@Override
@@ -74,20 +92,5 @@ public class TimeDAO extends AbstractDAO implements IDataAccesable<Bztime> {
 		sql.append(STATEMENT_FROM);
 		sql.append(TABLE_NAME_TIME);		
 		return sql.toString();
-	}
-
-	@Override
-	protected String getSelectStatementByIdentifier() {
-		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
-		sql.append(STATEMENT_WHERE);
-		sql.append(COLUMN_IDENTIFIER);
-		sql.append(PARAMETER + COLUMN_IDENTIFIER);
-		return sql.toString();
-	}
-
-	@Override
-	protected String getSelectStatementByCode() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

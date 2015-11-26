@@ -3,37 +3,31 @@
  */
 package co.com.carpcosoftware.schoolmanagement.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import co.com.carpcosoftware.schoolmanagement.hibernate.Cnuserttypexaccess;
 import co.com.carpcosoftware.schoolmanagement.hibernate.Cnusertype;
+import co.com.carpcosoftware.schoolmanagement.hibernate.Cnusertypexaccess;
 
 /**
  * User type business object
+ * 
  * @author Carlos Rodriguez
  * @version 1.0
  * @since 24/03/2015
  */
 @XmlRootElement(name = "userTypes")
-public class UserTypeBO extends AbstractBO implements Serializable {
+public class UserTypeBO extends AbstractWithCodeBO {
+
+	private static final long serialVersionUID = -2994642594740216071L;
 
 	/**
-	 * Auto generated serial version
-	 */
-	private static final long serialVersionUID = -2994642594740216071L;
-	
-	/**
-	 * {@link AccessBO} set granted to {@link UserTypeBO}  
+	 * {@link AccessBO} set granted to {@link UserTypeBO}
 	 */
 	private Set<AccessBO> accessSet;
-	
-	/**
-	 * Default constructor
-	 */
+
 	public UserTypeBO() {
 		super();
 	}
@@ -46,37 +40,26 @@ public class UserTypeBO extends AbstractBO implements Serializable {
 		this.creation = cnusertype.getCreation();
 		this.updated = cnusertype.getUpdated();
 		this.enabled = cnusertype.isEnabled();
-		
+
 		@SuppressWarnings("unchecked")
-		Set<Cnuserttypexaccess> cnUserTypeXAccessSet = cnusertype.getCnuserttypexaccesses();
+		Set<Cnusertypexaccess> cnUserTypeXAccessSet = cnusertype
+				.getCnuserttypexaccesses();
 		if (cnUserTypeXAccessSet != null) {
 			this.accessSet = new HashSet<>();
-	        cnUserTypeXAccessSet.stream().forEach((cnUserTypeXAccess) -> {
-	            accessSet.add(new AccessBO(cnUserTypeXAccess.getCnaccess()));
-	        });
+			cnUserTypeXAccessSet.stream().forEach((cnUserTypeXAccess) -> {
+				accessSet.add(new AccessBO(cnUserTypeXAccess.getCnaccess()));
+			});
 		}
 	}
 
-	/**
-	 * Gets {@link AccessBO} set
-	 * @return the accessSet
-	 */
 	public Set<AccessBO> getAccessSet() {
 		return accessSet;
 	}
 
-	/**
-	 * Sets {@link AccessBO} set
-	 * @param accessSet the accessSet to set
-	 */
 	public void setAccessSet(Set<AccessBO> accessSet) {
 		this.accessSet = accessSet;
 	}
 
-	/**
-	 * Add a new {@link AccessBO} to set
-	 * @param accessBO new {@link AccessBO}
-	 */
 	public void addAccessToSet(AccessBO accessBO) {
 		if (this.accessSet == null) {
 			this.accessSet = new HashSet<AccessBO>();
@@ -84,7 +67,9 @@ public class UserTypeBO extends AbstractBO implements Serializable {
 		this.accessSet.add(accessBO);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

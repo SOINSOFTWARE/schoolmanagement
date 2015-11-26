@@ -95,13 +95,13 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		newRecord.setCreation(DateTime.now().toDate());
 		newRecord.setUpdated(DateTime.now().toDate());
 		newRecord.setEnabled(true);
-		newRecord.setGradeBO(gradeBLL.findByIdentifier(newRecord.getIdGrade()));
-		newRecord.setSchoolBO(schoolBLL.findByIdentifier(newRecord.getIdSchool()));
-		newRecord.setTimeBO(timeBLL.findByIdentifier(newRecord.getIdTime()));
-		newRecord.setUserBO(userBLL.findByIdentifier(newRecord.getIdUser()));
-		newRecord.setYearBO(yearBLL.findByIdentifier(newRecord.getIdYear()));
+		newRecord.setGrade(gradeBLL.findByIdentifier(newRecord.getIdGrade()));
+		newRecord.setSchool(schoolBLL.findByIdentifier(newRecord.getIdSchool()));
+		newRecord.setTime(timeBLL.findByIdentifier(newRecord.getIdTime()));
+		newRecord.setTeacher(userBLL.findByIdentifier(newRecord.getIdUser()));
+		newRecord.setYear(yearBLL.findByIdentifier(newRecord.getIdYear()));
 		Bzclassroom bzClassRoom = this.buildClassRoomHibernateEntity(newRecord);
-		success = this.classRoomDAO.save(bzClassRoom); 
+		this.classRoomDAO.save(bzClassRoom); 
 		this.putRecordInCache(bzClassRoom);
 		return success;
 	}
@@ -111,7 +111,7 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		boolean success = false;
 		record.setUpdated(DateTime.now().toDate());
 		Bzclassroom bzClassRoom = this.buildClassRoomHibernateEntity(record);
-		success = this.classRoomDAO.save(bzClassRoom); 
+		this.classRoomDAO.save(bzClassRoom); 
 		this.putRecordInCache(bzClassRoom);
 		return success;
 	}
@@ -161,10 +161,10 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		Set<ClassRoomBO> cacheClassRoomBOSet = this.getObjectsFromCache();
 		if (cacheClassRoomBOSet != null) {
 			for (ClassRoomBO classRoomBO : cacheClassRoomBOSet) {
-				if (classRoomBO.getSchoolBO().getId().equals(schoolId)
-						&& (year == null || classRoomBO.getYearBO().getName().equals(year))
-						&& (grade == null || classRoomBO.getGradeBO().getId().equals(grade))
-						&& (time == null || classRoomBO.getTimeBO().getId().equals(time))
+				if (classRoomBO.getSchool().getId().equals(schoolId)
+						&& (year == null || classRoomBO.getYear().getName().equals(year))
+						&& (grade == null || classRoomBO.getGrade().getId().equals(grade))
+						&& (time == null || classRoomBO.getTime().getId().equals(time))
 						&& (classRoomId == null || classRoomBO.getId().equals(classRoomId))) {
 					if (classRoomBOSet == null) {
 						classRoomBOSet = new HashSet<>();
@@ -191,11 +191,11 @@ public class ClassRoomBLL implements IBusinessLogicLayer<ClassRoomBO> {
 		bzClassRoom.setCreation(classRoomBO.getCreation());
 		bzClassRoom.setUpdated(classRoomBO.getUpdated());
 		bzClassRoom.setEnabled(classRoomBO.isEnabled());
-		bzClassRoom.setBzgrade(gradeBLL.buildGradeHibernateEntity(classRoomBO.getGradeBO()));
-		bzClassRoom.setBzschool(schoolBLL.buildSchoolHibernateEntity(classRoomBO.getSchoolBO()));
-		bzClassRoom.setBztime(timeBLL.buildTimeHibernateEntity(classRoomBO.getTimeBO()));
-		bzClassRoom.setBzuser(userBLL.buildUserHibernateEntity(classRoomBO.getUserBO()));
-		bzClassRoom.setBzyear(yearBLL.buildYearHibernateEntity(classRoomBO.getYearBO()));
+		bzClassRoom.setBzgrade(gradeBLL.buildGradeHibernateEntity(classRoomBO.getGrade()));
+		bzClassRoom.setBzschool(schoolBLL.buildSchoolHibernateEntity(classRoomBO.getSchool()));
+		bzClassRoom.setBztime(timeBLL.buildTimeHibernateEntity(classRoomBO.getTime()));
+		bzClassRoom.setBzuser(userBLL.buildUserHibernateEntity(classRoomBO.getTeacher()));
+		bzClassRoom.setBzyear(yearBLL.buildYearHibernateEntity(classRoomBO.getYear()));
 		return bzClassRoom;
 	}
 	
