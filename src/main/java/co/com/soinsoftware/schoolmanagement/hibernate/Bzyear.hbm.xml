@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-abr-2015 18:35:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.soinsoftware.schoolmanagement.hibernate.Bzyear" table="bzyear" catalog="schoolmanagement" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="45" not-null="true" />
+        </property>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+        <set name="bzclassrooms" table="bzclassroom" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idYear" not-null="true" />
+            </key>
+            <one-to-many class="co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroom" />
+        </set>
+        <set name="bzperiods" table="bzperiod" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idBzYear" not-null="true" />
+            </key>
+            <one-to-many class="co.com.soinsoftware.schoolmanagement.hibernate.Bzperiod" />
+        </set>
+    </class>
+</hibernate-mapping>

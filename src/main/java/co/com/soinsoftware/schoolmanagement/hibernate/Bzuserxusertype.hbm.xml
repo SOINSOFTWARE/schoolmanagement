@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-abr-2015 18:35:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.soinsoftware.schoolmanagement.hibernate.Bzuserxusertype" table="bzuserxusertype" catalog="schoolmanagement" optimistic-lock="version">
+        <composite-id name="id" class="co.com.soinsoftware.schoolmanagement.hibernate.BzuserxusertypeId">
+            <key-property name="idUser" type="int">
+                <column name="idUser" />
+            </key-property>
+            <key-property name="idUserType" type="int">
+                <column name="idUserType" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="bzuser" class="co.com.soinsoftware.schoolmanagement.hibernate.Bzuser" update="false" insert="false" fetch="select">
+            <column name="idUser" not-null="true" />
+        </many-to-one>
+        <many-to-one name="cnusertype" class="co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype" update="false" insert="false" fetch="select">
+            <column name="idUserType" not-null="true" />
+        </many-to-one>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

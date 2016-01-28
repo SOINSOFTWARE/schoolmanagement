@@ -20,23 +20,23 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="mappingResources">
 			<list>
-				<value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzuserxusertype.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bznotevalue.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnaccess.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnusertypexaccess.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzschool.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bznotedefinition.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzgrade.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzyear.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzsubject.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bztime.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Cnusertype.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzclass.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzperiod.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzuser.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzclassroom.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzschoolxuser.hbm.xml</value>
-			    <value>co/com/carpcosoftware/schoolmanagement/hibernate/Bzclassroomxuser.hbm.xml</value>
+				<value>co/com/soinsoftware/schoolmanagement/hibernate/Bzuserxusertype.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bznotevalue.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Cnaccess.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Cnusertypexaccess.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzschool.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bznotedefinition.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzgrade.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzyear.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzsubject.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bztime.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Cnusertype.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclass.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzperiod.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzuser.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclassroom.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzschoolxuser.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclassroomxuser.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -61,5 +61,5 @@
 	    </property>
 	</bean>
 	
-	<context:component-scan base-package="co.com.carpcosoftware.schoolmanagement" />
+	<context:component-scan base-package="co.com.soinsoftware.schoolmanagement" />
 </beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-abr-2015 18:35:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="co.com.soinsoftware.schoolmanagement.hibernate.Bznotedefinition" table="bznotedefinition" catalog="schoolmanagement" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="bzclass" class="co.com.soinsoftware.schoolmanagement.hibernate.Bzclass" fetch="select">
+            <column name="idClass" not-null="true" />
+        </many-to-one>
+        <many-to-one name="bzperiod" class="co.com.soinsoftware.schoolmanagement.hibernate.Bzperiod" fetch="select">
+            <column name="idPeriod" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="50" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="80" not-null="true" />
+        </property>
+        <property name="value" type="big_decimal">
+            <column name="value" precision="2" not-null="true" />
+        </property>
+        <property name="creation" type="timestamp">
+            <column name="creation" length="19" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="updated" length="19" not-null="true" />
+        </property>
+        <property name="enabled" type="boolean">
+            <column name="enabled" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
