@@ -23,7 +23,8 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
  * @since 16/04/2015
  */
 @Service
-public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, Bzuser> {
+public class UserBLL extends AbstractBLL implements
+		IBusinessLogicLayer<UserBO, Bzuser> {
 
 	@Autowired
 	private UserDAO userDAO;
@@ -44,6 +45,12 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 	}
 
 	@Override
+	public Set<UserBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(USER_KEY) ? this.selectAndPutInCache() : this
+				.getObjectsFromCache();
+	}
+
+	@Override
 	public UserBO findByIdentifier(final Integer identifier) {
 		UserBO userBO = null;
 		if (this.isCacheEmpty(USER_KEY)) {
@@ -56,7 +63,8 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 	}
 
 	@Override
-	public UserBO findByCode(final String code) {
+	public UserBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		UserBO userBO = this.getUserBOFromCache(code);
 		if (userBO == null) {
 			userBO = this.selectByDocumentNumer(code);
@@ -66,19 +74,6 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 
 	@Override
 	public UserBO saveRecord(final UserBO record) {
-		return record.getId() == 0 ? this.insertRecord(record) : this
-				.updateRecord(record);
-	}
-
-	@Override
-	public UserBO insertRecord(final UserBO newRecord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public UserBO updateRecord(final UserBO record) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -121,7 +116,8 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 
 	public UserBO selectByDocumentNumer(final String documentNumber) {
 		UserBO userBO = null;
-		final Bzuser bzUser = this.userDAO.selectByDocumentNumber(documentNumber);
+		final Bzuser bzUser = this.userDAO
+				.selectByDocumentNumber(documentNumber);
 		if (bzUser != null) {
 			userBO = new UserBO(bzUser);
 			this.putObjectInCache(USER_KEY, userBO);
@@ -149,7 +145,8 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 		final Set<UserBO> userBOSet = new HashSet<>();
 		if (schoolId > 0 && userTypeBLL.isValidUserType(userTypeCode)) {
 			final Set<UserBO> cacheUserBOSet = this.getObjectsFromCache();
-			final UserTypeBO userTypeBO = userTypeBLL.findByCode(userTypeCode);
+			final UserTypeBO userTypeBO = userTypeBLL.findByCode(schoolId,
+					userTypeCode, 0);
 			if (cacheUserBOSet != null && userTypeBO != null) {
 				for (UserBO userBO : cacheUserBOSet) {
 					if (this.isUserLinkedToSchool(userBO, schoolId)
@@ -166,9 +163,10 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 		final Set<UserBO> userBOSet = new HashSet<>();
 		final Set<UserBO> cacheUserBOSet = this.getObjectsFromCache();
 		final YearBO yearBO = yearBLL.findCurrentYear();
-		final Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findBy(null, schoolId,
-				yearBO.getName(), null, null);
-		final UserTypeBO userTypeBO = userTypeBLL.findByCode(UserTypeBO.TEACHER);
+		final Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findBy(null,
+				schoolId, yearBO.getName(), null, null);
+		final UserTypeBO userTypeBO = userTypeBLL.findByCode(schoolId,
+				UserTypeBO.TEACHER, 0);
 		if (cacheUserBOSet != null) {
 			for (UserBO userBO : cacheUserBOSet) {
 				if (this.isUserLinkedToSchool(userBO, schoolId)
@@ -188,7 +186,8 @@ public class UserBLL extends AbstractBLL implements IBusinessLogicLayer<UserBO, 
 		return userBO.getSchool().getId().equals(schoolId);
 	}
 
-	private boolean isUserLinkedToUserType(final UserBO userBO, final UserTypeBO userTypeBO) {
+	private boolean isUserLinkedToUserType(final UserBO userBO,
+			final UserTypeBO userTypeBO) {
 		return userBO.getUserTypeSet().contains(userTypeBO);
 	}
 

@@ -19,23 +19,26 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @since 05/06/2015
  */
 @Repository
-public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassroom> {
+public class ClassRoomDAO extends AbstractDAO implements
+		IDataAccesable<Bzclassroom> {
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Bzclassroom> select() {
 		Set<Bzclassroom> bzClassRoomSet = null;
-		Chronometer chrono = this.startNewChronometer();        
-        try {
-            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzClassRoomSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", Select function");
-        }        
-        return bzClassRoomSet;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			Query query = this.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzClassRoomSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomDAO.class.getName() + ", Select function");
+		}
+		return bzClassRoomSet;
 	}
 
 	@Override
@@ -43,30 +46,36 @@ public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassr
 		Bzclassroom bzClassRoom = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	bzClassRoom = (Bzclassroom) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = this.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER, identifier);
+			bzClassRoom = (query.list().isEmpty()) ? null : (Bzclassroom) query
+					.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomDAO.class.getName()
+							+ ", selectByIdentifier function");
+		}
 		return bzClassRoom;
 	}
-	
+
 	@Override
 	public Bzclassroom selectByCode(String code) {
 		Bzclassroom bzClassRoom = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByCode());
-        	query.setParameter(COLUMN_CODE, code);
-        	bzClassRoom = (Bzclassroom) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", selectByCode function");
-        }
+			Query query = this.createQuery(this.getSelectStatementByCode());
+			query.setParameter(COLUMN_CODE, code);
+			bzClassRoom = (query.list().isEmpty()) ? null : (Bzclassroom) query
+					.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomDAO.class.getName() + ", selectByCode function");
+		}
 		return bzClassRoom;
 	}
 
@@ -77,18 +86,19 @@ public class ClassRoomDAO extends AbstractDAO implements IDataAccesable<Bzclassr
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomDAO.class.getName() + ", save function");
+		}
 	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_CLASSROOM);		
+		sql.append(TABLE_NAME_CLASSROOM);
 		return sql.toString();
 	}
 }

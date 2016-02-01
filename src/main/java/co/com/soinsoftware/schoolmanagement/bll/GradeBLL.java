@@ -32,6 +32,12 @@ public class GradeBLL extends AbstractBLL implements
 	}
 
 	@Override
+	public Set<GradeBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(GRADE_KEY) ? this.selectAndPutInCache() : this
+				.getObjectsFromCache();
+	}
+
+	@Override
 	public GradeBO findByIdentifier(final Integer identifier) {
 		GradeBO gradeBO = null;
 		if (!this.isCacheEmpty(GRADE_KEY)) {
@@ -48,26 +54,14 @@ public class GradeBLL extends AbstractBLL implements
 	}
 
 	@Override
-	public GradeBO findByCode(final String code) {
+	public GradeBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public GradeBO saveRecord(final GradeBO record) {
-		return record.getId() == 0 ? this.insertRecord(record) : this
-				.updateRecord(record);
-	}
-
-	@Override
-	public GradeBO insertRecord(final GradeBO newRecord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GradeBO updateRecord(final GradeBO record) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

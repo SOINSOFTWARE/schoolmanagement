@@ -26,7 +26,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
  * @since 10/03/2015
  */
 @Path("/schoolmanagement/school/")
-public class SchoolRequestHandler implements IRequestHandler<SchoolBO> {
+public class SchoolRequestHandler {
 	
 	/**
 	 * {@link SchoolBLL} object
@@ -34,7 +34,6 @@ public class SchoolRequestHandler implements IRequestHandler<SchoolBO> {
 	@Autowired
 	private SchoolBLL schoolBLL = ServiceLocator.getBean(SchoolBLL.class);
 
-	@Override
 	@GET
 	@Path("all")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -42,20 +41,18 @@ public class SchoolRequestHandler implements IRequestHandler<SchoolBO> {
 		return schoolBLL.findAll();
 	}
 	
-	@Override
 	@GET
 	@Path("validate")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String findByCode(@QueryParam("code") String code) {
 		boolean found = false;
-		SchoolBO schoolBO = schoolBLL.findByCode(code);
+		SchoolBO schoolBO = schoolBLL.findByCode(0, code, 0);
 		if (schoolBO != null) {
 			found = true;
 		}
 		return Boolean.toString(found);
 	}
 	
-	@Override
 	@POST
 	@Path("save")
 	@Produces(MediaType.APPLICATION_JSON)

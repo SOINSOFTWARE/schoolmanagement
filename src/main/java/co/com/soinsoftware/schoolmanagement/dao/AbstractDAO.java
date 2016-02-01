@@ -123,8 +123,6 @@ public abstract class AbstractDAO {
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_IDENTIFIER);
 		sql.append(PARAMETER + COLUMN_IDENTIFIER);
-		sql.append(STATEMENT_AND);
-		sql.append(COLUMN_ENABLED + " = 1");
 		return sql.toString();
 	}
 	

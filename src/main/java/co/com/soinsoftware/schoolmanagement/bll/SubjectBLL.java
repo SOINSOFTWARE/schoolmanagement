@@ -29,31 +29,26 @@ public class SubjectBLL extends AbstractBLL implements
 	}
 
 	@Override
+	public Set<SubjectBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(SUBJECT_KEY) ? this.selectAndPutInCache()
+				: this.getObjectsFromCache();
+	}
+
+	@Override
 	public SubjectBO findByIdentifier(final Integer identifier) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SubjectBO findByCode(final String code) {
+	public SubjectBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public SubjectBO saveRecord(final SubjectBO record) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SubjectBO insertRecord(final SubjectBO newRecord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SubjectBO updateRecord(final SubjectBO record) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -95,7 +90,7 @@ public class SubjectBLL extends AbstractBLL implements
 	protected Set<SubjectBO> getObjectsFromCache() {
 		return this.getObjectsFromCache(SUBJECT_KEY);
 	}
-	
+
 	public Bzsubject buildHibernateEntity(final SubjectBO subjectBO) {
 		final Bzsubject bzSubject = new Bzsubject();
 		if (subjectBO != null) {

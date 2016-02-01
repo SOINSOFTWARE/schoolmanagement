@@ -19,23 +19,25 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  */
 @Repository
 public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
-	
+
 	private static final String COLUMN_DOCUMENT_NUMBER = "documentNumber";
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Bzuser> select() {
 		Set<Bzuser> bzUserSet = null;
 		Chronometer chrono = this.startNewChronometer();
-		
-        try {
-        	Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-        	bzUserSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName() + ", Select function");
-        }
+
+		try {
+			Query query = this.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzUserSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
+					+ ", Select function");
+		}
 		return bzUserSet;
 	}
 
@@ -44,34 +46,40 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		Bzuser bzUser = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	bzUser = (Bzuser) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = this.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER, identifier);
+			bzUser = (query.list().isEmpty()) ? null : (Bzuser) query.list()
+					.get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
+					+ ", selectByIdentifier function");
+		}
 		return bzUser;
 	}
-	
+
 	@Override
 	public Bzuser selectByCode(String code) {
 		return null;
 	}
-	
+
 	public Bzuser selectByDocumentNumber(String documentNumber) {
 		Bzuser bzUser = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByDocumentNumber());
-        	query.setParameter(COLUMN_DOCUMENT_NUMBER, documentNumber);
-        	bzUser = (Bzuser) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName() + ", selectByDocumentNumber function");
-        }
+			Query query = this.createQuery(this
+					.getSelectStatementByDocumentNumber());
+			query.setParameter(COLUMN_DOCUMENT_NUMBER, documentNumber);
+			bzUser = (query.list().isEmpty()) ? null : (Bzuser) query.list()
+					.get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
+					+ ", selectByDocumentNumber function");
+		}
 		return bzUser;
 	}
 
@@ -82,23 +90,25 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
+					+ ", save function");
+		}
 	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_USER);		
+		sql.append(TABLE_NAME_USER);
 		return sql.toString();
 	}
-	
+
 	private String getSelectStatementByDocumentNumber() {
-		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
+		StringBuilder sql = new StringBuilder(
+				this.getSelectStatementWithoutWhere());
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_DOCUMENT_NUMBER);
 		sql.append(PARAMETER + COLUMN_DOCUMENT_NUMBER);

@@ -35,13 +35,20 @@ public class UserTypeBLL extends AbstractBLL implements
 	}
 
 	@Override
+	public Set<UserTypeBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(USERTYPE_KEY) ? this.selectAndPutInCache()
+				: this.getObjectsFromCache();
+	}
+
+	@Override
 	public UserTypeBO findByIdentifier(final Integer identifier) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public UserTypeBO findByCode(final String code) {
+	public UserTypeBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		UserTypeBO userTypeBO = this.getUserTypeBOFromCache(code);
 		if (userTypeBO == null) {
 			userTypeBO = this.selectByCode(code);
@@ -51,19 +58,6 @@ public class UserTypeBLL extends AbstractBLL implements
 
 	@Override
 	public UserTypeBO saveRecord(final UserTypeBO record) {
-		return record.getId() == 0 ? this.insertRecord(record) : this
-				.updateRecord(record);
-	}
-
-	@Override
-	public UserTypeBO insertRecord(final UserTypeBO newRecord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public UserTypeBO updateRecord(final UserTypeBO record) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

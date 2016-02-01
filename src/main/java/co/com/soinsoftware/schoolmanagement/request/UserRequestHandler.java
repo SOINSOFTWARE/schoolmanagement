@@ -38,7 +38,7 @@ public class UserRequestHandler {
 	public UserBO findBy(@QueryParam("id") int identifier, @QueryParam("documentNumber") String documentNumber) {
 		UserBO userBO = null;
 		if (documentNumber != null && !documentNumber.equals("")) {
-			userBO = userBLL.findByCode(documentNumber);
+			userBO = userBLL.findByCode(0, documentNumber, 0);
 		} else {
 			userBO = userBLL.findByIdentifier(identifier);
 		}

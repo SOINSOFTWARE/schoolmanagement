@@ -20,12 +20,11 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
  * @since 28/01/2015
  */
 @Path("/schoolmanagement/subject/")
-public class SubjectRequestHandler implements IRequestHandler<SubjectBO> {
+public class SubjectRequestHandler {
 
 	@Autowired
 	private SubjectBLL subjectBLL = ServiceLocator.getBean(SubjectBLL.class);
 
-	@Override
 	@GET
 	@Path("all")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -33,7 +32,6 @@ public class SubjectRequestHandler implements IRequestHandler<SubjectBO> {
 		return subjectBLL.findAll();
 	}
 
-	@Override
 	@POST
 	@Path("save")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +40,6 @@ public class SubjectRequestHandler implements IRequestHandler<SubjectBO> {
 		return null;
 	}
 
-	@Override
 	@GET
 	@Path("validate")
 	@Produces(MediaType.TEXT_PLAIN)

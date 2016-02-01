@@ -3,7 +3,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,12 @@ public class ClassBLL extends AbstractBLL implements
 	}
 
 	@Override
+	public Set<ClassBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(CLASS_KEY) ? this.selectAndPutInCache() : this
+				.getObjectsFromCache();
+	}
+
+	@Override
 	public ClassBO findByIdentifier(final Integer identifier) {
 		ClassBO classBO = null;
 		if (!this.isCacheEmpty(CLASS_KEY)) {
@@ -56,39 +61,20 @@ public class ClassBLL extends AbstractBLL implements
 	}
 
 	@Override
-	public ClassBO findByCode(final String code) {
+	public ClassBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		return null;
 	}
 
 	@Override
 	public ClassBO saveRecord(final ClassBO record) {
-		return record.getId() == 0 ? this.insertRecord(record) : this
-				.updateRecord(record);
-	}
-
-	@Override
-	public ClassBO insertRecord(final ClassBO newRecord) {
-
-		newRecord.setCreation(DateTime.now().toDate());
-		newRecord.setUpdated(DateTime.now().toDate());
-		newRecord.setEnabled(true);
-		newRecord.setClassRoom(classRoomBLL.findByIdentifier(newRecord
+		record.setClassRoom(classRoomBLL.findByIdentifier(record
 				.getIdClassRoom()));
-		newRecord.setSubject(subjectBLL.findByIdentifier(newRecord
-				.getIdSubject()));
-		newRecord
-				.setTeacher(userBLL.findByIdentifier(newRecord.getIdTeacher()));
-		Bzclass bzClass = this.buildHibernateEntity(newRecord);
+		record.setSubject(subjectBLL.findByIdentifier(record.getIdSubject()));
+		record.setTeacher(userBLL.findByIdentifier(record.getIdTeacher()));
+		Bzclass bzClass = this.buildHibernateEntity(record);
 		this.classDAO.save(bzClass);
 		return this.putObjectInCache(bzClass);
-	}
-
-	@Override
-	public ClassBO updateRecord(final ClassBO record) {
-		record.setUpdated(DateTime.now().toDate());
-		Bzclass bzClassRoom = this.buildHibernateEntity(record);
-		this.classDAO.save(bzClassRoom);
-		return this.putObjectInCache(bzClassRoom);
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class CacheManager {
 	 *            Name of cache that must be loaded
 	 * @return {@link Cache} object
 	 */
-	public Cache getCache(String cacheName) {
+	public synchronized Cache getCache(String cacheName) {
 		return this.cacheManager.getCache(cacheName);
 	}
 
@@ -67,7 +67,7 @@ public class CacheManager {
 	 * @return true if objects were added to cache, false otherwise
 	 */
 	@SuppressWarnings("rawtypes")
-	public boolean putObjectsInCache(Cache cache, Set objectSet) {
+	public synchronized boolean putObjectsInCache(Cache cache, Set objectSet) {
 		boolean success = true;
 		for (Object object : objectSet) {
 			if (!this.putObjectInCache(cache, object)) {
@@ -87,7 +87,7 @@ public class CacheManager {
 	 *            {@link AbstractBO} that will be stored
 	 * @return true if object was added to cache, false otherwise
 	 */
-	public boolean putObjectInCache(Cache cache, Object object) {
+	public synchronized boolean putObjectInCache(Cache cache, Object object) {
 		boolean success = true;
 		try {
 			Element element = new Element(((AbstractBO) object).getId(), object);
@@ -110,7 +110,7 @@ public class CacheManager {
 	 * @return {@link Set} of objects loaded from cache
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Set getObjectsFromCache(Cache cache) {
+	public synchronized Set getObjectsFromCache(Cache cache) {
 		Set objectSet = null;
 
 		for (Object key : cache.getKeys()) {
@@ -132,7 +132,7 @@ public class CacheManager {
 	 *            Identifier from object
 	 * @return Object using specified key stored in cache
 	 */
-	public Object getObjectFromCache(Cache cache, Integer key) {
+	public synchronized Object getObjectFromCache(Cache cache, Integer key) {
 		Object object = null;
 		try {
 			Element element = cache.get(key);
@@ -158,7 +158,7 @@ public class CacheManager {
 	 *            Unique code from object
 	 * @return Object using specified code stored in cache
 	 */
-	public Object getObjectFromCache(Cache cache, String code) {
+	public synchronized Object getObjectFromCache(Cache cache, String code) {
 		Object object = null;
 		for (Object key : cache.getKeys()) {
 			Object objectFromCache = this.getObjectFromCache(cache,
@@ -179,7 +179,7 @@ public class CacheManager {
 	 *            Name of cache that must be loaded
 	 * @return True if cache is still empty, false otherwise
 	 */
-	public boolean isCacheEmpty(String cacheName) {
+	public synchronized boolean isCacheEmpty(String cacheName) {
 		return this.getCache(cacheName).getSize() == 0;
 	}
 }

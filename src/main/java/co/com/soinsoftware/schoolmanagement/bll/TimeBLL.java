@@ -19,14 +19,22 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bztime;
  * @since 27/08/2015
  */
 @Service
-public class TimeBLL extends AbstractBLL implements IBusinessLogicLayer<TimeBO, Bztime> {
-	
+public class TimeBLL extends AbstractBLL implements
+		IBusinessLogicLayer<TimeBO, Bztime> {
+
 	@Autowired
 	private TimeDAO timeDAO;
 
 	@Override
 	public Set<TimeBO> findAll() {
-		return this.isCacheEmpty(TIME_KEY) ? this.selectAndPutInCache() : this.getObjectsFromCache();
+		return this.isCacheEmpty(TIME_KEY) ? this.selectAndPutInCache() : this
+				.getObjectsFromCache();
+	}
+
+	@Override
+	public Set<TimeBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(TIME_KEY) ? this.selectAndPutInCache() : this
+				.getObjectsFromCache();
 	}
 
 	@Override
@@ -39,34 +47,20 @@ public class TimeBLL extends AbstractBLL implements IBusinessLogicLayer<TimeBO, 
 			timeBO = this.selectByIdentifierAndPutInCache(identifier);
 		}
 		if (timeBO != null) {
-			LOGGER.info("time = {} was loaded successfully",
-					timeBO.toString());
+			LOGGER.info("time = {} was loaded successfully", timeBO.toString());
 		}
 		return timeBO;
 	}
 
 	@Override
-	public TimeBO findByCode(final String code) {
+	public TimeBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public TimeBO saveRecord(final TimeBO record) {
-		return record.getId() == 0 ? 
-				this.insertRecord(record) : 
-				this.updateRecord(record);
-	}
-
-	@Override
-	public TimeBO insertRecord(final TimeBO newRecord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public TimeBO updateRecord(final TimeBO record) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -100,20 +94,19 @@ public class TimeBLL extends AbstractBLL implements IBusinessLogicLayer<TimeBO, 
 			timeBOSet = new HashSet<>();
 			for (Object bzTime : hibernateEntitySet) {
 				if (bzTime instanceof Bztime) {
-					timeBOSet.add(new TimeBO(
-							(Bztime) bzTime));
+					timeBOSet.add(new TimeBO((Bztime) bzTime));
 				}
-			}	
+			}
 		}
 		return timeBOSet;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected Set<TimeBO> getObjectsFromCache() {
 		LOGGER.info("Loading times entities from cache");
 		return this.getObjectsFromCache(TIME_KEY);
 	}
-	
+
 	@Override
 	public Bztime buildHibernateEntity(TimeBO timeBO) {
 		Bztime bzTime = new Bztime();

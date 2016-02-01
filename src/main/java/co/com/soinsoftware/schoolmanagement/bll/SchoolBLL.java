@@ -21,15 +21,21 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
  * @since 09/03/2015
  */
 @Service
-public class SchoolBLL extends AbstractBLL implements IBusinessLogicLayer<SchoolBO, Bzschool> {
+public class SchoolBLL extends AbstractBLL implements
+		IBusinessLogicLayer<SchoolBO, Bzschool> {
 
 	@Autowired
 	private SchoolDAO schoolDAO;
 
 	@Override
 	public Set<SchoolBO> findAll() {
-		return this.isCacheEmpty(SCHOOL_KEY) ? this.selectAndPutInCache() : this
-				.getObjectsFromCache();
+		return this.isCacheEmpty(SCHOOL_KEY) ? this.selectAndPutInCache()
+				: this.getObjectsFromCache();
+	}
+
+	@Override
+	public Set<SchoolBO> findAll(final int idSchool) {
+		return null;
 	}
 
 	@Override
@@ -50,27 +56,13 @@ public class SchoolBLL extends AbstractBLL implements IBusinessLogicLayer<School
 	}
 
 	@Override
-	public SchoolBO findByCode(final String code) {
-		return (SchoolBO) this.getObjectFromCache(
-				SCHOOL_KEY, code);
+	public SchoolBO findByCode(final int idSchool, final String code,
+			final int identifier) {
+		return (SchoolBO) this.getObjectFromCache(SCHOOL_KEY, code);
 	}
-	
+
 	@Override
 	public SchoolBO saveRecord(final SchoolBO record) {
-		return record.getId() == 0 ? 
-				this.insertRecord(record) : 
-				this.updateRecord(record);
-	}
-
-	@Override
-	public SchoolBO insertRecord(final SchoolBO newRecord) {
-		//TODO
-		return null;
-	}
-
-	@Override
-	public SchoolBO updateRecord(final SchoolBO record) {
-		//TODO
 		return null;
 	}
 
@@ -104,7 +96,7 @@ public class SchoolBLL extends AbstractBLL implements IBusinessLogicLayer<School
 			schoolBOSet = new HashSet<>();
 			for (Object bzSchool : hibernateEntitySet) {
 				if (bzSchool instanceof Bzschool) {
-					schoolBOSet.add(new SchoolBO((Bzschool)bzSchool));
+					schoolBOSet.add(new SchoolBO((Bzschool) bzSchool));
 				}
 			}
 		}

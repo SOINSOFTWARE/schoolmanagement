@@ -32,6 +32,12 @@ public class YearBLL extends AbstractBLL implements
 	}
 
 	@Override
+	public Set<YearBO> findAll(final int idSchool) {
+		return this.isCacheEmpty(YEAR_KEY) ? this.selectAndPutInCache() : this
+				.getObjectsFromCache();
+	}
+
+	@Override
 	public YearBO findByIdentifier(final Integer identifier) {
 		YearBO yearBO = null;
 		if (!this.isCacheEmpty(YEAR_KEY)) {
@@ -47,26 +53,14 @@ public class YearBLL extends AbstractBLL implements
 	}
 
 	@Override
-	public YearBO findByCode(final String code) {
+	public YearBO findByCode(final int idSchool, final String code,
+			final int identifier) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public YearBO saveRecord(final YearBO record) {
-		return record.getId() == 0 ? this.insertRecord(record) : this
-				.updateRecord(record);
-	}
-
-	@Override
-	public YearBO insertRecord(final YearBO newRecord) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public YearBO updateRecord(final YearBO record) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
