@@ -3,14 +3,11 @@
  */
 package co.com.soinsoftware.schoolmanagement.entity;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import co.com.soinsoftware.schoolmanagement.hibernate.Bzclass;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroom;
-import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroomxuser;
 
 /**
  * Class room business object
@@ -25,25 +22,25 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 
 	private static final long serialVersionUID = -4200714585828342829L;
 
-	private GradeBO grade;
-
-	private SchoolBO school;
-
-	private TimeBO time;
-
-	private UserBO teacher;
-
-	private YearBO year;
-
 	private int idGrade;
+
+	private GradeBO grade;
 
 	private int idSchool;
 
+	private SchoolBO school;
+
 	private int idTime;
+
+	private TimeBO time;
 
 	private int idUser;
 
+	private UserBO teacher;
+
 	private int idYear;
+
+	private YearBO year;
 
 	private Set<ClassBO> classSet;
 
@@ -53,43 +50,25 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		super();
 	}
 
-	public ClassRoomBO(Bzclassroom bzClassRoom) {
-		super();
-		this.id = bzClassRoom.getId();
-		this.code = bzClassRoom.getCode();
-		this.name = bzClassRoom.getName();
-		this.creation = bzClassRoom.getCreation();
-		this.updated = bzClassRoom.getUpdated();
-		this.enabled = bzClassRoom.isEnabled();
-		this.idGrade = bzClassRoom.getBzgrade().getId();
-		this.idSchool = bzClassRoom.getBzschool().getId();
-		this.idTime = bzClassRoom.getBztime().getId();
-		this.idUser = bzClassRoom.getBzuser().getId();
-		this.idYear = bzClassRoom.getBzyear().getId();
-		this.grade = new GradeBO(bzClassRoom.getBzgrade());
-		this.school = new SchoolBO(bzClassRoom.getBzschool());
-		this.time = new TimeBO(bzClassRoom.getBztime());
-		this.teacher = new UserBO(bzClassRoom.getBzuser());
-		this.year = new YearBO(bzClassRoom.getBzyear());
-
-		Set<?> bzClassSet = bzClassRoom.getBzclasses();
-		if (bzClassSet != null && !bzClassSet.isEmpty()) {
-			this.classSet = new HashSet<>();
-			bzClassSet.stream().forEach((bzClass) -> {
-				classSet.add(new ClassBO(((Bzclass) bzClass)));
-			});
-		}
-
-		Set<?> bzClassRoomXUserSet = bzClassRoom.getBzclassroomxusers();
-		if (bzClassRoomXUserSet != null && !bzClassRoomXUserSet.isEmpty()) {
-			this.studentSet = new HashSet<>();
-			bzClassRoomXUserSet.stream().forEach(
-					(bzClassRoomXUser) -> {
-						studentSet.add(new UserBO(
-								((Bzclassroomxuser) bzClassRoomXUser)
-										.getBzuser()));
-					});
-		}
+	public ClassRoomBO(final Bzclassroom bzClassRoom, final SchoolBO school,
+			final GradeBO grade, final TimeBO time, final UserBO teacher,
+			final YearBO year, final Set<ClassBO> classSet,
+			final Set<UserBO> studentSet) {
+		super(bzClassRoom.getId(), bzClassRoom.getCode(),
+				bzClassRoom.getName(), bzClassRoom.getCreation(), bzClassRoom
+						.getUpdated(), bzClassRoom.isEnabled());
+		this.idGrade = grade.getId();
+		this.grade = grade;
+		this.idSchool = school.getId();
+		this.school = school;
+		this.idTime = time.getId();
+		this.time = time;
+		this.idUser = teacher.getId();
+		this.teacher = teacher;
+		this.idYear = year.getId();
+		this.year = year;
+		this.classSet = classSet;
+		this.studentSet = studentSet;
 	}
 
 	public int getIdGrade() {
@@ -116,7 +95,7 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return grade;
 	}
 
-	public void setGrade(GradeBO grade) {
+	public void setGrade(final GradeBO grade) {
 		this.grade = grade;
 	}
 
@@ -124,7 +103,7 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return school;
 	}
 
-	public void setSchool(SchoolBO school) {
+	public void setSchool(final SchoolBO school) {
 		this.school = school;
 	}
 
@@ -132,7 +111,7 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return time;
 	}
 
-	public void setTime(TimeBO time) {
+	public void setTime(final TimeBO time) {
 		this.time = time;
 	}
 
@@ -140,7 +119,7 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return teacher;
 	}
 
-	public void setTeacher(UserBO user) {
+	public void setTeacher(final UserBO user) {
 		this.teacher = user;
 	}
 
@@ -148,7 +127,7 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return year;
 	}
 
-	public void setYear(YearBO year) {
+	public void setYear(final YearBO year) {
 		this.year = year;
 	}
 
@@ -156,7 +135,7 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return classSet;
 	}
 
-	public void setClassSet(Set<ClassBO> classSet) {
+	public void setClassSet(final Set<ClassBO> classSet) {
 		this.classSet = classSet;
 	}
 
@@ -164,29 +143,24 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 		return studentSet;
 	}
 
-	public void setStudentSet(Set<UserBO> studentSet) {
+	public void setStudentSet(final Set<UserBO> studentSet) {
 		this.studentSet = studentSet;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "ClassRoomBO [gradeBO=" + grade.toString() + ", yearBO="
-				+ year.toString() + ", timeBO=" + time.toString()
-				+ ", userBO=" + teacher.toString() + ", schoolBO="
-				+ school.toString() + ", id=" + id + ", code=" + code
-				+ ", name=" + name + ", creation=" + creation + ", updated="
-				+ updated + ", enabled=" + enabled + "]";
+				+ year.toString() + ", timeBO=" + time.toString() + ", userBO="
+				+ teacher.toString() + ", schoolBO=" + school.toString()
+				+ ", id=" + id + ", code=" + code + ", name=" + name
+				+ ", creation=" + creation + ", updated=" + updated
+				+ ", enabled=" + enabled + "]";
 	}
 
 	@Override
-	public int compareTo(ClassRoomBO other) {
-		Integer thisGradeCode = Integer.parseInt(this.grade.getCode());
-		Integer otherGradeCode = Integer.parseInt(other.getGrade().getCode());
+	public int compareTo(final ClassRoomBO other) {
+		final Integer thisGradeCode = Integer.parseInt(this.grade.getCode());
+		final Integer otherGradeCode = Integer.parseInt(other.getGrade().getCode());
 		return thisGradeCode.compareTo(otherGradeCode)
 				+ this.code.compareTo(other.getCode());
 	}

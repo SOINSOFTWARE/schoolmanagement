@@ -3,6 +3,8 @@
  */
 package co.com.soinsoftware.schoolmanagement.entity;
 
+import java.util.Date;
+
 /**
  * Abstract object that provides code column necessary for multiple BO objects
  * 
@@ -10,17 +12,33 @@ package co.com.soinsoftware.schoolmanagement.entity;
  * @version 1.0
  * @since 26/11/2015
  */
-public class AbstractWithCodeBO extends AbstractBO {
+public abstract class AbstractWithCodeBO extends AbstractBO {
 
 	private static final long serialVersionUID = -2024771930579614306L;
-	
+
 	protected String code;
 	
+	public AbstractWithCodeBO() {
+		super();
+	}
+
+	public AbstractWithCodeBO(final Integer id, final String name,
+			final Date creation, final Date updated, final boolean enabled) {
+		super(id, name, creation, updated, enabled);
+	}
+
+	public AbstractWithCodeBO(final Integer id, final String code,
+			final String name, final Date creation, final Date updated,
+			final boolean enabled) {
+		super(id, name, creation, updated, enabled);
+		this.code = code;
+	}
+
 	public String getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(final String code) {
 		this.code = code;
 	}
 

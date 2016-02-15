@@ -1,12 +1,15 @@
 package co.com.soinsoftware.schoolmanagement.request;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,27 +24,44 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
  * @since 28/01/2016
  */
 @Path("/schoolmanagement/class/")
-public class ClassRequestHandler {
+public class ClassRequestHandler extends AbstractRequestHandler {
 
 	@Autowired
 	private ClassBLL classBLL = ServiceLocator.getBean(ClassBLL.class);
 
 	@GET
-	@Path("all")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Path(PATH_ALL)
+	@Produces(APPLICATION_JSON)
 	public Set<ClassBO> findAll() {
-		return classBLL.findAll();
+		final Set<ClassBO> classSet = classBLL.findAll();
+		LOGGER.info("findAll function loads {}", classSet.toString());
+		return classSet;
+	}
+	
+	@GET
+	@Path(PATH_BY)
+	@Produces(APPLICATION_JSON)
+	public Set<ClassBO> findBy(
+			@QueryParam(PARAMETER_CLASSROOM_ID) final int classRoomId,
+			@QueryParam(PARAMETER_SCHOOL_ID) final int schoolId) {
+		final Set<ClassBO> classSet = classBLL.findBy(schoolId, classRoomId);
+		LOGGER.info("findBy function loads {}", classSet.toString());
+		return classSet;
 	}
 
 	@POST
-	@Path("save")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ClassBO save(String jsonObject) {
-		ClassBO classBO = null;
-		ClassBO newClassBO = new ClassMapper().geObjectFromJSON(jsonObject);
-		if (newClassBO != null) {
-			classBO = classBLL.saveRecord(newClassBO);
+	@Path(PATH_SAVE)
+	@Produces(APPLICATION_JSON)
+	public Set<ClassBO> save(@FormParam(PARAMETER_OBJECT) final String jsonObject) {
+		final Set<ClassBO> classSet = new HashSet<>();
+		final List<ClassBO> classList = new ClassMapper().getObjectSetFromJSON(jsonObject);
+		if (!classList.isEmpty()) {
+			for(final ClassBO classBO : classList) {
+				final ClassBO savedClass = classBLL.saveRecord(classBO);
+				classSet.add(savedClass);
+				LOGGER.info("save function applied to {}", savedClass);
+			}
 		}
-		return classBO;
+		return classSet;
 	}
 }

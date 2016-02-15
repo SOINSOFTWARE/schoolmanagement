@@ -17,7 +17,7 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzperiod;
 @XmlRootElement(name = "periods")
 public class PeriodBO extends AbstractBO {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6503035896094998534L;
 
 	private YearBO year;
 
@@ -25,22 +25,17 @@ public class PeriodBO extends AbstractBO {
 		super();
 	}
 
-	public PeriodBO(Bzperiod bzPeriod) {
-		super();
-		this.id = bzPeriod.getId();
-		this.name = bzPeriod.getName();
-		this.year = (bzPeriod.getBzyear() != null) ? new YearBO(
-				bzPeriod.getBzyear()) : null;
-		this.creation = bzPeriod.getCreation();
-		this.updated = bzPeriod.getUpdated();
-		this.enabled = bzPeriod.isEnabled();
+	public PeriodBO(final Bzperiod bzPeriod, final YearBO year) {
+		super(bzPeriod.getId(), bzPeriod.getName(), bzPeriod.getCreation(),
+				bzPeriod.getUpdated(), bzPeriod.isEnabled());
+		this.year = year;
 	}
 
 	public YearBO getYear() {
 		return year;
 	}
 
-	public void setYear(YearBO year) {
+	public void setYear(final YearBO year) {
 		this.year = year;
 	}
 

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.dao.SubjectDAO;
+import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
+import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.soinsoftware.schoolmanagement.entity.SubjectBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzsubject;
 
@@ -22,6 +24,9 @@ public class SubjectBLL extends AbstractBLL implements
 	@Autowired
 	private SubjectDAO subjectDAO;
 
+	@Autowired
+	private ClassRoomBLL classRoomBLL;
+
 	@Override
 	public Set<SubjectBO> findAll() {
 		return this.isCacheEmpty(SUBJECT_KEY) ? this.selectAndPutInCache()
@@ -36,8 +41,19 @@ public class SubjectBLL extends AbstractBLL implements
 
 	@Override
 	public SubjectBO findByIdentifier(final Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		SubjectBO subjectBO = null;
+		if (!this.isCacheEmpty(SUBJECT_KEY)) {
+			subjectBO = (SubjectBO) this.getObjectFromCache(SUBJECT_KEY,
+					identifier);
+		}
+		if (subjectBO == null) {
+			subjectBO = this.selectByIdentifierAndPutInCache(identifier);
+		}
+		if (subjectBO != null) {
+			LOGGER.info("subject = {} was loaded successfully",
+					subjectBO.toString());
+		}
+		return subjectBO;
 	}
 
 	@Override
@@ -45,6 +61,42 @@ public class SubjectBLL extends AbstractBLL implements
 			final int identifier) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Set<SubjectBO> findExcludingClass(final int idClassRoom) {
+		final Set<SubjectBO> subjectSet = this.findAll();
+		final ClassRoomBO classRoom = classRoomBLL
+				.findByIdentifier(idClassRoom);
+		final Set<SubjectBO> subjectExcludedSet = new HashSet<SubjectBO>();
+		if (classRoom != null && subjectSet != null) {
+			final Set<ClassBO> classSet = classRoom.getClassSet();
+			if (!subjectSet.isEmpty()
+					&& (classSet == null || (classSet != null && classSet
+							.isEmpty()))) {
+				for (SubjectBO subject : subjectSet) {
+					if (subject.isEnabled()) {
+						subjectExcludedSet.add(subject);
+					}
+				}
+			} else if (!classSet.isEmpty() && !subjectSet.isEmpty()) {
+				boolean found = false;
+				for (SubjectBO subject : subjectSet) {
+					if (subject.isEnabled()) {
+						for (ClassBO classBO : classSet) {
+							if (classBO.getSubject().equals(subject)) {
+								found = true;
+								break;
+							}
+						}
+					}
+					if (!found) {
+						subjectExcludedSet.add(subject);
+					}
+					found = false;
+				}
+			}
+		}
+		return subjectExcludedSet;
 	}
 
 	@Override
@@ -66,8 +118,14 @@ public class SubjectBLL extends AbstractBLL implements
 
 	@Override
 	public SubjectBO selectByIdentifierAndPutInCache(final Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		SubjectBO classBO = null;
+		final Bzsubject bzSubject = this.subjectDAO
+				.selectByIdentifier(identifier);
+		if (bzSubject != null) {
+			classBO = new SubjectBO(bzSubject);
+			this.putObjectInCache(SUBJECT_KEY, classBO);
+		}
+		return classBO;
 	}
 
 	@Override

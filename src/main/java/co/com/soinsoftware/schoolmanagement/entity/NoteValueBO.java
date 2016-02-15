@@ -19,31 +19,31 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bznotevalue;
 public class NoteValueBO implements Serializable {
 
 	private static final long serialVersionUID = -1294581087156310419L;
-	
+
 	private int idStudent;
-	
+
 	private UserBO student;
-	
+
 	private int idNoteDefinition;
-	
+
 	private NoteDefinitionBO noteDefinition;
-	
+
 	private BigDecimal value;
-	
+
 	private Date creation;
 
 	private Date updated;
 
 	private boolean enabled;
-	
+
 	public NoteValueBO() {
 		super();
 	}
-	
-	public NoteValueBO(Bznotevalue bzNoteValue) {
+
+	public NoteValueBO(final Bznotevalue bzNoteValue) {
 		super();
 		if (bzNoteValue.getId() != null) {
-			this.idStudent =  bzNoteValue.getId().getIdUser();
+			this.idStudent = bzNoteValue.getId().getIdUser();
 			this.idNoteDefinition = bzNoteValue.getId().getIdNoteDefinition();
 		}
 		this.value = bzNoteValue.getValue();
@@ -56,7 +56,7 @@ public class NoteValueBO implements Serializable {
 		return idStudent;
 	}
 
-	public void setIdStudent(int idStudent) {
+	public void setIdStudent(final int idStudent) {
 		this.idStudent = idStudent;
 	}
 
@@ -64,7 +64,7 @@ public class NoteValueBO implements Serializable {
 		return student;
 	}
 
-	public void setStudent(UserBO student) {
+	public void setStudent(final UserBO student) {
 		this.student = student;
 	}
 
@@ -72,7 +72,7 @@ public class NoteValueBO implements Serializable {
 		return idNoteDefinition;
 	}
 
-	public void setIdNoteDefinition(int idNoteDefinition) {
+	public void setIdNoteDefinition(final int idNoteDefinition) {
 		this.idNoteDefinition = idNoteDefinition;
 	}
 
@@ -80,7 +80,7 @@ public class NoteValueBO implements Serializable {
 		return noteDefinition;
 	}
 
-	public void setNoteDefinition(NoteDefinitionBO noteDefinition) {
+	public void setNoteDefinition(final NoteDefinitionBO noteDefinition) {
 		this.noteDefinition = noteDefinition;
 	}
 
@@ -88,7 +88,7 @@ public class NoteValueBO implements Serializable {
 		return value;
 	}
 
-	public void setValue(BigDecimal value) {
+	public void setValue(final BigDecimal value) {
 		this.value = value;
 	}
 
@@ -96,7 +96,7 @@ public class NoteValueBO implements Serializable {
 		return creation;
 	}
 
-	public void setCreation(Date creation) {
+	public void setCreation(final Date creation) {
 		this.creation = creation;
 	}
 
@@ -104,7 +104,7 @@ public class NoteValueBO implements Serializable {
 		return updated;
 	}
 
-	public void setUpdated(Date updated) {
+	public void setUpdated(final Date updated) {
 		this.updated = updated;
 	}
 
@@ -112,7 +112,7 @@ public class NoteValueBO implements Serializable {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(final boolean enabled) {
 		this.enabled = enabled;
 	}
 

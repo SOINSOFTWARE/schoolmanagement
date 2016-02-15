@@ -20,21 +20,12 @@ public class SubjectBO extends AbstractWithCodeBO {
 		super();
 	}
 
-	public SubjectBO(Bzsubject bzSubject) {
-		super();
-		this.id = bzSubject.getId();
-		this.code = bzSubject.getCode();
-		this.name = bzSubject.getName();
-		this.creation = bzSubject.getCreation();
-		this.updated = bzSubject.getUpdated();
-		this.enabled = bzSubject.isEnabled();
+	public SubjectBO(final Bzsubject bzSubject) {
+		super(bzSubject.getId(), bzSubject.getCode(), bzSubject.getName(),
+				bzSubject.getCreation(), bzSubject.getUpdated(), bzSubject
+						.isEnabled());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "SubjectBO [id=" + id + ", code=" + code + ", name=" + name

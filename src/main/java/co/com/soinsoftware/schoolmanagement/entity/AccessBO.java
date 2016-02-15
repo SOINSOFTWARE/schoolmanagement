@@ -23,21 +23,12 @@ public class AccessBO extends AbstractWithCodeBO {
 		super();
 	}
 
-	public AccessBO(Cnaccess cnAccess) {
-		super();
-		this.id = cnAccess.getId();
-		this.code = cnAccess.getCode();
-		this.name = cnAccess.getName();
-		this.creation = cnAccess.getCreation();
-		this.updated = cnAccess.getUpdated();
-		this.enabled = cnAccess.isEnabled();
+	public AccessBO(final Cnaccess cnAccess) {
+		super(cnAccess.getId(), cnAccess.getCode(), cnAccess.getName(),
+				cnAccess.getCreation(), cnAccess.getUpdated(), cnAccess
+						.isEnabled());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "AccessBO [id=" + id + ", code=" + code + ", name=" + name

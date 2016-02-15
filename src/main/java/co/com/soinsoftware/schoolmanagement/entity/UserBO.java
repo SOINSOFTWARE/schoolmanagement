@@ -5,16 +5,12 @@ package co.com.soinsoftware.schoolmanagement.entity;
 
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import co.com.soinsoftware.schoolmanagement.hibernate.Bzclass;
-import co.com.soinsoftware.schoolmanagement.hibernate.Bzschoolxuser;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
-import co.com.soinsoftware.schoolmanagement.hibernate.Bzuserxusertype;
 
 /**
  * User business object
@@ -52,7 +48,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 
 	private UserBO guardian2;
 
-	private SchoolBO school;
+	private Set<SchoolBO> schoolSet;
 
 	private Set<UserTypeBO> userTypeSet;
 
@@ -62,12 +58,13 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		super();
 	}
 
-	public UserBO(Bzuser bzUser) {
-		super();
-		this.id = bzUser.getId();
+	public UserBO(final Bzuser bzUser, final Set<SchoolBO> schoolSet,
+			final UserBO guardian1, final UserBO guardian2,
+			final Set<UserTypeBO> userTypeSet) {
+		super(bzUser.getId(), bzUser.getName(), bzUser.getCreation(), bzUser
+				.getUpdated(), bzUser.isEnabled());
 		this.documentNumber = bzUser.getDocumentNumber();
 		this.documentType = bzUser.getDocumentType();
-		this.name = bzUser.getName();
 		this.lastName = bzUser.getLastName();
 		this.born = bzUser.getBorn();
 		this.address = bzUser.getAddress();
@@ -77,41 +74,24 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		this.password = bzUser.getPassword();
 		this.gender = bzUser.getGender();
 		this.photo = bzUser.getPhoto();
-		this.guardian1 = bzUser.getBzuserByIdGuardian1() != null ? new UserBO(
-				bzUser.getBzuserByIdGuardian1()) : null;
-		this.guardian2 = bzUser.getBzuserByIdGuardian2() != null ? new UserBO(
-				bzUser.getBzuserByIdGuardian2()) : null;
-		this.school = new SchoolBO(((Bzschoolxuser) bzUser.getBzschoolxusers()
-				.iterator().next()).getBzschool());
-		this.creation = bzUser.getCreation();
-		this.updated = bzUser.getUpdated();
-		this.enabled = bzUser.isEnabled();
+		this.guardian1 = guardian1;
+		this.guardian2 = guardian2;
+		this.schoolSet = schoolSet;
+		this.userTypeSet = userTypeSet;
+	}
 
-		Set<?> bzUserXUserTypeSet = bzUser.getBzuserxusertypes();
-		if (bzUserXUserTypeSet != null && !bzUserXUserTypeSet.isEmpty()) {
-			this.userTypeSet = new HashSet<>();
-			bzUserXUserTypeSet.stream().forEach(
-					(bzUserXUserType) -> {
-						userTypeSet.add(new UserTypeBO(
-								((Bzuserxusertype) bzUserXUserType)
-										.getCnusertype()));
-					});
-		}
-
-		Set<?> bzClassSet = bzUser.getBzclasses();
-		if (bzClassSet != null && !bzClassSet.isEmpty()) {
-			this.classSet = new HashSet<>();
-			bzClassSet.stream().forEach((bzClass) -> {
-				classSet.add(new ClassBO(((Bzclass) bzClass)));
-			});
-		}
+	public UserBO(final Bzuser bzUser, final Set<SchoolBO> schoolSet,
+			final UserBO guardian1, final UserBO guardian2,
+			final Set<UserTypeBO> userTypeSet, final Set<ClassBO> classSet) {
+		this(bzUser, schoolSet, guardian1, guardian2, userTypeSet);
+		this.classSet = classSet;
 	}
 
 	public String getDocumentNumber() {
 		return documentNumber;
 	}
 
-	public void setDocumentNumber(String documentNumber) {
+	public void setDocumentNumber(final String documentNumber) {
 		this.documentNumber = documentNumber;
 	}
 
@@ -119,7 +99,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return documentType;
 	}
 
-	public void setDocumentType(String documentType) {
+	public void setDocumentType(final String documentType) {
 		this.documentType = documentType;
 	}
 
@@ -127,7 +107,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	public void setLastName(final String lastName) {
 		this.lastName = lastName;
 	}
 
@@ -135,7 +115,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return born;
 	}
 
-	public void setBorn(Date born) {
+	public void setBorn(final Date born) {
 		this.born = born;
 	}
 
@@ -143,7 +123,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(final String address) {
 		this.address = address;
 	}
 
@@ -151,7 +131,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return phone1;
 	}
 
-	public void setPhone1(BigInteger phone1) {
+	public void setPhone1(final BigInteger phone1) {
 		this.phone1 = phone1;
 	}
 
@@ -159,7 +139,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return phone2;
 	}
 
-	public void setPhone2(BigInteger phone2) {
+	public void setPhone2(final BigInteger phone2) {
 		this.phone2 = phone2;
 	}
 
@@ -167,7 +147,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 
@@ -175,7 +155,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(final String gender) {
 		this.gender = gender;
 	}
 
@@ -183,7 +163,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(final String photo) {
 		this.photo = photo;
 	}
 
@@ -191,7 +171,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return guardian1;
 	}
 
-	public void setGuardian1(UserBO guardian1) {
+	public void setGuardian1(final UserBO guardian1) {
 		this.guardian1 = guardian1;
 	}
 
@@ -199,23 +179,23 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return guardian2;
 	}
 
-	public void setGuardian2(UserBO guardian2) {
+	public void setGuardian2(final UserBO guardian2) {
 		this.guardian2 = guardian2;
 	}
 
-	public SchoolBO getSchool() {
-		return school;
+	public Set<SchoolBO> getSchoolSet() {
+		return schoolSet;
 	}
 
-	public void setSchool(SchoolBO school) {
-		this.school = school;
+	public void setSchoolSet(final Set<SchoolBO> schoolSet) {
+		this.schoolSet = schoolSet;
 	}
 
 	public Set<UserTypeBO> getUserTypeSet() {
 		return userTypeSet;
 	}
 
-	public void setUserTypeSet(Set<UserTypeBO> userTypeSet) {
+	public void setUserTypeSet(final Set<UserTypeBO> userTypeSet) {
 		this.userTypeSet = userTypeSet;
 	}
 
@@ -223,7 +203,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return classSet;
 	}
 
-	public void setClassSet(Set<ClassBO> classSet) {
+	public void setClassSet(final Set<ClassBO> classSet) {
 		this.classSet = classSet;
 	}
 
@@ -235,7 +215,7 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null) {
 			return false;
 		}
@@ -249,11 +229,6 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "UserBO [id=" + id + ", documentNumber=" + documentNumber
@@ -262,19 +237,14 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 				+ address + ", phone1=" + phone1 + ", phone2=" + phone2
 				+ ", password=" + password + ", gender=" + gender + ", photo="
 				+ photo + ", guardian1=" + guardian1 + ", guardian2="
-				+ guardian2 + ", school=" + school + ", creation=" + creation
-				+ ", updated=" + updated + ", enabled=" + enabled
+				+ guardian2 + ", schoolSet=" + schoolSet + ", creation="
+				+ creation + ", updated=" + updated + ", enabled=" + enabled
 				+ ", userTypeSet=" + userTypeSet + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
 	@Override
-	public int compareTo(UserBO userBO) {
-		return this.lastName.compareToIgnoreCase(userBO.getLastName());
+	public int compareTo(final UserBO userBO) {
+		return this.lastName.compareToIgnoreCase(userBO.getLastName())
+				* this.name.compareToIgnoreCase(userBO.getName());
 	}
-
 }

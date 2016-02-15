@@ -20,21 +20,11 @@ public class GradeBO extends AbstractWithCodeBO implements Comparable<GradeBO> {
 		super();
 	}
 
-	public GradeBO(Bzgrade bzGrade) {
-		super();
-		this.id = bzGrade.getId();
-		this.code = bzGrade.getCode();
-		this.name = bzGrade.getName();
-		this.creation = bzGrade.getCreation();
-		this.updated = bzGrade.getUpdated();
-		this.enabled = bzGrade.isEnabled();
+	public GradeBO(final Bzgrade bzGrade) {
+		super(bzGrade.getId(), bzGrade.getCode(), bzGrade.getName(), bzGrade
+				.getCreation(), bzGrade.getUpdated(), bzGrade.isEnabled());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "GradeBO [id=" + id + ", code=" + code + ", name=" + name
@@ -43,9 +33,9 @@ public class GradeBO extends AbstractWithCodeBO implements Comparable<GradeBO> {
 	}
 
 	@Override
-	public int compareTo(GradeBO other) {
-		Integer thisCode = Integer.parseInt(this.code);
-		Integer otherCode = Integer.parseInt(other.getCode());
+	public int compareTo(final GradeBO other) {
+		final Integer thisCode = Integer.parseInt(this.code);
+		final Integer otherCode = Integer.parseInt(other.getCode());
 		return thisCode.compareTo(otherCode);
 	}
 }

@@ -53,9 +53,9 @@ public class UserRequestHandler {
 	}
 	
 	@GET
-	@Path("teacherFree")
+	@Path("teacherNotDirectors")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Set<UserBO> findTeacherNoDirectors(@QueryParam("schoolId") int schoolId) {
+	public Set<UserBO> findTeacherNotDirectors(@QueryParam("schoolId") int schoolId) {
 		return userBLL.findTeacherNoGroupDirectors(schoolId);
 	}
 	

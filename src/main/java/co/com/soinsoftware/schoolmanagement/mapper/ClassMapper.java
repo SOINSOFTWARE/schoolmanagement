@@ -1,6 +1,10 @@
 package co.com.soinsoftware.schoolmanagement.mapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.codehaus.jackson.type.TypeReference;
 
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 
@@ -20,7 +24,21 @@ public class ClassMapper implements IJsonMappable<ClassBO> {
 			} catch (IOException ex) {
 				LOGGER.error(ex.getMessage());
 			}
-		}		
+		}
 		return classBO;
+	}
+
+	public List<ClassBO> getObjectSetFromJSON(String objectAsJSON) {
+		List<ClassBO> classList = new ArrayList<ClassBO>();
+		if (objectAsJSON != null && !objectAsJSON.equals("")) {
+			try {
+				classList = JSON_MAPPER.readValue(
+						objectAsJSON, new TypeReference<List<ClassBO>>() {
+						});
+			} catch (IOException ex) {
+				LOGGER.error(ex.getMessage());
+			}
+		}
+		return classList;
 	}
 }

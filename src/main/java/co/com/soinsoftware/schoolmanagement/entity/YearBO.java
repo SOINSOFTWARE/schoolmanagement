@@ -17,29 +17,17 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzyear;
 @XmlRootElement(name = "years")
 public class YearBO extends AbstractBO implements Comparable<YearBO> {
 
-	/**
-	 * Auto generated serial version
-	 */
 	private static final long serialVersionUID = -6670213337879299160L;
 
 	public YearBO() {
 		super();
 	}
 
-	public YearBO(Bzyear bzYear) {
-		super();
-		this.id = bzYear.getId();
-		this.name = bzYear.getName();
-		this.creation = bzYear.getCreation();
-		this.updated = bzYear.getUpdated();
-		this.enabled = bzYear.isEnabled();
+	public YearBO(final Bzyear bzYear) {
+		super(bzYear.getId(), bzYear.getName(), bzYear.getCreation(), bzYear
+				.getUpdated(), bzYear.isEnabled());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "YearBO [id=" + id + ", name=" + name + ", creation=" + creation
@@ -47,9 +35,9 @@ public class YearBO extends AbstractBO implements Comparable<YearBO> {
 	}
 
 	@Override
-	public int compareTo(YearBO other) {
-		Integer thisName = Integer.parseInt(this.name);
-		Integer otherName = Integer.parseInt(other.getName());
+	public int compareTo(final YearBO other) {
+		final Integer thisName = Integer.parseInt(this.name);
+		final Integer otherName = Integer.parseInt(other.getName());
 		return thisName.compareTo(otherName) * -1;
 	}
 }

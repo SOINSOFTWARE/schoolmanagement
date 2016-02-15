@@ -34,24 +34,21 @@ public class NoteDefinitionBO extends AbstractBO {
 		super();
 	}
 
-	public NoteDefinitionBO(Bznotedefinition bzNoteDefinition) {
-		super();
-		this.id = bzNoteDefinition.getId();
-		this.name = bzNoteDefinition.getName();
+	public NoteDefinitionBO(final Bznotedefinition bzNoteDefinition,
+			final PeriodBO period) {
+		super(bzNoteDefinition.getId(), bzNoteDefinition.getName(),
+				bzNoteDefinition.getCreation(), bzNoteDefinition.getUpdated(),
+				bzNoteDefinition.isEnabled());
 		this.description = bzNoteDefinition.getDescription();
 		this.value = bzNoteDefinition.getValue();
-		this.period = (bzNoteDefinition.getBzperiod() != null) ? new PeriodBO(
-				bzNoteDefinition.getBzperiod()) : null;
-		this.creation = bzNoteDefinition.getCreation();
-		this.updated = bzNoteDefinition.getUpdated();
-		this.enabled = bzNoteDefinition.isEnabled();
+		this.period = period;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -59,7 +56,7 @@ public class NoteDefinitionBO extends AbstractBO {
 		return value;
 	}
 
-	public void setValue(BigDecimal value) {
+	public void setValue(final BigDecimal value) {
 		this.value = value;
 	}
 
@@ -67,7 +64,7 @@ public class NoteDefinitionBO extends AbstractBO {
 		return period;
 	}
 
-	public void setPeriod(PeriodBO period) {
+	public void setPeriod(final PeriodBO period) {
 		this.period = period;
 	}
 
@@ -75,7 +72,7 @@ public class NoteDefinitionBO extends AbstractBO {
 		return noteValueSet;
 	}
 
-	public void setNoteValueSet(Set<NoteValueBO> noteValueSet) {
+	public void setNoteValueSet(final Set<NoteValueBO> noteValueSet) {
 		this.noteValueSet = noteValueSet;
 	}
 

@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.dao.UserDAO;
+import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
+import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserTypeBO;
 import co.com.soinsoftware.schoolmanagement.entity.YearBO;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroomxuser;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
 
 /**
@@ -27,13 +30,19 @@ public class UserBLL extends AbstractBLL implements
 		IBusinessLogicLayer<UserBO, Bzuser> {
 
 	@Autowired
+	private ClassBLL classBLL;
+
+	@Autowired
+	private ClassRoomBLL classRoomBLL;
+
+	@Autowired
+	private SchoolBLL schoolBLL;
+
+	@Autowired
 	private UserDAO userDAO;
 
 	@Autowired
 	private UserTypeBLL userTypeBLL;
-
-	@Autowired
-	private ClassRoomBLL classRoomBLL;
 
 	@Autowired
 	private YearBLL yearBLL;
@@ -96,7 +105,7 @@ public class UserBLL extends AbstractBLL implements
 			userBOSet = new HashSet<>();
 			for (Object bzUser : hibernateEntitySet) {
 				if (bzUser instanceof Bzuser) {
-					userBOSet.add(new UserBO((Bzuser) bzUser));
+					userBOSet.add(this.buildUserBO((Bzuser) bzUser, true));
 				}
 			}
 		}
@@ -108,7 +117,7 @@ public class UserBLL extends AbstractBLL implements
 		UserBO userBO = null;
 		final Bzuser bzUser = this.userDAO.selectByIdentifier(identifier);
 		if (bzUser != null) {
-			userBO = new UserBO(bzUser);
+			userBO = this.buildUserBO(bzUser, true);
 			this.putObjectInCache(USER_KEY, userBO);
 		}
 		return userBO;
@@ -119,7 +128,7 @@ public class UserBLL extends AbstractBLL implements
 		final Bzuser bzUser = this.userDAO
 				.selectByDocumentNumber(documentNumber);
 		if (bzUser != null) {
-			userBO = new UserBO(bzUser);
+			userBO = this.buildUserBO(bzUser, true);
 			this.putObjectInCache(USER_KEY, userBO);
 		}
 		return userBO;
@@ -149,8 +158,8 @@ public class UserBLL extends AbstractBLL implements
 					userTypeCode, 0);
 			if (cacheUserBOSet != null && userTypeBO != null) {
 				for (UserBO userBO : cacheUserBOSet) {
-					if (this.isUserLinkedToSchool(userBO, schoolId)
-							&& this.isUserLinkedToUserType(userBO, userTypeBO)) {
+					if (this.isLinkedToSchool(userBO, schoolId)
+							&& this.isLinkedToUserType(userBO, userTypeBO)) {
 						userBOSet.add(userBO);
 					}
 				}
@@ -169,8 +178,8 @@ public class UserBLL extends AbstractBLL implements
 				UserTypeBO.TEACHER, 0);
 		if (cacheUserBOSet != null) {
 			for (UserBO userBO : cacheUserBOSet) {
-				if (this.isUserLinkedToSchool(userBO, schoolId)
-						&& this.isUserLinkedToUserType(userBO, userTypeBO)
+				if (this.isLinkedToSchool(userBO, schoolId)
+						&& this.isLinkedToUserType(userBO, userTypeBO)
 						&& !this.isTeacherADirector(classRoomBOSet, userBO)) {
 					userBOSet.add(userBO);
 					LOGGER.info(
@@ -182,11 +191,18 @@ public class UserBLL extends AbstractBLL implements
 		return userBOSet;
 	}
 
-	private boolean isUserLinkedToSchool(final UserBO userBO, final int schoolId) {
-		return userBO.getSchool().getId().equals(schoolId);
+	public boolean isLinkedToSchool(final UserBO userBO, final int schoolId) {
+		boolean linked = false;
+		for (final SchoolBO school : userBO.getSchoolSet()) {
+			if (school.getId().equals(schoolId)) {
+				linked = true;
+				break;
+			}
+		}
+		return linked;
 	}
 
-	private boolean isUserLinkedToUserType(final UserBO userBO,
+	private boolean isLinkedToUserType(final UserBO userBO,
 			final UserTypeBO userTypeBO) {
 		return userBO.getUserTypeSet().contains(userTypeBO);
 	}
@@ -195,7 +211,7 @@ public class UserBLL extends AbstractBLL implements
 			UserBO userBO) {
 		boolean isDirector = false;
 		if (classRoomBOSet != null) {
-			for (ClassRoomBO classRoomBO : classRoomBOSet) {
+			for (final ClassRoomBO classRoomBO : classRoomBOSet) {
 				if (classRoomBO.getTeacher().equals(userBO)) {
 					isDirector = true;
 					break;
@@ -241,5 +257,37 @@ public class UserBLL extends AbstractBLL implements
 	public UserBO putObjectInCache(Bzuser record) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public UserBO buildUserBO(final Bzuser bzUser, final boolean includeClassBO) {
+		UserBO user = null;
+		if (bzUser != null) {
+			final Set<SchoolBO> schoolSet = schoolBLL.buildSchoolSet(bzUser
+					.getBzschoolxusers());
+			final UserBO guardian1 = this.buildUserBO(
+					bzUser.getBzuserByIdGuardian1(), includeClassBO);
+			final UserBO guardian2 = this.buildUserBO(
+					bzUser.getBzuserByIdGuardian2(), includeClassBO);
+			final Set<UserTypeBO> userTypeSet = userTypeBLL
+					.buildUserTypeSet(bzUser.getBzuserxusertypes());
+			Set<ClassBO> classSet = null;
+			if (includeClassBO) {
+				classSet = classBLL.buildClassSet(bzUser.getBzclasses());
+			}
+			user = new UserBO(bzUser, schoolSet, guardian1, guardian2,
+					userTypeSet, classSet);
+		}
+		return user;
+	}
+
+	public Set<UserBO> buildUserSet(
+			final Set<Bzclassroomxuser> bzClassRoomXUserSet) {
+		final Set<UserBO> userSet = new HashSet<>();
+		for (final Bzclassroomxuser bzClassRoomXuser : bzClassRoomXUserSet) {
+			final UserBO user = this.buildUserBO(bzClassRoomXuser.getBzuser(), false);
+			userSet.add(user);
+		}
+		return userSet;
 	}
 }

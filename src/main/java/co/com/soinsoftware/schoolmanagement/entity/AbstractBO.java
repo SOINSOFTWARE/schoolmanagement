@@ -27,12 +27,26 @@ public abstract class AbstractBO implements Serializable {
 	protected Date updated;
 
 	protected boolean enabled;
+	
+	public AbstractBO() {
+		super();
+	}
+
+	public AbstractBO(final Integer id, final String name, final Date creation,
+			final Date updated, final boolean enabled) {
+		this();
+		this.id = id;
+		this.name = name;
+		this.creation = creation;
+		this.updated = updated;
+		this.enabled = enabled;
+	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(final Integer id) {
 		this.id = id;
 	}
 
@@ -40,7 +54,7 @@ public abstract class AbstractBO implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -48,7 +62,7 @@ public abstract class AbstractBO implements Serializable {
 		return creation;
 	}
 
-	public void setCreation(Date creation) {
+	public void setCreation(final Date creation) {
 		this.creation = creation;
 	}
 
@@ -56,7 +70,7 @@ public abstract class AbstractBO implements Serializable {
 		return updated;
 	}
 
-	public void setUpdated(Date updated) {
+	public void setUpdated(final Date updated) {
 		this.updated = updated;
 	}
 
@@ -64,7 +78,7 @@ public abstract class AbstractBO implements Serializable {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(final boolean enabled) {
 		this.enabled = enabled;
 	}
 
@@ -76,7 +90,7 @@ public abstract class AbstractBO implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null) {
 			return false;
 		}

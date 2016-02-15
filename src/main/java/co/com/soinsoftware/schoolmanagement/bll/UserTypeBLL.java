@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.dao.UserTypeDAO;
+import co.com.soinsoftware.schoolmanagement.entity.AccessBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserTypeBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuserxusertype;
 import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
+import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertypexaccess;
 
 /**
  * @author Carlos Rodriguez
@@ -86,7 +88,9 @@ public class UserTypeBLL extends AbstractBLL implements
 			userTypeBOSet = new HashSet<>();
 			for (Object cnUserType : hibernateEntitySet) {
 				if (cnUserType instanceof Cnusertype) {
-					userTypeBOSet.add(new UserTypeBO((Cnusertype) cnUserType));
+					Set<AccessBO> accessSet = this.getAccessSet((Cnusertype) cnUserType);
+					userTypeBOSet.add(new UserTypeBO((Cnusertype) cnUserType,
+							accessSet));
 				}
 			}
 		}
@@ -117,7 +121,8 @@ public class UserTypeBLL extends AbstractBLL implements
 		UserTypeBO userTypeBO = null;
 		final Cnusertype cnuserType = this.userTypeDAO.selectByCode(code);
 		if (cnuserType != null) {
-			userTypeBO = new UserTypeBO(cnuserType);
+			Set<AccessBO> accessSet = this.getAccessSet(cnuserType);
+			userTypeBO = new UserTypeBO(cnuserType, accessSet);
 			this.putObjectInCache(USERTYPE_KEY, userTypeBO);
 		}
 		return userTypeBO;
@@ -142,5 +147,42 @@ public class UserTypeBLL extends AbstractBLL implements
 	public Bzuserxusertype buildHibernateEntity(UserTypeBO record) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Set<AccessBO> getAccessSet(final Cnusertype cnuserType) {
+		final Set<AccessBO> accessSet = new HashSet<>();
+		if (cnuserType.getCnusertypexaccesses() != null) {
+			cnuserType
+					.getCnusertypexaccesses()
+					.stream()
+					.forEach(
+							(cnUserTypeXAccess) -> {
+								accessSet.add(new AccessBO(
+										((Cnusertypexaccess) cnUserTypeXAccess)
+												.getCnaccess()));
+							});
+		}
+		return accessSet;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<UserTypeBO> buildUserTypeSet(
+			final Set<Bzuserxusertype> bzUserxUserTypes) {
+		final Set<UserTypeBO> userTypeSet = new HashSet<>();
+		for (final Bzuserxusertype userXuserType : bzUserxUserTypes) {
+			final Cnusertype cnUserType = userXuserType.getCnusertype();
+			final Set<Cnusertypexaccess> userTypeXaccessSet = cnUserType
+					.getCnusertypexaccesses();
+			final Set<AccessBO> accessSet = new HashSet<>();
+			for (final Cnusertypexaccess usertypeXaccess : userTypeXaccessSet) {
+				final AccessBO access = new AccessBO(
+						usertypeXaccess.getCnaccess());
+				accessSet.add(access);
+			}
+			final UserTypeBO userType = new UserTypeBO(cnUserType, accessSet);
+			userTypeSet.add(userType);
+		}
+		return userTypeSet;
 	}
 }

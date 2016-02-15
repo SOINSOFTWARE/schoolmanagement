@@ -3,13 +3,11 @@
  */
 package co.com.soinsoftware.schoolmanagement.entity;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclass;
-import co.com.soinsoftware.schoolmanagement.hibernate.Bznotedefinition;
 
 /**
  * Class business object
@@ -22,16 +20,16 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bznotedefinition;
 public class ClassBO extends AbstractBO {
 
 	private static final long serialVersionUID = -39758306494005636L;
-	
+
 	private int idClassRoom;
 	
-	private int idSubject;
-	
-	private int idTeacher;
-
 	private ClassRoomBO classRoom;
 
+	private int idSubject;
+	
 	private SubjectBO subject;
+
+	private int idTeacher;
 
 	private UserBO teacher;
 
@@ -41,36 +39,21 @@ public class ClassBO extends AbstractBO {
 		super();
 	}
 
-	public ClassBO(Bzclass bzClass) {
-		super();
-		this.id = bzClass.getId();
-		this.name = bzClass.getName();
-		this.classRoom = (bzClass.getBzclassroom() != null) ? new ClassRoomBO(
-				bzClass.getBzclassroom()) : null;
-		this.subject = (bzClass.getBzsubject() != null) ? new SubjectBO(
-				bzClass.getBzsubject()) : null;
-		this.teacher = (bzClass.getBzuser() != null) ? new UserBO(
-				bzClass.getBzuser()) : null;
-		this.creation = bzClass.getCreation();
-		this.updated = bzClass.getUpdated();
-		this.enabled = bzClass.isEnabled();
-
-		Set<?> bzNoteDefSet = bzClass.getBznotedefinitions();
-		if (bzNoteDefSet != null && !bzNoteDefSet.isEmpty()) {
-			this.noteDefinitionSet = new HashSet<>();
-			bzNoteDefSet.stream().forEach(
-					(bzNoteDef) -> {
-						this.noteDefinitionSet.add(new NoteDefinitionBO(
-								((Bznotedefinition) bzNoteDef)));
-					});
-		}
+	public ClassBO(final Bzclass bzClass, final ClassRoomBO classRoom, final SubjectBO subject,
+			final UserBO teacher, final Set<NoteDefinitionBO> noteDefinitionSet) {
+		super(bzClass.getId(), bzClass.getName(), bzClass.getCreation(),
+				bzClass.getUpdated(), bzClass.isEnabled());
+		this.classRoom = classRoom;
+		this.subject = subject;
+		this.teacher = teacher;
+		this.noteDefinitionSet = noteDefinitionSet;
 	}
 
 	public ClassRoomBO getClassRoom() {
 		return classRoom;
 	}
 
-	public void setClassRoom(ClassRoomBO classRoom) {
+	public void setClassRoom(final ClassRoomBO classRoom) {
 		this.classRoom = classRoom;
 	}
 
@@ -78,7 +61,7 @@ public class ClassBO extends AbstractBO {
 		return subject;
 	}
 
-	public void setSubject(SubjectBO subject) {
+	public void setSubject(final SubjectBO subject) {
 		this.subject = subject;
 	}
 
@@ -86,7 +69,7 @@ public class ClassBO extends AbstractBO {
 		return teacher;
 	}
 
-	public void setTeacher(UserBO teacher) {
+	public void setTeacher(final UserBO teacher) {
 		this.teacher = teacher;
 	}
 
@@ -94,7 +77,8 @@ public class ClassBO extends AbstractBO {
 		return noteDefinitionSet;
 	}
 
-	public void setNoteDefinitionSet(Set<NoteDefinitionBO> noteDefinitionSet) {
+	public void setNoteDefinitionSet(
+			final Set<NoteDefinitionBO> noteDefinitionSet) {
 		this.noteDefinitionSet = noteDefinitionSet;
 	}
 
@@ -102,7 +86,7 @@ public class ClassBO extends AbstractBO {
 		return idClassRoom;
 	}
 
-	public void setIdClassRoom(int idClassRoom) {
+	public void setIdClassRoom(final int idClassRoom) {
 		this.idClassRoom = idClassRoom;
 	}
 
@@ -110,7 +94,7 @@ public class ClassBO extends AbstractBO {
 		return idSubject;
 	}
 
-	public void setIdSubject(int idSubject) {
+	public void setIdSubject(final int idSubject) {
 		this.idSubject = idSubject;
 	}
 
@@ -118,7 +102,7 @@ public class ClassBO extends AbstractBO {
 		return idTeacher;
 	}
 
-	public void setIdTeacher(int idTeacher) {
+	public void setIdTeacher(final int idTeacher) {
 		this.idTeacher = idTeacher;
 	}
 

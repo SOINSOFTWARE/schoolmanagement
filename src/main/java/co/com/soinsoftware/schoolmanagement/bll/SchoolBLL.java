@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import co.com.soinsoftware.schoolmanagement.dao.SchoolDAO;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzschoolxuser;
 
 /**
  * School business logic layer
@@ -124,5 +125,16 @@ public class SchoolBLL extends AbstractBLL implements
 	protected Set<SchoolBO> getObjectsFromCache() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Set<SchoolBO> buildSchoolSet(final Set<Bzschoolxuser> bzSchoolXUsers) {
+		final Set<SchoolBO> schoolSet = new HashSet<>();
+		if (bzSchoolXUsers != null && !bzSchoolXUsers.isEmpty()) {
+			for (final Bzschoolxuser schoolXuser : bzSchoolXUsers) {
+				final SchoolBO school = new SchoolBO(schoolXuser.getBzschool());
+				schoolSet.add(school);
+			}
+		}
+		return schoolSet;
 	}
 }
