@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.dao.ClassRoomDAO;
+import co.com.soinsoftware.schoolmanagement.dao.ClassRoomXUserDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.soinsoftware.schoolmanagement.entity.GradeBO;
@@ -19,6 +20,9 @@ import co.com.soinsoftware.schoolmanagement.entity.TimeBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserBO;
 import co.com.soinsoftware.schoolmanagement.entity.YearBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroom;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroomxuser;
+import co.com.soinsoftware.schoolmanagement.hibernate.BzclassroomxuserId;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
 
 /**
  * @author Carlos Rodriguez
@@ -34,6 +38,9 @@ public class ClassRoomBLL extends AbstractBLL implements
 
 	@Autowired
 	private ClassRoomDAO classRoomDAO;
+
+	@Autowired
+	private ClassRoomXUserDAO classRoomXUserDAO;
 
 	@Autowired
 	private GradeBLL gradeBLL;
@@ -92,6 +99,7 @@ public class ClassRoomBLL extends AbstractBLL implements
 	@Override
 	public ClassRoomBO findByCode(final int idSchool, final String code,
 			final int identifier) {
+		final YearBO year = yearBLL.findCurrentYear();
 		ClassRoomBO classRoom = (ClassRoomBO) this.getObjectFromCache(
 				CLASSROOM_KEY, code);
 		if (classRoom == null) {
@@ -101,8 +109,9 @@ public class ClassRoomBLL extends AbstractBLL implements
 			}
 		}
 		return (classRoom != null
-				&& classRoom.getSchool().getId().equals(idSchool) && !classRoom
-				.getId().equals(identifier)) ? classRoom : null;
+				&& classRoom.getSchool().getId().equals(idSchool)
+				&& !classRoom.getId().equals(identifier) 
+				&& classRoom.getYear().equals(year)) ? classRoom : null;
 	}
 
 	@Override
@@ -247,5 +256,42 @@ public class ClassRoomBLL extends AbstractBLL implements
 				.getBzclassroomxusers());
 		return new ClassRoomBO(bzClassRoom, school, grade, time, teacher, year,
 				classSet, studentSet);
+	}
+
+	public ClassRoomBO saveClassRoomXStudent(final ClassRoomBO classRoom) {
+		ClassRoomBO savedClassRoom = null;
+		if (classRoom != null && classRoom.getId() != null
+				&& classRoom.getId() > 0 && classRoom.getStudentSet() != null) {
+			final ClassRoomBO cachedClassRoom = this.findByIdentifier(classRoom
+					.getId());
+			for (final UserBO student : classRoom.getStudentSet()) {
+				if (student.getId() != null && student.getId() > 0) {
+					final UserBO cachedStudent = userBLL
+							.findByIdentifier(student.getId());
+					cachedClassRoom.addStudentToStudentSet(cachedStudent);
+					final Bzclassroomxuser bzClassRoomxUser = this
+							.buildClassRoomXUserHibernateEntity(
+									cachedClassRoom, cachedStudent);
+					classRoomXUserDAO.save(bzClassRoomxUser);
+					final Bzclassroom bzClassRoom = this
+							.buildHibernateEntity(cachedClassRoom);
+					this.putObjectInCache(bzClassRoom);
+					savedClassRoom = classRoom;
+				}
+			}
+		}
+		return savedClassRoom;
+	}
+
+	private Bzclassroomxuser buildClassRoomXUserHibernateEntity(
+			final ClassRoomBO classRoom, final UserBO student) {
+		final BzclassroomxuserId bzClassRoomxUserId = new BzclassroomxuserId(
+				classRoom.getId(), student.getId());
+		final Bzclassroom bzClassRoom = this.buildHibernateEntity(classRoom);
+		final Bzuser bzUser = userBLL.buildHibernateEntity(student);
+		final Bzclassroomxuser bzClassRoomxUser = new Bzclassroomxuser(
+				bzClassRoomxUserId, bzClassRoom, bzUser, new Date(),
+				new Date(), true);
+		return bzClassRoomxUser;
 	}
 }

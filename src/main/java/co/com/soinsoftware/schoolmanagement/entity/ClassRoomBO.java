@@ -3,6 +3,7 @@
  */
 package co.com.soinsoftware.schoolmanagement.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -145,6 +146,13 @@ public class ClassRoomBO extends AbstractWithCodeBO implements
 
 	public void setStudentSet(final Set<UserBO> studentSet) {
 		this.studentSet = studentSet;
+	}
+	
+	public void addStudentToStudentSet(final UserBO student) {
+		if (this.studentSet == null) {
+			this.studentSet = new HashSet<>();
+		}
+		this.studentSet.add(student);
 	}
 
 	@Override

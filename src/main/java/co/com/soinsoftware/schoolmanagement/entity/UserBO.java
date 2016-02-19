@@ -53,6 +53,8 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 	private Set<UserTypeBO> userTypeSet;
 
 	private Set<ClassBO> classSet;
+	
+	private ClassRoomBO lastClassRoom;
 
 	public UserBO() {
 		super();
@@ -205,6 +207,14 @@ public class UserBO extends AbstractBO implements Comparable<UserBO> {
 
 	public void setClassSet(final Set<ClassBO> classSet) {
 		this.classSet = classSet;
+	}
+
+	public ClassRoomBO getLastClassRoom() {
+		return lastClassRoom;
+	}
+
+	public void setLastClassRoom(ClassRoomBO lastClassRoom) {
+		this.lastClassRoom = lastClassRoom;
 	}
 
 	@Override

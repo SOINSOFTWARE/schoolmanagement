@@ -54,7 +54,7 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 	@Produces(APPLICATION_JSON)
 	public Set<ClassBO> save(@FormParam(PARAMETER_OBJECT) final String jsonObject) {
 		final Set<ClassBO> classSet = new HashSet<>();
-		final List<ClassBO> classList = new ClassMapper().getObjectSetFromJSON(jsonObject);
+		final List<ClassBO> classList = new ClassMapper().getObjectListFromJSON(jsonObject);
 		if (!classList.isEmpty()) {
 			for(final ClassBO classBO : classList) {
 				final ClassBO savedClass = classBLL.saveRecord(classBO);

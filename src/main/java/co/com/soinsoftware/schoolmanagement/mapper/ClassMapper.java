@@ -28,8 +28,8 @@ public class ClassMapper implements IJsonMappable<ClassBO> {
 		return classBO;
 	}
 
-	public List<ClassBO> getObjectSetFromJSON(String objectAsJSON) {
-		List<ClassBO> classList = new ArrayList<ClassBO>();
+	public List<ClassBO> getObjectListFromJSON(String objectAsJSON) {
+		List<ClassBO> classList = new ArrayList<>();
 		if (objectAsJSON != null && !objectAsJSON.equals("")) {
 			try {
 				classList = JSON_MAPPER.readValue(

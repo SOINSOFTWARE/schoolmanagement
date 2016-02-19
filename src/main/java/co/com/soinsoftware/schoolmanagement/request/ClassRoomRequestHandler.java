@@ -1,5 +1,7 @@
 package co.com.soinsoftware.schoolmanagement.request;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.FormParam;
@@ -66,6 +68,26 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 			LOGGER.info("save function applied to {}", savedClassRoom);
 		}
 		return savedClassRoom;
+	}
+
+	@POST
+	@Path(PATH_SAVE_CLASSROOM_X_STUDENT)
+	@Produces(APPLICATION_JSON)
+	public Set<ClassRoomBO> saveClassRoomxStudent(
+			@FormParam(PARAMETER_OBJECT) final String jsonObject) {
+		final Set<ClassRoomBO> classRoomSet = new HashSet<>();
+		final List<ClassRoomBO> classRoomList = new ClassRoomMapper()
+				.getObjectListFromJSON(jsonObject);
+		if (!classRoomList.isEmpty()) {
+			for (final ClassRoomBO classRoom : classRoomList) {
+				final ClassRoomBO savedClassRoom = classRoomBLL
+						.saveClassRoomXStudent(classRoom);
+				classRoomSet.add(savedClassRoom);
+				LOGGER.info("saveClassRoomxStudent function applied to {}",
+						savedClassRoom);
+			}
+		}
+		return classRoomSet;
 	}
 
 	@GET

@@ -285,9 +285,77 @@ public class UserBLL extends AbstractBLL implements
 			final Set<Bzclassroomxuser> bzClassRoomXUserSet) {
 		final Set<UserBO> userSet = new HashSet<>();
 		for (final Bzclassroomxuser bzClassRoomXuser : bzClassRoomXUserSet) {
-			final UserBO user = this.buildUserBO(bzClassRoomXuser.getBzuser(), false);
-			userSet.add(user);
+			if (bzClassRoomXuser.isEnabled()) {
+				final UserBO user = this.buildUserBO(
+						bzClassRoomXuser.getBzuser(), false);
+				userSet.add(user);
+			}
 		}
 		return userSet;
+	}
+
+	public Set<UserBO> findStudentsNotLinkedToClassRoom(final int idSchool,
+			final Integer grade, final Integer idClassRoom) {
+		final Set<UserBO> userSet = new HashSet<>();
+		final Set<UserBO> cacheUserSet = this.getObjectsFromCache();
+		final int lastYear = yearBLL.findLastYear();
+		final YearBO year = yearBLL.findCurrentYear();
+		final Set<ClassRoomBO> classRoomLastYearSet = classRoomBLL.findBy(
+				idClassRoom, idSchool, String.valueOf(lastYear), grade, null);
+		final Set<ClassRoomBO> classRoomCurrentYearSet = classRoomBLL.findBy(
+				null, idSchool, year.getName(), null, null);
+		final UserTypeBO userType = userTypeBLL.findByCode(idSchool,
+				UserTypeBO.STUDENT, 0);
+		if (cacheUserSet != null) {
+			for (UserBO user : cacheUserSet) {
+				if (this.isLinkedToSchool(user, idSchool)
+						&& this.isLinkedToUserType(user, userType)
+						&& !this.isStudentLinkedToClassRoom(
+								classRoomCurrentYearSet, user)
+						&& ((idClassRoom == null && grade == null) || this
+								.isStudentLinkedToClassRoom(
+										classRoomLastYearSet, user))) {
+					final ClassRoomBO lastClassRoom = this.findLastClassRoom(
+							classRoomLastYearSet, user);
+					user.setLastClassRoom(lastClassRoom);
+					userSet.add(user);
+				}
+			}
+		}
+		return userSet;
+	}
+
+	private boolean isStudentLinkedToClassRoom(
+			final Set<ClassRoomBO> classRoomSet, final UserBO user) {
+		boolean isLinked = false;
+		if (classRoomSet != null) {
+			for (final ClassRoomBO classRoom : classRoomSet) {
+				for (final UserBO studentInClassRoom : classRoom
+						.getStudentSet()) {
+					if (studentInClassRoom.equals(user)) {
+						isLinked = true;
+						break;
+					}
+				}
+			}
+		}
+		return isLinked;
+	}
+
+	private ClassRoomBO findLastClassRoom(final Set<ClassRoomBO> classRoomSet,
+			final UserBO user) {
+		ClassRoomBO lastClassRoom = null;
+		if (classRoomSet != null) {
+			for (final ClassRoomBO classRoom : classRoomSet) {
+				for (final UserBO studentInClassRoom : classRoom
+						.getStudentSet()) {
+					if (studentInClassRoom.equals(user)) {
+						lastClassRoom = classRoom;
+						break;
+					}
+				}
+			}
+		}
+		return lastClassRoom;
 	}
 }

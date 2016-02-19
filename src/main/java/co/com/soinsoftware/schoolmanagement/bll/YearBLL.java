@@ -33,8 +33,7 @@ public class YearBLL extends AbstractBLL implements
 
 	@Override
 	public Set<YearBO> findAll(final int idSchool) {
-		return this.isCacheEmpty(YEAR_KEY) ? this.selectAndPutInCache() : this
-				.getObjectsFromCache();
+		return this.findAll();
 	}
 
 	@Override
@@ -64,12 +63,6 @@ public class YearBLL extends AbstractBLL implements
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see co.com.carpcosoftware.schoolmanagement.bll.IBusinessLogicLayer#
-	 * selectAndPutInCache()
-	 */
 	@Override
 	public Set<YearBO> selectAndPutInCache() {
 		final Set<Bzyear> bzYearSet = this.yearDAO.select();
@@ -123,6 +116,11 @@ public class YearBLL extends AbstractBLL implements
 			}
 		}
 		return currentYear;
+	}
+	
+	public int findLastYear() {
+		final YearBO year = findCurrentYear();
+		return (Integer.valueOf(year.getName()) - 1);
 	}
 
 	@Override

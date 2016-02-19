@@ -16,8 +16,9 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @since 14/10/2015
  */
 @Repository
-public class ClassRoomXUserDAO extends AbstractDAO implements IDataAccesable<Bzclassroomxuser> {
-	
+public class ClassRoomXUserDAO extends AbstractDAO implements
+		IDataAccesable<Bzclassroomxuser> {
+
 	public static final String COLUMN_IDENTIFIER_CLASSROOM = "idClassroom";
 	public static final String COLUMN_IDENTIFIER_USER = "idUser";
 
@@ -25,17 +26,19 @@ public class ClassRoomXUserDAO extends AbstractDAO implements IDataAccesable<Bzc
 	@Override
 	public Set<Bzclassroomxuser> select() {
 		Set<Bzclassroomxuser> bzClassRoomXUserSet = null;
-		Chronometer chrono = this.startNewChronometer();        
-        try {
-            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzClassRoomXUserSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomXUserDAO.class.getName() + ", Select function");
-        }
-        return bzClassRoomXUserSet;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			Query query = this.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzClassRoomXUserSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomXUserDAO.class.getName() + ", Select function");
+		}
+		return bzClassRoomXUserSet;
 	}
 
 	@Override
@@ -47,20 +50,25 @@ public class ClassRoomXUserDAO extends AbstractDAO implements IDataAccesable<Bzc
 	public Bzclassroomxuser selectByCode(String code) {
 		return null;
 	}
-	
-	public Bzclassroomxuser selectByIdentifier(Integer idClassRoom, Integer idUser) {
+
+	public Bzclassroomxuser selectByIdentifier(Integer idClassRoom,
+			Integer idUser) {
 		Bzclassroomxuser bzClassRoomXUser = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER_CLASSROOM, idClassRoom);
-        	query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
-        	bzClassRoomXUser = (Bzclassroomxuser) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, ClassRoomXUserDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = this.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER_CLASSROOM, idClassRoom);
+			query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
+			bzClassRoomXUser = (query.list().isEmpty()) ? null
+					: (Bzclassroomxuser) query.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomXUserDAO.class.getName()
+							+ ", selectByIdentifier function");
+		}
 		return bzClassRoomXUser;
 	}
 
@@ -68,36 +76,37 @@ public class ClassRoomXUserDAO extends AbstractDAO implements IDataAccesable<Bzc
 	public void save(Bzclassroomxuser record) {
 		Chronometer chrono = this.startNewChronometer();
 		try {
-			boolean isNew = (this.selectByIdentifier(record.getBzclassroom().getId(), record.getBzuser().getId()) == null) 
-					? true : false;
+			boolean isNew = (this.selectByIdentifier(record.getBzclassroom()
+					.getId(), record.getBzuser().getId()) == null) ? true
+					: false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomDAO.class.getName() + ", save function");
+		}
 	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_CLASSROOM_X_USER);		
+		sql.append(TABLE_NAME_CLASSROOM_X_USER);
 		return sql.toString();
 	}
-	
+
 	@Override
 	protected String getSelectStatementByIdentifier() {
-		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
+		StringBuilder sql = new StringBuilder(
+				this.getSelectStatementWithoutWhere());
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_IDENTIFIER_CLASSROOM);
 		sql.append(PARAMETER + COLUMN_IDENTIFIER_CLASSROOM);
 		sql.append(STATEMENT_AND);
 		sql.append(COLUMN_IDENTIFIER_USER);
 		sql.append(PARAMETER + COLUMN_IDENTIFIER_USER);
-		sql.append(STATEMENT_AND);
-		sql.append(COLUMN_ENABLED + " = 1");
-		return sql.toString();		
+		return sql.toString();
 	}
 }
