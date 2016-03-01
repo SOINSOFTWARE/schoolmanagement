@@ -28,15 +28,17 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 	public Set<Bzschool> select() {
 		Set<Bzschool> bzSchoolSet = null;
 		Chronometer chrono = this.startNewChronometer();
-		
-        try {
-        	Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzSchoolSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName() + ", Select function");
-        }
+
+		try {
+			Query query = this.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzSchoolSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
+					+ ", Select function");
+		}
 		return bzSchoolSet;
 	}
 
@@ -45,14 +47,17 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 		Bzschool bzSchool = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER, identifier);
-            bzSchool = (Bzschool) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = this.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER, identifier);
+			bzSchool = (query.list().isEmpty()) ? null : (Bzschool) query
+					.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
+					+ ", selectByIdentifier function");
+		}
 		return bzSchool;
 	}
 
@@ -61,14 +66,16 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 		Bzschool bzSchool = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByCode());
-        	query.setParameter(COLUMN_CODE, code);
-            bzSchool = (Bzschool) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName() + ", selectByCode function");
-        }
+			Query query = this.createQuery(this.getSelectStatementByCode());
+			query.setParameter(COLUMN_CODE, code);
+			bzSchool = (query.list().isEmpty()) ? null : (Bzschool) query
+					.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
+					+ ", selectByCode function");
+		}
 		return bzSchool;
 	}
 
@@ -79,18 +86,19 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
+					+ ", save function");
+		}
 	}
-	
+
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_SCHOOL);		
+		sql.append(TABLE_NAME_SCHOOL);
 		return sql.toString();
 	}
 }

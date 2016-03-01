@@ -5,6 +5,7 @@ package co.com.soinsoftware.schoolmanagement.request;
 
 import java.util.Set;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,45 +27,55 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
  * @since 10/03/2015
  */
 @Path("/schoolmanagement/school/")
-public class SchoolRequestHandler {
-	
-	/**
-	 * {@link SchoolBLL} object
-	 */
+public class SchoolRequestHandler extends AbstractRequestHandler {
+
 	@Autowired
 	private SchoolBLL schoolBLL = ServiceLocator.getBean(SchoolBLL.class);
 
 	@GET
-	@Path("all")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Path(PATH_ALL)
+	@Produces(APPLICATION_JSON)
 	public Set<SchoolBO> findAll() {
-		return schoolBLL.findAll();
+		final Set<SchoolBO> schoolSet = schoolBLL.findAll();
+		if (schoolSet != null) {
+			LOGGER.info("findAll function loads {}", schoolSet.toString());
+		}
+		return schoolSet;
 	}
 	
 	@GET
-	@Path("validate")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String findByCode(@QueryParam("code") String code) {
-		boolean found = false;
-		SchoolBO schoolBO = schoolBLL.findByCode(0, code, 0);
-		if (schoolBO != null) {
-			found = true;
+	@Path(PATH_BY)
+	@Produces(APPLICATION_JSON)
+	public SchoolBO findByIdentifier(
+			@QueryParam(PARAMETER_SCHOOL_ID) final int identifier) {
+		final SchoolBO school = this.schoolBLL.findByIdentifier(identifier);
+		if (school != null) {
+			LOGGER.info("findBy function loads {}", school.toString());
 		}
-		return Boolean.toString(found);
+		return school;
 	}
-	
+
+	@GET
+	@Path(PATH_VALIDATE)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String validateCode(
+			@QueryParam(PARAMETER_SCHOOL_ID) final int identifier,
+			@QueryParam(PARAMETER_CODE) final String code) {
+		boolean validCode = false;
+		SchoolBO schoolBO = schoolBLL.findByCode(0, code, 0);
+		if (schoolBO == null
+				|| (schoolBO != null && schoolBO.getId().equals(identifier))) {
+			validCode = true;
+		}
+		LOGGER.info("code {} is valid = {}", code, validCode);
+		return Boolean.toString(validCode);
+	}
+
 	@POST
-	@Path("save")
-	@Produces(MediaType.APPLICATION_JSON)
-	public SchoolBO save(String jsonObject) {
+	@Path(PATH_SAVE)
+	@Produces(APPLICATION_JSON)
+	public SchoolBO save(@FormParam(PARAMETER_OBJECT) final String jsonObject) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	@GET
-	@Path("by")
-	@Produces(MediaType.APPLICATION_JSON)
-	public SchoolBO findByIdentifier(@QueryParam("id") int identifier) {
-		return schoolBLL.findByIdentifier(identifier);
 	}
 }

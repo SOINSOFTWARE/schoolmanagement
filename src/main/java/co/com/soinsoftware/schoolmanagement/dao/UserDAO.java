@@ -90,7 +90,7 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-			LOGGER.error(ex.getMessage());
+			LOGGER.error(ex.getMessage(), ex);
 		} finally {
 			chrono.stop();
 			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()

@@ -2,6 +2,7 @@ package co.com.soinsoftware.schoolmanagement.request;
 
 import java.util.Set;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -40,23 +41,27 @@ public class SubjectRequestHandler extends AbstractRequestHandler {
 	@Produces(APPLICATION_JSON)
 	public Set<SubjectBO> findExcludingCurrentClass(
 			@QueryParam(PARAMETER_CLASSROOM_ID) final Integer idClassRoom) {
-		final Set<SubjectBO> subjectSet = subjectBLL.findExcludingClass(idClassRoom);
-		LOGGER.info("findExcludingCurrentClass function loads {}", subjectSet.toString());
+		final Set<SubjectBO> subjectSet = subjectBLL
+				.findExcludingClass(idClassRoom);
+		LOGGER.info("findExcludingCurrentClass function loads {}",
+				subjectSet.toString());
 		return subjectSet;
-	}
-
-	@POST
-	@Path(PATH_SAVE)
-	@Produces(APPLICATION_JSON)
-	public SubjectBO save(String jsonObject) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@GET
 	@Path(PATH_VALIDATE)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String findByCode(final String code) {
+	public String validateCode(
+			@QueryParam(PARAMETER_SCHOOL_ID) final int identifier,
+			@QueryParam(PARAMETER_CODE) final String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@POST
+	@Path(PATH_SAVE)
+	@Produces(APPLICATION_JSON)
+	public SubjectBO save(@FormParam(PARAMETER_OBJECT) final String jsonObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}

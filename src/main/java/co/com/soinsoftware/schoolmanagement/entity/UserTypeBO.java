@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
 
 /**
@@ -18,6 +20,7 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
  * @since 24/03/2015
  */
 @XmlRootElement(name = "userTypes")
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class UserTypeBO extends AbstractWithCodeBO {
 
 	private static final long serialVersionUID = -2994642594740216071L;

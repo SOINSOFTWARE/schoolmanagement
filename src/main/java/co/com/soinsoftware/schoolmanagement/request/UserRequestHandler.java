@@ -2,15 +2,19 @@ package co.com.soinsoftware.schoolmanagement.request;
 
 import java.util.Set;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import co.com.soinsoftware.schoolmanagement.bll.UserBLL;
 import co.com.soinsoftware.schoolmanagement.entity.UserBO;
+import co.com.soinsoftware.schoolmanagement.mapper.UserMapper;
 import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
@@ -44,7 +48,9 @@ public class UserRequestHandler extends AbstractRequestHandler {
 		} else {
 			user = userBLL.findByIdentifier(identifier);
 		}
-		LOGGER.info("findBy function loads {}", user.toString());
+		if (user != null) {
+			LOGGER.info("findBy function loads {}", user.toString());
+		}
 		return user;
 	}
 
@@ -83,5 +89,34 @@ public class UserRequestHandler extends AbstractRequestHandler {
 		LOGGER.info("findStudentsNotLinkedToClassRooms function loads {}",
 				userSet.toString());
 		return userSet;
+	}
+
+	@POST
+	@Path(PATH_SAVE)
+	@Produces(APPLICATION_JSON)
+	public UserBO save(@FormParam(PARAMETER_OBJECT) final String jsonObject) {
+		UserBO savedUser = null;
+		final UserBO user = new UserMapper().geObjectFromJSON(jsonObject);
+		if (user != null) {
+			savedUser = this.userBLL.saveRecord(user);
+			LOGGER.info("save function applied to {}", savedUser);
+		}
+		return savedUser;
+	}
+
+	@GET
+	@Path(PATH_VALIDATE)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String validateExistingByDocumentNumber(
+			@QueryParam(PARAMETER_USER_ID) final int identifier,
+			@QueryParam(PARAMETER_DOCUMENT_NUMBER) final String documentNumber) {
+		boolean validCode = false;
+		final UserBO user = userBLL.findByCode(0, documentNumber, 0);
+		if (user == null || (user != null && user.getId().equals(identifier))) {
+			validCode = true;
+		}
+		LOGGER.info("documentNumber {} is valid = {}", documentNumber,
+				validCode);
+		return Boolean.toString(validCode);
 	}
 }

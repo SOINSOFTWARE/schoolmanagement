@@ -10,6 +10,8 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
 
 /**
@@ -20,6 +22,7 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
  * @since 24/03/2015
  */
 @XmlRootElement(name = "users")
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class UserBO extends AbstractBO implements Comparable<UserBO> {
 
 	private static final long serialVersionUID = 1337704244736040283L;

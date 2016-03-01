@@ -42,12 +42,11 @@ public class SchoolBLL extends AbstractBLL implements
 	@Override
 	public SchoolBO findByIdentifier(final Integer identifier) {
 		SchoolBO schoolBO = null;
-		if (!this.isCacheEmpty(SCHOOL_KEY)) {
+		if (this.isCacheEmpty(SCHOOL_KEY)) {
+			schoolBO = this.selectByIdentifierAndPutInCache(identifier);
+		} else {
 			schoolBO = (SchoolBO) this.getObjectFromCache(SCHOOL_KEY,
 					identifier);
-		}
-		if (schoolBO == null) {
-			schoolBO = this.selectByIdentifierAndPutInCache(identifier);
 		}
 		if (schoolBO != null) {
 			LOGGER.info("school = {} was loaded successfully",
@@ -121,12 +120,12 @@ public class SchoolBLL extends AbstractBLL implements
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Set<SchoolBO> getObjectsFromCache() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getObjectsFromCache(SCHOOL_KEY);
 	}
-	
+
 	public Set<SchoolBO> buildSchoolSet(final Set<Bzschoolxuser> bzSchoolXUsers) {
 		final Set<SchoolBO> schoolSet = new HashSet<>();
 		if (bzSchoolXUsers != null && !bzSchoolXUsers.isEmpty()) {

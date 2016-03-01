@@ -132,7 +132,7 @@ public class ClassRoomBLL extends AbstractBLL implements
 			record.setYear(yearBLL.findByIdentifier(record.getIdYear()));
 		}
 		record.setUpdated(new Date());
-		Bzclassroom bzClassRoom = this.buildHibernateEntity(record);
+		final Bzclassroom bzClassRoom = this.buildHibernateEntity(record);
 		this.classRoomDAO.save(bzClassRoom);
 		return this.putObjectInCache(bzClassRoom);
 	}

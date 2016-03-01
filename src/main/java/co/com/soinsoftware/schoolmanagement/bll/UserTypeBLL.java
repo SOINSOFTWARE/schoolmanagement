@@ -25,7 +25,7 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertypexaccess;
  */
 @Service
 public class UserTypeBLL extends AbstractBLL implements
-		IBusinessLogicLayer<UserTypeBO, Bzuserxusertype> {
+		IBusinessLogicLayer<UserTypeBO, Cnusertype> {
 
 	@Autowired
 	private UserTypeDAO userTypeDAO;
@@ -138,15 +138,23 @@ public class UserTypeBLL extends AbstractBLL implements
 	}
 
 	@Override
-	public UserTypeBO putObjectInCache(Bzuserxusertype record) {
+	public UserTypeBO putObjectInCache(Cnusertype record) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Bzuserxusertype buildHibernateEntity(UserTypeBO record) {
-		// TODO Auto-generated method stub
-		return null;
+	public Cnusertype buildHibernateEntity(UserTypeBO record) {
+		Cnusertype cnUserType = new Cnusertype();
+		if (record != null) {
+			cnUserType.setId(record.getId());
+			cnUserType.setCode(record.getCode());
+			cnUserType.setName(record.getName());
+			cnUserType.setCreation(record.getCreation());
+			cnUserType.setUpdated(record.getUpdated());
+			cnUserType.setEnabled(record.isEnabled());
+		}
+		return cnUserType;
 	}
 
 	@SuppressWarnings("unchecked")

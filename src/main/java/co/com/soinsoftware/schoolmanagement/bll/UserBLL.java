@@ -1,5 +1,6 @@
 package co.com.soinsoftware.schoolmanagement.bll;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,7 +9,9 @@ import net.sf.ehcache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.com.soinsoftware.schoolmanagement.dao.SchoolXUserDAO;
 import co.com.soinsoftware.schoolmanagement.dao.UserDAO;
+import co.com.soinsoftware.schoolmanagement.dao.UserXUserTypeDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
@@ -16,7 +19,13 @@ import co.com.soinsoftware.schoolmanagement.entity.UserBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserTypeBO;
 import co.com.soinsoftware.schoolmanagement.entity.YearBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroomxuser;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzschoolxuser;
+import co.com.soinsoftware.schoolmanagement.hibernate.BzschoolxuserId;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzuserxusertype;
+import co.com.soinsoftware.schoolmanagement.hibernate.BzuserxusertypeId;
+import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
 
 /**
  * User business logic layer
@@ -39,10 +48,16 @@ public class UserBLL extends AbstractBLL implements
 	private SchoolBLL schoolBLL;
 
 	@Autowired
+	private SchoolXUserDAO schoolxUserDAO;
+
+	@Autowired
 	private UserDAO userDAO;
 
 	@Autowired
 	private UserTypeBLL userTypeBLL;
+
+	@Autowired
+	private UserXUserTypeDAO userxUserTypeDAO;
 
 	@Autowired
 	private YearBLL yearBLL;
@@ -67,23 +82,33 @@ public class UserBLL extends AbstractBLL implements
 		} else {
 			userBO = (UserBO) this.getObjectFromCache(USER_KEY, identifier);
 		}
-		LOGGER.info("User = {} was loaded successfully", userBO.toString());
+		if (userBO != null) {
+			LOGGER.info("User = {} was loaded successfully", userBO.toString());
+		}
 		return userBO;
 	}
 
 	@Override
 	public UserBO findByCode(final int idSchool, final String code,
 			final int identifier) {
-		UserBO userBO = this.getUserBOFromCache(code);
-		if (userBO == null) {
-			userBO = this.selectByDocumentNumer(code);
+		UserBO user = this.getUserFromCacheUsingDocNumber(code);
+		if (user == null) {
+			user = this.selectByDocumentNumer(code);
 		}
-		return userBO;
+		return (user != null && user.isEnabled()) ? user : null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public UserBO saveRecord(final UserBO record) {
-		return null;
+		this.setPreviousData(record);
+		record.setUpdated(new Date());
+		final Bzuser bzUser = this.buildHibernateEntity(record);
+		this.userDAO.save(bzUser);
+		this.saveSchoolXUserRecords(bzUser.getId(), bzUser.getBzschoolxusers());
+		this.saveUserXUserTypeRecords(bzUser.getId(),
+				bzUser.getBzuserxusertypes());
+		return this.putObjectInCache(bzUser);
 	}
 
 	@Override
@@ -134,7 +159,7 @@ public class UserBLL extends AbstractBLL implements
 		return userBO;
 	}
 
-	public UserBO getUserBOFromCache(final String documentNumber) {
+	public UserBO getUserFromCacheUsingDocNumber(final String documentNumber) {
 		UserBO userBO = null;
 		final Cache cache = this.getCacheUsingKey(USER_KEY);
 		for (Object key : cache.getKeys()) {
@@ -242,21 +267,45 @@ public class UserBLL extends AbstractBLL implements
 			bzUser.setPassword(userBO.getPassword());
 			bzUser.setGender(userBO.getGender());
 			bzUser.setPhoto(userBO.getPhoto());
-			bzUser.setBzuserByIdGuardian1(this.buildHibernateEntity(userBO
-					.getGuardian1()));
-			bzUser.setBzuserByIdGuardian2(this.buildHibernateEntity(userBO
-					.getGuardian2()));
+			if (userBO.getGuardian1() != null) {
+				bzUser.setBzuserByIdGuardian1(this.buildHibernateEntity(userBO
+						.getGuardian1()));
+			}
+			if (userBO.getGuardian2() != null) {
+				bzUser.setBzuserByIdGuardian2(this.buildHibernateEntity(userBO
+						.getGuardian2()));
+			}
 			bzUser.setCreation(userBO.getCreation());
 			bzUser.setUpdated(userBO.getUpdated());
 			bzUser.setEnabled(userBO.isEnabled());
+			if (userBO.getSchoolSet() != null) {
+				Set<Bzschoolxuser> bzschoolxusers = new HashSet<>();
+				for (final SchoolBO school : userBO.getSchoolSet()) {
+					bzschoolxusers.add(this.buildSchoolXUserHibernateEntity(
+							school, bzUser));
+				}
+				bzUser.setBzschoolxusers(bzschoolxusers);
+			}
+			if (userBO.getUserTypeSet() != null) {
+				Set<Bzuserxusertype> bzuserxusertypes = new HashSet<>();
+				for (final UserTypeBO userType : userBO.getUserTypeSet()) {
+					bzuserxusertypes
+							.add(this.buildUserXUserTypeHibernateEntity(
+									userType, bzUser));
+				}
+				bzUser.setBzuserxusertypes(bzuserxusertypes);
+			}
 		}
 		return bzUser;
 	}
 
 	@Override
 	public UserBO putObjectInCache(Bzuser record) {
-		// TODO Auto-generated method stub
-		return null;
+		final Bzuser queryResult = this.userDAO.selectByIdentifier(record
+				.getId());
+		final UserBO userBO = this.buildUserBO(queryResult, true);
+		this.putObjectInCache(USER_KEY, userBO);
+		return userBO;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -357,5 +406,58 @@ public class UserBLL extends AbstractBLL implements
 			}
 		}
 		return lastClassRoom;
+	}
+
+	private void setPreviousData(final UserBO record) {
+		if (record.getId() == null || record.getId() == 0) {
+			record.setPassword("123456");
+			record.setCreation(new Date());
+		} else {
+			final UserBO cacheUser = (UserBO) this.getObjectFromCache(USER_KEY,
+					record.getId());
+			record.setPassword(cacheUser.getPassword());
+			record.setCreation(cacheUser.getCreation());
+			if (record.getPhoto() == null && cacheUser.getPhoto() != null) {
+				record.setPhoto(cacheUser.getPhoto());
+			}
+		}
+	}
+
+	private Bzschoolxuser buildSchoolXUserHibernateEntity(
+			final SchoolBO school, final Bzuser bzUser) {
+		final BzschoolxuserId bzSchoolxUserId = new BzschoolxuserId(
+				school.getId(), bzUser.getId());
+		final Bzschool bzSchool = schoolBLL.buildHibernateEntity(school);
+		final Bzschoolxuser bzSchoolxUser = new Bzschoolxuser(bzSchoolxUserId,
+				bzSchool, bzUser, new Date(), new Date(), true);
+		return bzSchoolxUser;
+	}
+
+	private Bzuserxusertype buildUserXUserTypeHibernateEntity(
+			final UserTypeBO userType, final Bzuser bzUser) {
+		final BzuserxusertypeId bzUserXUserTypeId = new BzuserxusertypeId(
+				bzUser.getId(), userType.getId());
+		final Cnusertype cnUserType = userTypeBLL
+				.buildHibernateEntity(userType);
+		final Bzuserxusertype bzUserxUserType = new Bzuserxusertype(
+				bzUserXUserTypeId, bzUser, cnUserType, new Date(), new Date(),
+				true);
+		return bzUserxUserType;
+	}
+
+	private void saveSchoolXUserRecords(final int idUser,
+			final Set<Bzschoolxuser> bzSchoolxUserSet) {
+		for (final Bzschoolxuser bzSchoolxUser : bzSchoolxUserSet) {
+			bzSchoolxUser.getId().setIdUser(idUser);
+			this.schoolxUserDAO.save(bzSchoolxUser);
+		}
+	}
+
+	private void saveUserXUserTypeRecords(final int idUser,
+			final Set<Bzuserxusertype> bzUserxUserTypeSet) {
+		for (final Bzuserxusertype bzUserxUserType : bzUserxUserTypeSet) {
+			bzUserxUserType.getId().setIdUser(idUser);
+			this.userxUserTypeDAO.save(bzUserxUserType);
+		}
 	}
 }
