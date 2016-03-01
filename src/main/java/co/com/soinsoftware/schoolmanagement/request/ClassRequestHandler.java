@@ -43,8 +43,9 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 	@Produces(APPLICATION_JSON)
 	public Set<ClassBO> findBy(
 			@QueryParam(PARAMETER_CLASSROOM_ID) final int classRoomId,
-			@QueryParam(PARAMETER_SCHOOL_ID) final int schoolId) {
-		final Set<ClassBO> classSet = classBLL.findBy(schoolId, classRoomId);
+			@QueryParam(PARAMETER_SCHOOL_ID) final int schoolId,
+			@QueryParam(PARAMETER_USER_ID) final int idTeacher) {
+		final Set<ClassBO> classSet = classBLL.findBy(schoolId, classRoomId, idTeacher);
 		LOGGER.info("findBy function loads {}", classSet.toString());
 		return classSet;
 	}

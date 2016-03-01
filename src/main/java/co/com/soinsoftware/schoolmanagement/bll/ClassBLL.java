@@ -73,12 +73,14 @@ public class ClassBLL extends AbstractBLL implements
 		return null;
 	}
 
-	public Set<ClassBO> findBy(final int idSchool, final int idClassRoom) {
+	public Set<ClassBO> findBy(final int idSchool, final int idClassRoom,
+			final int idTeacher) {
 		final Set<ClassBO> classSet = new HashSet<>();
 		final Set<ClassBO> cacheClassSet = this.findAll(idSchool);
 		if (cacheClassSet != null && !cacheClassSet.isEmpty()) {
 			for (final ClassBO classBO : cacheClassSet) {
-				if (classBO.getClassRoom().getId().equals(idClassRoom)) {
+				if ((classBO.getClassRoom().getId().equals(idClassRoom) && idTeacher == 0)
+						|| (classBO.getTeacher().getId().equals(idTeacher) && idClassRoom == 0)) {
 					classSet.add(classBO);
 				}
 			}
@@ -193,7 +195,8 @@ public class ClassBLL extends AbstractBLL implements
 				.selectByIdentifier(bzClass.getId());
 		final ClassBO classBO = this.buildClassBO(queryResult);
 		this.putObjectInCache(CLASS_KEY, classBO);
-		classRoomBLL.selectByIdentifierAndPutInCache(bzClass.getBzclassroom().getId());
+		classRoomBLL.selectByIdentifierAndPutInCache(bzClass.getBzclassroom()
+				.getId());
 		return classBO;
 	}
 
