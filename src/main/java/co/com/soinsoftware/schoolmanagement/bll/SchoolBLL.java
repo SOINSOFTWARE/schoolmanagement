@@ -130,8 +130,10 @@ public class SchoolBLL extends AbstractBLL implements
 		final Set<SchoolBO> schoolSet = new HashSet<>();
 		if (bzSchoolXUsers != null && !bzSchoolXUsers.isEmpty()) {
 			for (final Bzschoolxuser schoolXuser : bzSchoolXUsers) {
-				final SchoolBO school = new SchoolBO(schoolXuser.getBzschool());
-				schoolSet.add(school);
+				if (schoolXuser.isEnabled()) {
+					final SchoolBO school = new SchoolBO(schoolXuser.getBzschool());
+					schoolSet.add(school);
+				}
 			}
 		}
 		return schoolSet;

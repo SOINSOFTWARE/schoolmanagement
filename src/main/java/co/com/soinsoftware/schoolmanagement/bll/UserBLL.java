@@ -429,7 +429,7 @@ public class UserBLL extends AbstractBLL implements
 				school.getId(), bzUser.getId());
 		final Bzschool bzSchool = schoolBLL.buildHibernateEntity(school);
 		final Bzschoolxuser bzSchoolxUser = new Bzschoolxuser(bzSchoolxUserId,
-				bzSchool, bzUser, new Date(), new Date(), true);
+				bzSchool, bzUser, new Date(), new Date(), school.isEnabled());
 		return bzSchoolxUser;
 	}
 
