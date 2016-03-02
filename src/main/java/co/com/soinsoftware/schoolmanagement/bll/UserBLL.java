@@ -101,6 +101,12 @@ public class UserBLL extends AbstractBLL implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public UserBO saveRecord(final UserBO record) {
+		if (record.getId() == null || record.getId().equals(0)) {
+			final UserBO cacheUser = this.findByCode(0, record.getDocumentNumber(), 0);
+			if (cacheUser != null) {
+				record.setId(cacheUser.getId());
+			}
+		}
 		this.setPreviousData(record);
 		record.setUpdated(new Date());
 		final Bzuser bzUser = this.buildHibernateEntity(record);

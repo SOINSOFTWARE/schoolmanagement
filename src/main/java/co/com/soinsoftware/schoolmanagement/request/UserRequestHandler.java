@@ -109,10 +109,15 @@ public class UserRequestHandler extends AbstractRequestHandler {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String validateExistingByDocumentNumber(
 			@QueryParam(PARAMETER_USER_ID) final int identifier,
-			@QueryParam(PARAMETER_DOCUMENT_NUMBER) final String documentNumber) {
+			@QueryParam(PARAMETER_DOCUMENT_NUMBER) final String documentNumber,
+			@QueryParam(PARAMETER_SCHOOL_ID) final int schoolId) {
 		boolean validCode = false;
 		final UserBO user = userBLL.findByCode(0, documentNumber, 0);
-		if (user == null || (user != null && user.getId().equals(identifier))) {
+		boolean validId = (user != null && user.getId().equals(identifier));
+		boolean isLinkedToSchool = this.userBLL
+				.isLinkedToSchool(user, schoolId);
+		if (user == null || (validId && isLinkedToSchool)
+				|| (!validId && !isLinkedToSchool)) {
 			validCode = true;
 		}
 		LOGGER.info("documentNumber {} is valid = {}", documentNumber,
