@@ -110,8 +110,8 @@ public class ClassRoomBLL extends AbstractBLL implements
 		}
 		return (classRoom != null
 				&& classRoom.getSchool().getId().equals(idSchool)
-				&& !classRoom.getId().equals(identifier) 
-				&& classRoom.getYear().equals(year)) ? classRoom : null;
+				&& !classRoom.getId().equals(identifier) && classRoom.getYear()
+				.equals(year)) ? classRoom : null;
 	}
 
 	@Override
@@ -176,8 +176,9 @@ public class ClassRoomBLL extends AbstractBLL implements
 		return classRoomBOSet;
 	}
 
-	public Set<ClassRoomBO> findBy(Integer classRoomId, int schoolId,
-			String year, Integer grade, Integer time) {
+	public Set<ClassRoomBO> findBy(final Integer classRoomId,
+			final int schoolId, final String year, final Integer grade,
+			final Integer time, final boolean refresh) {
 		Set<ClassRoomBO> classRoomBOSet = new HashSet<>();
 		Set<ClassRoomBO> cacheClassRoomBOSet = this.getObjectsFromCache();
 		if (cacheClassRoomBOSet != null) {
@@ -192,9 +193,14 @@ public class ClassRoomBLL extends AbstractBLL implements
 						&& (time == null || timeBO.getId().equals(time))
 						&& (classRoomId == null || classRoomBO.getId().equals(
 								classRoomId)) && classRoomBO.isEnabled()) {
-					//Update classRoomBO object before add it to set because the
-					//student information could be changed
-					classRoomBO = this.selectByIdentifierAndPutInCache(classRoomBO.getId());
+					// Update classRoomBO object before add it to set because
+					// the
+					// student information could be changed
+					if (refresh) {
+						classRoomBO = this
+								.selectByIdentifierAndPutInCache(classRoomBO
+										.getId());
+					}
 					classRoomBOSet.add(classRoomBO);
 					LOGGER.info("ClassRoomBO object loaded: {}", classRoomBO);
 				}
@@ -272,9 +278,12 @@ public class ClassRoomBLL extends AbstractBLL implements
 					final UserBO cachedStudent = userBLL
 							.findByIdentifier(student.getId());
 					cachedClassRoom.addStudentToStudentSet(cachedStudent);
+					this.updatePreviousClassRoomXUserInSameYear(
+							cachedClassRoom.getSchool(), cachedStudent);
+					;
 					final Bzclassroomxuser bzClassRoomxUser = this
 							.buildClassRoomXUserHibernateEntity(
-									cachedClassRoom, cachedStudent);
+									cachedClassRoom, cachedStudent, true);
 					classRoomXUserDAO.save(bzClassRoomxUser);
 					final Bzclassroom bzClassRoom = this
 							.buildHibernateEntity(cachedClassRoom);
@@ -286,15 +295,39 @@ public class ClassRoomBLL extends AbstractBLL implements
 		return savedClassRoom;
 	}
 
+	private void updatePreviousClassRoomXUserInSameYear(final SchoolBO school,
+			final UserBO user) {
+		final YearBO year = this.yearBLL.findCurrentYear();
+		final Set<ClassRoomBO> classRoomSet = this.findBy(null, school.getId(),
+				year.getName(), null, null, true);
+		if (classRoomSet != null && !classRoomSet.isEmpty()) {
+			for (final ClassRoomBO classRoom : classRoomSet) {
+				if (classRoom.getStudentSet() != null
+						&& !classRoom.getStudentSet().isEmpty()
+						&& classRoom.getStudentSet().contains(user)) {
+					final Bzclassroomxuser bzClassRoomxUser = this
+							.buildClassRoomXUserHibernateEntity(classRoom,
+									user, false);
+					classRoomXUserDAO.save(bzClassRoomxUser);
+					final Bzclassroom bzClassRoom = this
+							.buildHibernateEntity(classRoom);
+					this.putObjectInCache(bzClassRoom);
+					break;
+				}
+			}
+		}
+	}
+
 	private Bzclassroomxuser buildClassRoomXUserHibernateEntity(
-			final ClassRoomBO classRoom, final UserBO student) {
+			final ClassRoomBO classRoom, final UserBO student,
+			final boolean enabled) {
 		final BzclassroomxuserId bzClassRoomxUserId = new BzclassroomxuserId(
 				classRoom.getId(), student.getId());
 		final Bzclassroom bzClassRoom = this.buildHibernateEntity(classRoom);
 		final Bzuser bzUser = userBLL.buildHibernateEntity(student);
 		final Bzclassroomxuser bzClassRoomxUser = new Bzclassroomxuser(
 				bzClassRoomxUserId, bzClassRoom, bzUser, new Date(),
-				new Date(), true);
+				new Date(), enabled);
 		return bzClassRoomxUser;
 	}
 }

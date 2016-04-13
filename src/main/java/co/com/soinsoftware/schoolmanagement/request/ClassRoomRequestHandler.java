@@ -51,7 +51,7 @@ public class ClassRoomRequestHandler extends AbstractRequestHandler {
 			@QueryParam(PARAMETER_GRADE) final Integer grade,
 			@QueryParam(PARAMETER_TIME) final Integer time) {
 		final Set<ClassRoomBO> classRoomSet = classRoomBLL.findBy(classRoomId,
-				schoolId, year, grade, time);
+				schoolId, year, grade, time, true);
 		LOGGER.info("findBy function loads {}", classRoomSet.toString());
 		return classRoomSet;
 	}

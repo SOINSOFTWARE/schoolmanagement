@@ -204,7 +204,7 @@ public class UserBLL extends AbstractBLL implements
 		final Set<UserBO> cacheUserBOSet = this.getObjectsFromCache();
 		final YearBO yearBO = yearBLL.findCurrentYear();
 		final Set<ClassRoomBO> classRoomBOSet = classRoomBLL.findBy(null,
-				schoolId, yearBO.getName(), null, null);
+				schoolId, yearBO.getName(), null, null, false);
 		final UserTypeBO userTypeBO = userTypeBLL.findByCode(schoolId,
 				UserTypeBO.TEACHER, 0);
 		if (cacheUserBOSet != null) {
@@ -360,9 +360,9 @@ public class UserBLL extends AbstractBLL implements
 		final int lastYear = yearBLL.findLastYear();
 		final YearBO year = yearBLL.findCurrentYear();
 		final Set<ClassRoomBO> classRoomLastYearSet = classRoomBLL.findBy(
-				idClassRoom, idSchool, String.valueOf(lastYear), grade, null);
+				idClassRoom, idSchool, String.valueOf(lastYear), grade, null, false);
 		final Set<ClassRoomBO> classRoomCurrentYearSet = classRoomBLL.findBy(
-				null, idSchool, year.getName(), null, null);
+				null, idSchool, year.getName(), null, null, false);
 		final UserTypeBO userType = userTypeBLL.findByCode(idSchool,
 				UserTypeBO.STUDENT, 0);
 		if (cacheUserSet != null) {
