@@ -224,10 +224,12 @@ public class UserBLL extends AbstractBLL implements
 
 	public boolean isLinkedToSchool(final UserBO userBO, final int schoolId) {
 		boolean linked = false;
-		for (final SchoolBO school : userBO.getSchoolSet()) {
-			if (school.getId().equals(schoolId)) {
-				linked = true;
-				break;
+		if (userBO != null) {
+			for (final SchoolBO school : userBO.getSchoolSet()) {
+				if (school.getId().equals(schoolId)) {
+					linked = true;
+					break;
+				}
 			}
 		}
 		return linked;
@@ -274,12 +276,12 @@ public class UserBLL extends AbstractBLL implements
 			bzUser.setGender(userBO.getGender());
 			bzUser.setPhoto(userBO.getPhoto());
 			if (userBO.getGuardian1() != null) {
-				bzUser.setBzuserByIdGuardian1(this.buildHibernateEntity(userBO
-						.getGuardian1()));
+				final UserBO guardian = this.saveRecord(userBO.getGuardian1());
+				bzUser.setBzuserByIdGuardian1(this.buildHibernateEntity(guardian));
 			}
 			if (userBO.getGuardian2() != null) {
-				bzUser.setBzuserByIdGuardian2(this.buildHibernateEntity(userBO
-						.getGuardian2()));
+				final UserBO guardian = this.saveRecord(userBO.getGuardian2());
+				bzUser.setBzuserByIdGuardian2(this.buildHibernateEntity(guardian));
 			}
 			bzUser.setCreation(userBO.getCreation());
 			bzUser.setUpdated(userBO.getUpdated());
@@ -343,7 +345,9 @@ public class UserBLL extends AbstractBLL implements
 			if (bzClassRoomXuser.isEnabled()) {
 				final UserBO user = this.buildUserBO(
 						bzClassRoomXuser.getBzuser(), false);
-				userSet.add(user);
+				if (user.isEnabled()) {
+					userSet.add(user);
+				}
 			}
 		}
 		return userSet;

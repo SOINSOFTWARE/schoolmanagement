@@ -179,7 +179,18 @@ public class CacheManager {
 	 *            Name of cache that must be loaded
 	 * @return True if cache is still empty, false otherwise
 	 */
-	public synchronized boolean isCacheEmpty(String cacheName) {
+	public synchronized boolean isCacheEmpty(final String cacheName) {
 		return this.getCache(cacheName).getSize() == 0;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param cacheName
+	 * @param key
+	 * @return
+	 */
+	public synchronized boolean removeFromCache(final String cacheName, final Integer key) {
+		return this.getCache(cacheName).remove(key);
 	}
 }

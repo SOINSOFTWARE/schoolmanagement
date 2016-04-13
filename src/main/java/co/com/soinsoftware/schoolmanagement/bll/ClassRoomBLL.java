@@ -192,6 +192,9 @@ public class ClassRoomBLL extends AbstractBLL implements
 						&& (time == null || timeBO.getId().equals(time))
 						&& (classRoomId == null || classRoomBO.getId().equals(
 								classRoomId)) && classRoomBO.isEnabled()) {
+					//Update classRoomBO object before add it to set because the
+					//student information could be changed
+					classRoomBO = this.selectByIdentifierAndPutInCache(classRoomBO.getId());
 					classRoomBOSet.add(classRoomBO);
 					LOGGER.info("ClassRoomBO object loaded: {}", classRoomBO);
 				}
