@@ -33,6 +33,8 @@
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Cnusertype.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclass.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzperiod.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Cnnotevalue.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Cnnote.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzuser.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclassroom.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzschoolxuser.hbm.xml</value>

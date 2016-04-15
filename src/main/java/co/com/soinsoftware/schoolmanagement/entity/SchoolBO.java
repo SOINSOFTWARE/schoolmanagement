@@ -18,6 +18,10 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
 public class SchoolBO extends AbstractWithCodeBO {
 
 	private static final long serialVersionUID = -318874995739938197L;
+	
+	private String photo;
+	
+	private NoteConfigurationBO note;
 
 	public SchoolBO() {
 		super();
@@ -27,6 +31,24 @@ public class SchoolBO extends AbstractWithCodeBO {
 		super(bzSchool.getId(), bzSchool.getCode(), bzSchool.getName(),
 				bzSchool.getCreation(), bzSchool.getUpdated(), bzSchool
 						.isEnabled());
+		this.photo = bzSchool.getPhoto();
+		this.note = new NoteConfigurationBO(bzSchool.getCnnote());
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public NoteConfigurationBO getNote() {
+		return note;
+	}
+
+	public void setNote(NoteConfigurationBO note) {
+		this.note = note;
 	}
 
 	@Override

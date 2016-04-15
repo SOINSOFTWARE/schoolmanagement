@@ -13,8 +13,10 @@ import java.util.Set;
 public class Bzschool implements java.io.Serializable {
 
 	private Integer id;
+	private Cnnote cnnote;
 	private String code;
 	private String name;
+	private String photo;
 	private Date creation;
 	private Date updated;
 	private boolean enabled;
@@ -24,19 +26,24 @@ public class Bzschool implements java.io.Serializable {
 	public Bzschool() {
 	}
 
-	public Bzschool(String code, String name, Date creation, Date updated,
-			boolean enabled) {
+	public Bzschool(Cnnote cnnote, String code, String name, String photo,
+			Date creation, Date updated, boolean enabled) {
+		this.cnnote = cnnote;
 		this.code = code;
 		this.name = name;
+		this.photo = photo;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
 	}
 
-	public Bzschool(String code, String name, Date creation, Date updated,
-			boolean enabled, Set bzschoolxusers, Set bzclassrooms) {
+	public Bzschool(Cnnote cnnote, String code, String name, String photo,
+			Date creation, Date updated, boolean enabled, Set bzschoolxusers,
+			Set bzclassrooms) {
+		this.cnnote = cnnote;
 		this.code = code;
 		this.name = name;
+		this.photo = photo;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
@@ -50,6 +57,14 @@ public class Bzschool implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Cnnote getCnnote() {
+		return cnnote;
+	}
+
+	public void setCnnote(Cnnote cnnote) {
+		this.cnnote = cnnote;
 	}
 
 	public String getCode() {
@@ -66,6 +81,14 @@ public class Bzschool implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPhoto() {
+		return this.photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	public Date getCreation() {
