@@ -20,6 +20,9 @@
         <property name="photo" type="string">
             <column name="photo" length="400" />
         </property>
+        <property name="period" type="java.lang.Integer">
+            <column name="period" />
+        </property>
         <property name="creation" type="timestamp">
             <column name="creation" length="19" not-null="true" />
         </property>

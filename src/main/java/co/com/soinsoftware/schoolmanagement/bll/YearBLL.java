@@ -66,12 +66,12 @@ public class YearBLL extends AbstractBLL implements
 	@Override
 	public Set<YearBO> selectAndPutInCache() {
 		final Set<Bzyear> bzYearSet = this.yearDAO.select();
-		final Set<YearBO> YearBOSet = this
+		final Set<YearBO> yearBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzYearSet);
-		if (YearBOSet != null) {
-			this.putObjectsInCache(YEAR_KEY, YearBOSet);
+		if (yearBOSet != null) {
+			this.putObjectsInCache(YEAR_KEY, yearBOSet);
 		}
-		return YearBOSet;
+		return yearBOSet;
 	}
 
 	@Override

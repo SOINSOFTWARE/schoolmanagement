@@ -14,6 +14,7 @@ public class Bzperiod implements java.io.Serializable {
 
 	private Integer id;
 	private Bzyear bzyear;
+	private String code;
 	private String name;
 	private Date creation;
 	private Date updated;
@@ -23,18 +24,20 @@ public class Bzperiod implements java.io.Serializable {
 	public Bzperiod() {
 	}
 
-	public Bzperiod(Bzyear bzyear, String name, Date creation, Date updated,
-			boolean enabled) {
+	public Bzperiod(Bzyear bzyear, String code, String name, Date creation,
+			Date updated, boolean enabled) {
 		this.bzyear = bzyear;
+		this.code = code;
 		this.name = name;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
 	}
 
-	public Bzperiod(Bzyear bzyear, String name, Date creation, Date updated,
-			boolean enabled, Set bznotedefinitions) {
+	public Bzperiod(Bzyear bzyear,  String code,String name, Date creation,
+			Date updated, boolean enabled, Set bznotedefinitions) {
 		this.bzyear = bzyear;
+		this.code = code;
 		this.name = name;
 		this.creation = creation;
 		this.updated = updated;
@@ -56,6 +59,14 @@ public class Bzperiod implements java.io.Serializable {
 
 	public void setBzyear(Bzyear bzyear) {
 		this.bzyear = bzyear;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {

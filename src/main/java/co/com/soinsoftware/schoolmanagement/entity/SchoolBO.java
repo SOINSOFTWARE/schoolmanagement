@@ -21,6 +21,8 @@ public class SchoolBO extends AbstractWithCodeBO {
 	
 	private String photo;
 	
+	private Integer period;
+	
 	private NoteConfigurationBO note;
 
 	public SchoolBO() {
@@ -32,6 +34,7 @@ public class SchoolBO extends AbstractWithCodeBO {
 				bzSchool.getCreation(), bzSchool.getUpdated(), bzSchool
 						.isEnabled());
 		this.photo = bzSchool.getPhoto();
+		this.period = bzSchool.getPeriod();
 		this.note = new NoteConfigurationBO(bzSchool.getCnnote());
 	}
 
@@ -41,6 +44,14 @@ public class SchoolBO extends AbstractWithCodeBO {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	public Integer getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Integer period) {
+		this.period = period;
 	}
 
 	public NoteConfigurationBO getNote() {

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import co.com.soinsoftware.schoolmanagement.bll.ClassBLL;
 import co.com.soinsoftware.schoolmanagement.bll.ClassRoomBLL;
 import co.com.soinsoftware.schoolmanagement.bll.GradeBLL;
+import co.com.soinsoftware.schoolmanagement.bll.PeriodBLL;
 import co.com.soinsoftware.schoolmanagement.bll.SchoolBLL;
 import co.com.soinsoftware.schoolmanagement.bll.SubjectBLL;
 import co.com.soinsoftware.schoolmanagement.bll.UserBLL;
@@ -82,6 +83,7 @@ public class SchoolManagementServer {
 		ServiceLocator.getBean(ClassBLL.class).findAll();
 		ServiceLocator.getBean(ClassRoomBLL.class).findAll();
 		ServiceLocator.getBean(GradeBLL.class).findAll();
+		ServiceLocator.getBean(PeriodBLL.class).findAll();
 		ServiceLocator.getBean(SchoolBLL.class).findAll();
 		ServiceLocator.getBean(SubjectBLL.class).findAll();
 		ServiceLocator.getBean(UserBLL.class).findAll();

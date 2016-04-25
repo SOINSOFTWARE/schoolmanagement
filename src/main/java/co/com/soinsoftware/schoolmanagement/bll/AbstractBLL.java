@@ -23,6 +23,8 @@ public abstract class AbstractBLL {
 	
 	protected static final String GRADE_KEY = "grades";
 	
+	protected static final String PERIOD_KEY = "periods";
+	
 	protected static final String SCHOOL_KEY = "schools";
 
 	protected static final String SUBJECT_KEY = "subjects";

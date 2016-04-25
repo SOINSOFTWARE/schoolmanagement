@@ -11,6 +11,9 @@
         <many-to-one name="bzyear" class="co.com.soinsoftware.schoolmanagement.hibernate.Bzyear" fetch="select">
             <column name="idBzYear" not-null="true" />
         </many-to-one>
+        <property name="code" type="string">
+            <column name="code" length="5" not-null="true" />
+        </property>
         <property name="name" type="string">
             <column name="name" length="45" not-null="true" />
         </property>

@@ -17,6 +17,7 @@ public class Bzschool implements java.io.Serializable {
 	private String code;
 	private String name;
 	private String photo;
+	private Integer period;
 	private Date creation;
 	private Date updated;
 	private boolean enabled;
@@ -27,23 +28,25 @@ public class Bzschool implements java.io.Serializable {
 	}
 
 	public Bzschool(Cnnote cnnote, String code, String name, String photo,
-			Date creation, Date updated, boolean enabled) {
+			Integer period, Date creation, Date updated, boolean enabled) {
 		this.cnnote = cnnote;
 		this.code = code;
 		this.name = name;
 		this.photo = photo;
+		this.period = period;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
 	}
 
 	public Bzschool(Cnnote cnnote, String code, String name, String photo,
-			Date creation, Date updated, boolean enabled, Set bzschoolxusers,
-			Set bzclassrooms) {
+			Integer period, Date creation, Date updated, boolean enabled,
+			Set bzschoolxusers, Set bzclassrooms) {
 		this.cnnote = cnnote;
 		this.code = code;
 		this.name = name;
 		this.photo = photo;
+		this.period = period;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
@@ -89,6 +92,14 @@ public class Bzschool implements java.io.Serializable {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+	
+	public Integer getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Integer period) {
+		this.period = period;
 	}
 
 	public Date getCreation() {
