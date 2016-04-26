@@ -28,6 +28,12 @@ public class NoteDefinitionBO extends AbstractBO {
 	private PeriodBO period;
 
 	private Set<NoteValueBO> noteValueSet;
+	
+	private ClassBO classBO;
+	
+	private int idClass;
+	
+	private int idPeriod;
 
 	public NoteDefinitionBO() {
 		super();
@@ -73,6 +79,30 @@ public class NoteDefinitionBO extends AbstractBO {
 
 	public void setNoteValueSet(final Set<NoteValueBO> noteValueSet) {
 		this.noteValueSet = noteValueSet;
+	}
+
+	public ClassBO getClassBO() {
+		return classBO;
+	}
+
+	public void setClassBO(ClassBO classBO) {
+		this.classBO = classBO;
+	}
+
+	public int getIdClass() {
+		return idClass;
+	}
+
+	public void setIdClass(int idClass) {
+		this.idClass = idClass;
+	}
+
+	public int getIdPeriod() {
+		return idPeriod;
+	}
+
+	public void setIdPeriod(int idPeriod) {
+		this.idPeriod = idPeriod;
 	}
 
 	@Override

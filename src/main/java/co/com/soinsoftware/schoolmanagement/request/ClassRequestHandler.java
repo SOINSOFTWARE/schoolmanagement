@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import co.com.soinsoftware.schoolmanagement.bll.ClassBLL;
+import co.com.soinsoftware.schoolmanagement.bll.NoteDefinitionBLL;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
 import co.com.soinsoftware.schoolmanagement.mapper.ClassMapper;
@@ -29,6 +30,9 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 
 	@Autowired
 	private ClassBLL classBLL = ServiceLocator.getBean(ClassBLL.class);
+	
+	@Autowired
+	private NoteDefinitionBLL noteDefBLL = ServiceLocator.getBean(NoteDefinitionBLL.class);
 
 	@GET
 	@Path(PATH_ALL)
@@ -77,5 +81,26 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 				idClass, idPeriod);
 		LOGGER.info("findNoteDefinitionByClass function loads {}", noteDefSet.toString());
 		return noteDefSet;
+	}
+	
+	@POST
+	@Path(PATH_SAVE_NOTEDEFINITION_BY_CLASS)
+	@Produces(APPLICATION_JSON)
+	public ClassBO saveNoteDefinitionsByClass(
+			@FormParam(PARAMETER_OBJECT) final String jsonObject) {
+		ClassBO classBO = null;
+		final List<NoteDefinitionBO> noteDefList = new NoteDefinitionMapper()
+				.getObjectListFromJSON(jsonObject);
+		if (!noteDefList.isEmpty()) {
+			for (NoteDefinitionBO noteDefinition : noteDefList) {
+				this.noteDefBLL.saveRecord(noteDefinition);
+				LOGGER.info(
+						"saveNoteDefinitionsByClass function applied to {}",
+						noteDefinition);
+			}
+			final int idClass = noteDefList.get(0).getIdClass();
+			classBO = this.classBLL.selectByIdentifierAndPutInCache(idClass);
+		}
+		return classBO;
 	}
 }

@@ -100,11 +100,6 @@ public class ClassBLL extends AbstractBLL implements
 		if (record.getTeacher() == null) {
 			record.setTeacher(userBLL.findByIdentifier(record.getIdTeacher()));
 		}
-		if (record.getNoteDefinitionSet() == null) {
-			// TODO: Implement notedefinitionbll class and create a method to
-			// find a set
-			// using the class identifier
-		}
 		record.setUpdated(new Date());
 		Bzclass bzClass = this.buildHibernateEntity(record);
 		this.classDAO.save(bzClass);

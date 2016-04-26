@@ -29,6 +29,9 @@ public class PeriodBLL extends AbstractBLL implements
 
 	@Autowired
 	private SchoolBLL schoolBLL;
+	
+	@Autowired
+	private YearBLL yearBLL;
 
 	@Override
 	public Set<PeriodBO> findAll() {
@@ -54,8 +57,18 @@ public class PeriodBLL extends AbstractBLL implements
 
 	@Override
 	public PeriodBO findByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		PeriodBO period = null;
+		if (!this.isCacheEmpty(PERIOD_KEY)) {
+			period = (PeriodBO) this.getObjectFromCache(PERIOD_KEY, identifier);
+		}
+		if (period == null) {
+			period = this.selectByIdentifierAndPutInCache(identifier);
+		}
+		if (period != null) {
+			LOGGER.info("Period = {} was loaded successfully",
+					period.toString());
+		}
+		return period;
 	}
 
 	@Override
@@ -83,8 +96,13 @@ public class PeriodBLL extends AbstractBLL implements
 
 	@Override
 	public PeriodBO selectByIdentifierAndPutInCache(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+		PeriodBO period = null;
+		final Bzperiod bzPeriod = this.dao.selectByIdentifier(identifier);
+		if (bzPeriod != null) {
+			period = this.buildPeriodBO(bzPeriod);
+			this.putObjectInCache(PERIOD_KEY, period);
+		}
+		return period;
 	}
 
 	@Override
@@ -111,14 +129,29 @@ public class PeriodBLL extends AbstractBLL implements
 	}
 
 	@Override
-	public Bzperiod buildHibernateEntity(PeriodBO record) {
-		// TODO Auto-generated method stub
-		return null;
+	public Bzperiod buildHibernateEntity(final PeriodBO record) {
+		Bzperiod bzPeriod = new Bzperiod();
+		if (record != null) {
+			bzPeriod.setId(record.getId());
+			bzPeriod.setCode(record.getCode());
+			bzPeriod.setName(record.getName());
+			bzPeriod.setBzyear(this.yearBLL.buildHibernateEntity(record
+					.getYear()));
+			bzPeriod.setCreation(record.getCreation());
+			bzPeriod.setUpdated(record.getUpdated());
+			bzPeriod.setEnabled(record.isEnabled());
+		}
+		return bzPeriod;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Set<PeriodBO> getObjectsFromCache() {
 		return this.getObjectsFromCache(PERIOD_KEY);
+	}
+	
+	public PeriodBO buildPeriodBO(final Bzperiod bzPeriod) {
+		final YearBO year = new YearBO(bzPeriod.getBzyear());
+		return new PeriodBO(bzPeriod, year);
 	}
 }
