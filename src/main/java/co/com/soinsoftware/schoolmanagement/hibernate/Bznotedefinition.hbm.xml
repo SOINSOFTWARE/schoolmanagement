@@ -20,8 +20,8 @@
         <property name="description" type="string">
             <column name="description" length="80" not-null="true" />
         </property>
-        <property name="value" type="big_decimal">
-            <column name="value" precision="2" not-null="true" />
+        <property name="value" type="java.lang.Integer">
+            <column name="value" not-null="true" />
         </property>
         <property name="creation" type="timestamp">
             <column name="creation" length="19" not-null="true" />

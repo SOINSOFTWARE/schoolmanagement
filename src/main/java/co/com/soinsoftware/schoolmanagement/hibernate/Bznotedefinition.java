@@ -2,7 +2,6 @@ package co.com.soinsoftware.schoolmanagement.hibernate;
 
 // Generated 19-abr-2015 18:35:39 by Hibernate Tools 4.3.1
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -16,7 +15,7 @@ public class Bznotedefinition implements java.io.Serializable {
 	private Bzperiod bzperiod;
 	private String name;
 	private String description;
-	private BigDecimal value;
+	private Integer value;
 	private Date creation;
 	private Date updated;
 	private boolean enabled;
@@ -25,7 +24,7 @@ public class Bznotedefinition implements java.io.Serializable {
 	}
 
 	public Bznotedefinition(Bzclass bzclass, Bzperiod bzperiod, String name,
-			String description, BigDecimal value, Date creation, Date updated,
+			String description, Integer value, Date creation, Date updated,
 			boolean enabled) {
 		this.bzclass = bzclass;
 		this.bzperiod = bzperiod;
@@ -77,11 +76,11 @@ public class Bznotedefinition implements java.io.Serializable {
 		this.description = description;
 	}
 
-	public BigDecimal getValue() {
+	public Integer getValue() {
 		return this.value;
 	}
 
-	public void setValue(BigDecimal value) {
+	public void setValue(Integer value) {
 		this.value = value;
 	}
 

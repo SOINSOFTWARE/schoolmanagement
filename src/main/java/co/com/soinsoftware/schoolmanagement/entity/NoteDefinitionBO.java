@@ -3,7 +3,6 @@
  */
 package co.com.soinsoftware.schoolmanagement.entity;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,7 +23,7 @@ public class NoteDefinitionBO extends AbstractBO {
 
 	private String description;
 
-	private BigDecimal value;
+	private Integer value;
 
 	private PeriodBO period;
 
@@ -52,11 +51,11 @@ public class NoteDefinitionBO extends AbstractBO {
 		this.description = description;
 	}
 
-	public BigDecimal getValue() {
+	public Integer getValue() {
 		return value;
 	}
 
-	public void setValue(final BigDecimal value) {
+	public void setValue(final Integer value) {
 		this.value = value;
 	}
 

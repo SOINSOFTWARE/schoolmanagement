@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import co.com.soinsoftware.schoolmanagement.bll.ClassBLL;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
+import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
 import co.com.soinsoftware.schoolmanagement.mapper.ClassMapper;
 import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
@@ -64,5 +65,17 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 			}
 		}
 		return classSet;
+	}
+	
+	@GET
+	@Path(PATH_NOTEDEFINITION_BY_CLASS)
+	@Produces(APPLICATION_JSON)
+	public Set<NoteDefinitionBO> findNoteDefinitionByClass(
+			@QueryParam(PARAMETER_CLASS_ID) final int idClass,
+			@QueryParam(PARAMETER_PERIOD_ID) final int idPeriod) {
+		final Set<NoteDefinitionBO> noteDefSet = classBLL.findNoteDefinition(
+				idClass, idPeriod);
+		LOGGER.info("findNoteDefinitionByClass function loads {}", noteDefSet.toString());
+		return noteDefSet;
 	}
 }

@@ -225,13 +225,31 @@ public class ClassBLL extends AbstractBLL implements
 			final Set<Bznotedefinition> bzNoteDefinitionSet) {
 		final Set<NoteDefinitionBO> noteDefSet = new HashSet<>();
 		for (final Bznotedefinition bzNoteDefinition : bzNoteDefinitionSet) {
-			final YearBO year = new YearBO(bzNoteDefinition.getBzperiod()
-					.getBzyear());
-			final PeriodBO period = new PeriodBO(
-					bzNoteDefinition.getBzperiod(), year);
-			final NoteDefinitionBO noteDef = new NoteDefinitionBO(
-					bzNoteDefinition, period);
-			noteDefSet.add(noteDef);
+			if (bzNoteDefinition.isEnabled()) {
+				final YearBO year = new YearBO(bzNoteDefinition.getBzperiod()
+						.getBzyear());
+				final PeriodBO period = new PeriodBO(
+						bzNoteDefinition.getBzperiod(), year);
+				final NoteDefinitionBO noteDef = new NoteDefinitionBO(
+						bzNoteDefinition, period);
+				noteDefSet.add(noteDef);
+			}
+		}
+		return noteDefSet;
+	}
+	
+	public Set<NoteDefinitionBO> findNoteDefinition(final int idClass, final int idPeriod) {
+		final Set<NoteDefinitionBO> noteDefSet = new HashSet<>();
+		final ClassBO classBO = this.findByIdentifier(idClass);
+		if (classBO != null && classBO.isEnabled()) {
+			final Set<NoteDefinitionBO> cacheNoteDefSet = classBO.getNoteDefinitionSet();
+			if (cacheNoteDefSet != null && !cacheNoteDefSet.isEmpty()) {
+				for (final NoteDefinitionBO noteDef : cacheNoteDefSet) {
+					if (noteDef.isEnabled() && noteDef.getPeriod().getId() == idPeriod) {
+						noteDefSet.add(noteDef);
+					}
+				}
+			}
 		}
 		return noteDefSet;
 	}
