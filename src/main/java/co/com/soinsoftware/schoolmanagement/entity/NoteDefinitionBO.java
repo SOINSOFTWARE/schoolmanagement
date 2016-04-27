@@ -40,13 +40,14 @@ public class NoteDefinitionBO extends AbstractBO {
 	}
 
 	public NoteDefinitionBO(final Bznotedefinition bzNoteDefinition,
-			final PeriodBO period) {
+			final PeriodBO period, final Set<NoteValueBO> noteValueSet) {
 		super(bzNoteDefinition.getId(), bzNoteDefinition.getName(),
 				bzNoteDefinition.getCreation(), bzNoteDefinition.getUpdated(),
 				bzNoteDefinition.isEnabled());
 		this.description = bzNoteDefinition.getDescription();
 		this.value = bzNoteDefinition.getValue();
 		this.period = period;
+		this.noteValueSet = noteValueSet;
 	}
 
 	public String getDescription() {

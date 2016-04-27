@@ -11,6 +11,7 @@ import co.com.soinsoftware.schoolmanagement.dao.ClassDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
+import co.com.soinsoftware.schoolmanagement.entity.NoteValueBO;
 import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
 import co.com.soinsoftware.schoolmanagement.entity.SubjectBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserBO;
@@ -32,12 +33,15 @@ public class ClassBLL extends AbstractBLL implements
 
 	@Autowired
 	private ClassRoomBLL classRoomBLL;
+	
+	@Autowired
+	private NoteValueBLL noteValueBLL;
+	
+	@Autowired
+	private SubjectBLL subjectBLL;
 
 	@Autowired
 	private UserBLL userBLL;
-
-	@Autowired
-	private SubjectBLL subjectBLL;
 
 	@Override
 	public Set<ClassBO> findAll() {
@@ -225,8 +229,10 @@ public class ClassBLL extends AbstractBLL implements
 						.getBzyear());
 				final PeriodBO period = new PeriodBO(
 						bzNoteDefinition.getBzperiod(), year);
+				final Set<NoteValueBO> noteValueSet = this.noteValueBLL
+						.findAllByIdNoteDefinition(bzNoteDefinition.getId());
 				final NoteDefinitionBO noteDef = new NoteDefinitionBO(
-						bzNoteDefinition, period);
+						bzNoteDefinition, period, noteValueSet);
 				noteDefSet.add(noteDef);
 			}
 		}

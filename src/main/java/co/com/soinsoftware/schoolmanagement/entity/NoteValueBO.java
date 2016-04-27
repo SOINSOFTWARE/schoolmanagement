@@ -22,11 +22,7 @@ public class NoteValueBO implements Serializable {
 
 	private int idStudent;
 
-	private UserBO student;
-
 	private int idNoteDefinition;
-
-	private NoteDefinitionBO noteDefinition;
 
 	private BigDecimal value;
 
@@ -60,28 +56,12 @@ public class NoteValueBO implements Serializable {
 		this.idStudent = idStudent;
 	}
 
-	public UserBO getStudent() {
-		return student;
-	}
-
-	public void setStudent(final UserBO student) {
-		this.student = student;
-	}
-
 	public int getIdNoteDefinition() {
 		return idNoteDefinition;
 	}
 
 	public void setIdNoteDefinition(final int idNoteDefinition) {
 		this.idNoteDefinition = idNoteDefinition;
-	}
-
-	public NoteDefinitionBO getNoteDefinition() {
-		return noteDefinition;
-	}
-
-	public void setNoteDefinition(final NoteDefinitionBO noteDefinition) {
-		this.noteDefinition = noteDefinition;
 	}
 
 	public BigDecimal getValue() {
@@ -118,10 +98,9 @@ public class NoteValueBO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "NoteValueBO [idStudent=" + idStudent + ", student=" + student
+		return "NoteValueBO [idStudent=" + idStudent 
 				+ ", idNoteDefinition=" + idNoteDefinition
-				+ ", noteDefinition=" + noteDefinition + ", value=" + value
-				+ ", creation=" + creation + ", updated=" + updated
-				+ ", enabled=" + enabled + "]";
+				+ ", value=" + value + ", creation=" + creation
+				+ ", updated=" + updated + ", enabled=" + enabled + "]";
 	}
 }

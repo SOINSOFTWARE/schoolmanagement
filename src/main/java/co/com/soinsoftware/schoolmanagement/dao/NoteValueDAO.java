@@ -17,8 +17,9 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @since 15/10/2015
  */
 @Repository
-public class NoteValueDAO extends AbstractDAO implements IDataAccesable<Bznotevalue> {
-	
+public class NoteValueDAO extends AbstractDAO implements
+		IDataAccesable<Bznotevalue> {
+
 	public static final String COLUMN_IDENTIFIER_NOTEDEFINITION = "idNoteDefinition";
 	public static final String COLUMN_IDENTIFIER_USER = "idUser";
 
@@ -26,17 +27,19 @@ public class NoteValueDAO extends AbstractDAO implements IDataAccesable<Bznoteva
 	@Override
 	public Set<Bznotevalue> select() {
 		Set<Bznotevalue> bzNoteDefinitionSet = null;
-		Chronometer chrono = this.startNewChronometer();        
-        try {
-            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzNoteDefinitionSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, NoteValueDAO.class.getName() + ", Select function");
-        }
-        return bzNoteDefinitionSet;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			Query query = this.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzNoteDefinitionSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					NoteValueDAO.class.getName() + ", Select function");
+		}
+		return bzNoteDefinitionSet;
 	}
 
 	@Override
@@ -48,20 +51,25 @@ public class NoteValueDAO extends AbstractDAO implements IDataAccesable<Bznoteva
 	public Bznotevalue selectByCode(String code) {
 		return null;
 	}
-	
-	public Bznotevalue selectByIdentifier(Integer idNoteDefinition, Integer idUser) {
+
+	public Bznotevalue selectByIdentifier(Integer idNoteDefinition,
+			Integer idUser) {
 		Bznotevalue bzNoteValue = null;
 		Chronometer chrono = this.startNewChronometer();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER_NOTEDEFINITION, idNoteDefinition);
-        	query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
-        	bzNoteValue = (Bznotevalue) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, NoteValueDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = this.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER_NOTEDEFINITION,
+					idNoteDefinition);
+			query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
+			bzNoteValue = (Bznotevalue) query.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono,
+					NoteValueDAO.class.getName()
+							+ ", selectByIdentifier function");
+		}
 		return bzNoteValue;
 	}
 
@@ -71,28 +79,56 @@ public class NoteValueDAO extends AbstractDAO implements IDataAccesable<Bznoteva
 		try {
 			BznotevalueId bzNoteValueId = record.getId();
 			Bznotevalue bzNoteValue = this.selectByIdentifier(
-					bzNoteValueId.getIdNoteDefinition(), bzNoteValueId.getIdUser());
+					bzNoteValueId.getIdNoteDefinition(),
+					bzNoteValueId.getIdUser());
 			boolean isNew = (bzNoteValue == null) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, NoteValueDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					NoteValueDAO.class.getName() + ", save function");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public Set<Bznotevalue> selectByIdNoteDefinition(
+			final Integer idNoteDefinition) {
+		Set<Bznotevalue> bzNoteValueSet = null;
+		Chronometer chrono = this.startNewChronometer();
+		try {
+			final StringBuilder queryStr = new StringBuilder(
+					this.getSelectStatementWithoutWhere());
+			queryStr.append(STATEMENT_WHERE);
+			queryStr.append(COLUMN_IDENTIFIER_NOTEDEFINITION);
+			queryStr.append(PARAMETER + COLUMN_IDENTIFIER_NOTEDEFINITION);
+			final Query query = this.createQuery(queryStr.toString());
+			query.setParameter(COLUMN_IDENTIFIER_NOTEDEFINITION,
+					idNoteDefinition);
+			bzNoteValueSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono,
+					NoteValueDAO.class.getName()
+							+ ", selectByIdNoteDefinition function");
+		}
+		return bzNoteValueSet;
 	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_NOTEVALUE);		
+		sql.append(TABLE_NAME_NOTEVALUE);
 		return sql.toString();
 	}
-	
+
 	@Override
 	protected String getSelectStatementByIdentifier() {
-		StringBuilder sql = new StringBuilder(this.getSelectStatementWithoutWhere());
+		StringBuilder sql = new StringBuilder(
+				this.getSelectStatementWithoutWhere());
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_IDENTIFIER_NOTEDEFINITION);
 		sql.append(PARAMETER + COLUMN_IDENTIFIER_NOTEDEFINITION);
@@ -101,7 +137,7 @@ public class NoteValueDAO extends AbstractDAO implements IDataAccesable<Bznoteva
 		sql.append(PARAMETER + COLUMN_IDENTIFIER_USER);
 		sql.append(STATEMENT_AND);
 		sql.append(COLUMN_ENABLED + " = 1");
-		return sql.toString();		
+		return sql.toString();
 	}
 
 }
