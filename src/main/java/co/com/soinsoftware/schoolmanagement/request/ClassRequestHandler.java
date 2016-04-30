@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import co.com.soinsoftware.schoolmanagement.bll.ClassBLL;
 import co.com.soinsoftware.schoolmanagement.bll.NoteDefinitionBLL;
+import co.com.soinsoftware.schoolmanagement.bll.NoteValueBLL;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
+import co.com.soinsoftware.schoolmanagement.entity.NoteValueBO;
 import co.com.soinsoftware.schoolmanagement.mapper.ClassMapper;
+import co.com.soinsoftware.schoolmanagement.mapper.NoteDefinitionMapper;
+import co.com.soinsoftware.schoolmanagement.mapper.NoteValueMapper;
 import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
@@ -33,6 +37,9 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 	
 	@Autowired
 	private NoteDefinitionBLL noteDefBLL = ServiceLocator.getBean(NoteDefinitionBLL.class);
+	
+	@Autowired
+	private NoteValueBLL noteValueBLL = ServiceLocator.getBean(NoteValueBLL.class);
 
 	@GET
 	@Path(PATH_ALL)
@@ -91,7 +98,7 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 		ClassBO classBO = null;
 		final List<NoteDefinitionBO> noteDefList = new NoteDefinitionMapper()
 				.getObjectListFromJSON(jsonObject);
-		if (!noteDefList.isEmpty()) {
+		if (noteDefList != null && !noteDefList.isEmpty()) {
 			for (NoteDefinitionBO noteDefinition : noteDefList) {
 				this.noteDefBLL.saveRecord(noteDefinition);
 				LOGGER.info(
@@ -100,6 +107,30 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 			}
 			final int idClass = noteDefList.get(0).getIdClass();
 			classBO = this.classBLL.selectByIdentifierAndPutInCache(idClass);
+		}
+		return classBO;
+	}
+	
+	@POST
+	@Path(PATH_SAVE_NOTEVALUE)
+	@Produces(APPLICATION_JSON)
+	public ClassBO saveNoteValue(
+			@FormParam(PARAMETER_OBJECT) final String jsonObject) {
+		ClassBO classBO = null;
+		final List<NoteValueBO> noteValueList = new NoteValueMapper()
+				.getObjectListFromJSON(jsonObject);
+		if (noteValueList != null && !noteValueList.isEmpty()) {
+			for (final NoteValueBO noteValue : noteValueList) {
+				this.noteValueBLL.saveRecord(noteValue);
+				LOGGER.info("saveNoteValue function applied to {}", noteValue);
+			}
+			final int idNoteDefinition = noteValueList.get(0)
+					.getIdNoteDefinition();
+			final NoteDefinitionBO noteDefinition = this.noteDefBLL
+					.findByIdentifier(idNoteDefinition);
+			classBO = this.classBLL
+					.selectByIdentifierAndPutInCache(noteDefinition
+							.getIdClass());
 		}
 		return classBO;
 	}

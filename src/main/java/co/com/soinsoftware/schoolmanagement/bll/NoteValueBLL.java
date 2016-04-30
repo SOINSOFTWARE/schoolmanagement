@@ -1,5 +1,6 @@
 package co.com.soinsoftware.schoolmanagement.bll;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import co.com.soinsoftware.schoolmanagement.dao.NoteValueDAO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteValueBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bznotevalue;
+import co.com.soinsoftware.schoolmanagement.hibernate.BznotevalueId;
 
 /**
  * @author Carlos Rodriguez
@@ -48,8 +50,10 @@ public class NoteValueBLL extends AbstractBLL implements
 
 	@Override
 	public NoteValueBO saveRecord(NoteValueBO record) {
-		// TODO Auto-generated method stub
-		return null;
+		record.setUpdated(new Date());
+		final Bznotevalue bzNoteValue = this.buildHibernateEntity(record);
+		this.dao.save(bzNoteValue);
+		return record;
 	}
 
 	@Override
@@ -88,8 +92,17 @@ public class NoteValueBLL extends AbstractBLL implements
 
 	@Override
 	public Bznotevalue buildHibernateEntity(NoteValueBO record) {
-		// TODO Auto-generated method stub
-		return null;
+		final Bznotevalue bzNoteValue = new Bznotevalue();
+		if (record != null) {
+			final BznotevalueId id = new BznotevalueId(
+					record.getIdNoteDefinition(), record.getIdStudent());
+			bzNoteValue.setId(id);
+			bzNoteValue.setValue(record.getValue());
+			bzNoteValue.setCreation(record.getCreation());
+			bzNoteValue.setUpdated(record.getUpdated());
+			bzNoteValue.setEnabled(record.isEnabled());
+		}
+		return bzNoteValue;
 	}
 
 	@Override

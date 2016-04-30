@@ -41,9 +41,13 @@ public class NoteDefinitionBLL extends AbstractBLL implements
 	}
 
 	@Override
-	public NoteDefinitionBO findByIdentifier(Integer identifier) {
-		// TODO Auto-generated method stub
-		return null;
+	public NoteDefinitionBO findByIdentifier(final Integer identifier) {
+		final Bznotedefinition bzNoteDefinition = this.dao
+				.selectByIdentifier(identifier);
+		final NoteDefinitionBO noteDefinition = new NoteDefinitionBO(
+				bzNoteDefinition, null, null);
+		noteDefinition.setIdClass(bzNoteDefinition.getBzclass().getId());
+		return noteDefinition;
 	}
 
 	@Override

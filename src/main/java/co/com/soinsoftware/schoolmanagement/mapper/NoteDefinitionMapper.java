@@ -1,7 +1,7 @@
 /**
  * 
  */
-package co.com.soinsoftware.schoolmanagement.request;
+package co.com.soinsoftware.schoolmanagement.mapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import java.util.List;
 import org.codehaus.jackson.type.TypeReference;
 
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
-import co.com.soinsoftware.schoolmanagement.mapper.IJsonMappable;
 
 /**
  * @author Carlos Rodriguez

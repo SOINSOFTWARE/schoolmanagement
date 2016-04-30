@@ -62,7 +62,7 @@ public class NoteValueDAO extends AbstractDAO implements
 			query.setParameter(COLUMN_IDENTIFIER_NOTEDEFINITION,
 					idNoteDefinition);
 			query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
-			bzNoteValue = (Bznotevalue) query.list().get(0);
+			bzNoteValue = (query.list().isEmpty()) ? null : (Bznotevalue) query.list().get(0);
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
