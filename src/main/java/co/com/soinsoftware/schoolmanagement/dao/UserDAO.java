@@ -97,6 +97,26 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 					+ ", save function");
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<Bzuser> selectByGuardian(final Integer idUser) {
+		Set<Bzuser> bzUserSet = null;
+		final Chronometer chrono = this.startNewChronometer();
+
+		try {
+			Query query = this.createQuery(this
+					.getSelectStatementByGuardian());
+			query.setParameter(COLUMN_GUARDIAN1, idUser);
+			query.setParameter(COLUMN_GUARDIAN2, idUser);
+			bzUserSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
+					+ ", Select function");
+		}
+		return bzUserSet;
+	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
@@ -112,6 +132,18 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		sql.append(STATEMENT_WHERE);
 		sql.append(COLUMN_DOCUMENT_NUMBER);
 		sql.append(PARAMETER + COLUMN_DOCUMENT_NUMBER);
+		return sql.toString();
+	}
+	
+	private String getSelectStatementByGuardian() {
+		final StringBuilder sql = new StringBuilder(
+				this.getSelectStatementWithoutWhere());
+		sql.append(STATEMENT_WHERE);
+		sql.append(COLUMN_GUARDIAN1);
+		sql.append(PARAMETER + COLUMN_GUARDIAN1);
+		sql.append(STATEMENT_OR);
+		sql.append(COLUMN_GUARDIAN2);
+		sql.append(PARAMETER + COLUMN_GUARDIAN2);
 		return sql.toString();
 	}
 }

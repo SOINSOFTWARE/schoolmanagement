@@ -124,4 +124,15 @@ public class UserRequestHandler extends AbstractRequestHandler {
 				validCode);
 		return Boolean.toString(validCode);
 	}
+	
+	@GET
+	@Path(PATH_STUDENTS_BY_GUARDIAN)
+	@Produces(APPLICATION_JSON)
+	public Set<UserBO> findStudentsByGuardian(@QueryParam(PARAMETER_USER_ID) final Integer idGuardian) {
+		final Set<UserBO> userSet = this.userBLL.selectByGuardian(idGuardian);
+		if (userSet != null) {
+			LOGGER.info("findStudentsByGuardian function loads {}", userSet.toString());
+		}
+		return userSet;
+	}
 }

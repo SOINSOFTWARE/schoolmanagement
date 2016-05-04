@@ -383,6 +383,11 @@ public class UserBLL extends AbstractBLL implements
 		}
 		return userSet;
 	}
+	
+	public Set<UserBO> selectByGuardian(final Integer idUser) {
+		final Set<Bzuser> bzUserSet = this.userDAO.selectByGuardian(idUser);
+		return this.createEntityBOSetUsingHibernatEntities(bzUserSet);
+	}
 
 	private boolean isStudentLinkedToClassRoom(
 			final Set<ClassRoomBO> classRoomSet, final UserBO user) {

@@ -44,12 +44,15 @@ public abstract class AbstractDAO {
 	public static final String COLUMN_CODE = "code";
 	public static final String COLUMN_IDENTIFIER = "id";
 	public static final String COLUMN_ENABLED = "enabled";
+	public static final String COLUMN_GUARDIAN1 = "idGuardian1";
+	public static final String COLUMN_GUARDIAN2 = "idGuardian2";
 	public static final String PARAMETER = "= :";
 
 	protected static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractDAO.class);
 
 	protected static final String STATEMENT_AND = " and ";
+	protected static final String STATEMENT_OR = " or ";
 	protected static final String STATEMENT_SELECT = " select ";
 	protected static final String STATEMENT_FROM = " from ";
 	protected static final String STATEMENT_JOIN = " join ";

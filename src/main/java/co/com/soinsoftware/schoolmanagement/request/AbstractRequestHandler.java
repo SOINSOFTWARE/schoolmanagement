@@ -22,6 +22,7 @@ public abstract class AbstractRequestHandler {
 	public static final String PATH_SAVE_NOTEDEFINITION_BY_CLASS = "saveNoteDefByClass";
 	public static final String PATH_SAVE_NOTEVALUE = "saveNoteValue";
 	public static final String PATH_STUDENTS_NOT_LINKED = "studentsNotLinked";
+	public static final String PATH_STUDENTS_BY_GUARDIAN = "studentsByGuardian";
 	public static final String PATH_TEACHERS_NOT_DIRECTORS = "teacherNotDirectors";
 	public static final String PATH_VALIDATE = "validate";
 
