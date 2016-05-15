@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import co.com.soinsoftware.schoolmanagement.bll.ClassBLL;
+import co.com.soinsoftware.schoolmanagement.bll.FinalNoteBLL;
 import co.com.soinsoftware.schoolmanagement.bll.NoteDefinitionBLL;
 import co.com.soinsoftware.schoolmanagement.bll.NoteValueBLL;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
@@ -34,6 +35,9 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 
 	@Autowired
 	private ClassBLL classBLL = ServiceLocator.getBean(ClassBLL.class);
+	
+	@Autowired
+	private FinalNoteBLL finalNoteBLL = ServiceLocator.getBean(FinalNoteBLL.class);
 	
 	@Autowired
 	private NoteDefinitionBLL noteDefBLL = ServiceLocator.getBean(NoteDefinitionBLL.class);
@@ -131,6 +135,9 @@ public class ClassRequestHandler extends AbstractRequestHandler {
 			classBO = this.classBLL
 					.selectByIdentifierAndPutInCache(noteDefinition
 							.getIdClass());
+			LOGGER.info("Initialization of thread to calculate and save Final Note values");
+			this.finalNoteBLL.doSaveProcess(classBO, noteDefinition.getPeriod()
+					.getId());
 		}
 		return classBO;
 	}

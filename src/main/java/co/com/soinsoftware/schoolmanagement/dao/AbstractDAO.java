@@ -27,6 +27,7 @@ public abstract class AbstractDAO {
 	public static final String TABLE_NAME_CLASS = "Bzclass";
 	public static final String TABLE_NAME_CLASSROOM = "Bzclassroom";
 	public static final String TABLE_NAME_CLASSROOM_X_USER = "Bzclassroomxuser";
+	public static final String TABLE_NAME_FINALNOTE = "Bzfinalnote";
 	public static final String TABLE_NAME_GRADE = "Bzgrade";
 	public static final String TABLE_NAME_NOTEDEFINITION = "Bznotedefinition";
 	public static final String TABLE_NAME_NOTEVALUE = "Bznotevalue";

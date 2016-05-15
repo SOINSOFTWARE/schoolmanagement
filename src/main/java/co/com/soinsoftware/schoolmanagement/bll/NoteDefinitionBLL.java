@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.dao.NoteDefinitionDAO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
+import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
+import co.com.soinsoftware.schoolmanagement.entity.YearBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bznotedefinition;
+import co.com.soinsoftware.schoolmanagement.hibernate.Bzperiod;
 
 /**
  * @author Carlos Rodriguez
@@ -44,8 +47,11 @@ public class NoteDefinitionBLL extends AbstractBLL implements
 	public NoteDefinitionBO findByIdentifier(final Integer identifier) {
 		final Bznotedefinition bzNoteDefinition = this.dao
 				.selectByIdentifier(identifier);
+		final Bzperiod bzPeriod = bzNoteDefinition.getBzperiod();
+		final YearBO year = new YearBO(bzPeriod.getBzyear());
+		final PeriodBO period = new PeriodBO(bzPeriod, year);
 		final NoteDefinitionBO noteDefinition = new NoteDefinitionBO(
-				bzNoteDefinition, null, null);
+				bzNoteDefinition, period, null);
 		noteDefinition.setIdClass(bzNoteDefinition.getBzclass().getId());
 		return noteDefinition;
 	}

@@ -57,6 +57,14 @@ public class ServerProperties extends Properties {
 	 */
 	private static final String PACKAGE_VALUE_DEFAULT = "co.com.carpcosoftware.schoolmanagement.request";
 	
+	private static final String DRIVER_CLASS_NAME = "driver_class_name";
+	
+	private static final String DB_URL = "db_url";
+	
+	private static final String DB_USERNAME = "db_username";
+	
+	private static final String DB_PASSWORD = "db_password";
+	
 	/**
 	 * Instance from {@link ServerProperties}
 	 */
@@ -127,5 +135,45 @@ public class ServerProperties extends Properties {
 		LOGGER.info("Property {} loaded with value {}", PACKAGE_VALUE, packageValue);
 		
 		return packageValue;
+	}
+	
+	/**
+	 * Gets driver class name
+	 * @return Driver class name
+	 */
+	public String getDriverClassName() {
+		final String driverClassName = this.getProperty(DRIVER_CLASS_NAME);		
+		LOGGER.info("Property {} loaded with value {}", DRIVER_CLASS_NAME, driverClassName);		
+		return driverClassName;
+	}
+	
+	/**
+	 * Gets database URL
+	 * @return Database URL
+	 */
+	public String getDbUrl() {
+		final String dbUrl = this.getProperty(DB_URL);		
+		LOGGER.info("Property {} loaded with value {}", DB_URL, dbUrl);		
+		return dbUrl;
+	}
+	
+	/**
+	 * Gets database user name
+	 * @return Database user name
+	 */
+	public String getDbUserName() {
+		final String dbUserName = this.getProperty(DB_USERNAME);		
+		LOGGER.info("Property {} loaded with value {}", DB_USERNAME, dbUserName);		
+		return dbUserName;
+	}
+	
+	/**
+	 * Gets database password
+	 * @return Database password
+	 */
+	public String getDbPassword() {
+		final String dbPassword = this.getProperty(DB_PASSWORD);		
+		LOGGER.info("Property {} loaded with value {}", DB_PASSWORD, dbPassword);		
+		return dbPassword;
 	}
 }

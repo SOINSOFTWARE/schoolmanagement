@@ -7,6 +7,7 @@
   <table-filter match-name="bzclassroom"/>
   <table-filter match-name="bzclassroomxuser"/>
   <table-filter match-name="bzgrade"/>
+  <table-filter match-name="bzfinalnote"/>
   <table-filter match-name="bznotedefinition"/>
   <table-filter match-name="bznotevalue"/>
   <table-filter match-name="bzperiod"/>

@@ -39,6 +39,7 @@
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclassroom.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzschoolxuser.hbm.xml</value>
 			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzclassroomxuser.hbm.xml</value>
+			    <value>co/com/soinsoftware/schoolmanagement/hibernate/Bzfinalnote.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

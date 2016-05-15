@@ -34,6 +34,12 @@ public class ClassBO extends AbstractBO {
 	private UserBO teacher;
 
 	private Set<NoteDefinitionBO> noteDefinitionSet;
+	
+	private volatile FinalNoteBO finalNote;
+	
+	private volatile String qualitativeNote;
+	
+	private volatile String achievements;
 
 	public ClassBO() {
 		super();
@@ -104,6 +110,30 @@ public class ClassBO extends AbstractBO {
 
 	public void setIdTeacher(final int idTeacher) {
 		this.idTeacher = idTeacher;
+	}
+
+	public FinalNoteBO getFinalNote() {
+		return finalNote;
+	}
+
+	public void setFinalNote(FinalNoteBO finalNote) {
+		this.finalNote = finalNote;
+	}
+
+	public String getQualitativeNote() {
+		return qualitativeNote;
+	}
+
+	public void setQualitativeNote(String qualitativeNote) {
+		this.qualitativeNote = qualitativeNote;
+	}
+
+	public String getAchievements() {
+		return achievements;
+	}
+
+	public void setAchievements(String achievements) {
+		this.achievements = achievements;
 	}
 
 	@Override
