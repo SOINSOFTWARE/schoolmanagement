@@ -79,9 +79,8 @@ public class Report {
 			this.buildTitleSection();
 			this.buildPageHeaderSection();
 			this.buildDetailSection();
-			this.buildPageFooter();
-			report.show();
-			report.toPdf(new FileOutputStream("c:/report.pdf"));
+			this.buildColumnFooter();
+			report.toPdf(new FileOutputStream(this.getReportFile()));
 			generated = true;
 		} catch (DRException | FileNotFoundException ex) {
 			LOGGER.error(ex.getMessage(), ex);
@@ -179,7 +178,7 @@ public class Report {
 
 	}
 
-	private void buildPageFooter() {
+	private void buildColumnFooter() {
 		final StyleBuilder styleFont12 = this
 				.getNewStyle()
 				.setFontSize(12)
@@ -188,7 +187,7 @@ public class Report {
 				.setTextAlignment(HorizontalTextAlignment.LEFT,
 						VerticalTextAlignment.TOP);
 		final UserBO teacher = this.classRoom.getTeacher();
-		this.report.pageFooter(cmp.verticalList().add(
+		this.report.columnFooter(cmp.verticalList().add(
 				cmp.line().setPen(DynamicReports.stl.pen1Point())
 						.setFixedWidth(200),
 				this.getTextField(this.getFullName(teacher), styleFont12),
@@ -301,5 +300,35 @@ public class Report {
 			}
 		}
 		return achievementBuilder.toString();
+	}
+
+	private File getReportFile() {
+		final File reportDir = this.getReportFolderDir();
+		final String pdfFileName = this.student.getDocumentNumber() + ".pdf";
+		return new File(reportDir, pdfFileName);
+	}
+
+	private File getReportFolderDir() {
+		final ServerProperties prop = ServerProperties.getInstance();
+		final String reportDir = prop.getReportFolder();
+		final File reportFolderDir = new File(reportDir);
+		final String subFolder = this.buildSubFolderDirString();
+		final File subFolderDir = new File(reportFolderDir, subFolder);
+		if (!subFolderDir.exists()) {
+			subFolderDir.mkdirs();
+		}
+		return subFolderDir;
+	}
+
+	private String buildSubFolderDirString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(this.school.getId());
+		builder.append(File.separator);
+		builder.append(this.period.getYear().getName());
+		builder.append(File.separator);
+		builder.append(this.period.getCode());
+		builder.append(File.separator);
+		builder.append(this.classRoom.getName());
+		return builder.toString();
 	}
 }

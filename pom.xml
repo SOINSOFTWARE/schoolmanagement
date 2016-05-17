@@ -110,7 +110,13 @@
 		<groupId>net.sourceforge.dynamicreports</groupId>
 		<artifactId>dynamicreports-core</artifactId>
 		<version>4.1.0</version>
-	</dependency>		
+	</dependency>
+	<dependency>
+	    <groupId>org.zeroturnaround</groupId>
+	    <artifactId>zt-zip</artifactId>
+	    <version>1.9</version>
+	    <type>jar</type>
+	</dependency>
   </dependencies>
   <dependencyManagement>
   	<dependencies>

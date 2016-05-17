@@ -1,10 +1,13 @@
 package co.com.soinsoftware.schoolmanagement.request;
 
+import java.io.File;
 import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +19,7 @@ import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.soinsoftware.schoolmanagement.entity.FinalNoteBO;
 import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
-import co.com.soinsoftware.schoolmanagement.util.ReportThread;
+import co.com.soinsoftware.schoolmanagement.util.ReportGenerator;
 import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
@@ -43,7 +46,7 @@ public class ReportRequestHandler extends AbstractRequestHandler {
 
 	@GET
 	@Path(PATH_BY)
-	public void generateReports(
+	public Response generateReports(
 			@QueryParam(PARAMETER_SCHOOL_ID) final int idSchool,
 			@QueryParam(PARAMETER_CLASSROOM_ID) final int idClassRoom,
 			@QueryParam(PARAMETER_PERIOD_ID) final int idPeriod) {
@@ -57,10 +60,14 @@ public class ReportRequestHandler extends AbstractRequestHandler {
 		if (school != null && classRoom != null && period != null) {
 			final Set<FinalNoteBO> finalNoteSet = this.finalNoteBLL
 					.findAllByClassRoom(classRoom, period);
-			final ReportThread report = new ReportThread(school, classRoom,
+			final ReportGenerator report = new ReportGenerator(school, classRoom,
 					period, finalNoteSet);
-			report.start();
+			final File zipFile = report.generate();
+			ResponseBuilder responseBuilder = Response.ok((Object) zipFile);
+			responseBuilder.header("Content-Disposition",
+					"attachment; filename=\"boletines.zip\"");
+			return responseBuilder.build();
 		}
+		return null;
 	}
-
 }
