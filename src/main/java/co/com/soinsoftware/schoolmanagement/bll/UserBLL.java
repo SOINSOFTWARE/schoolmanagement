@@ -430,7 +430,9 @@ public class UserBLL extends AbstractBLL implements
 		} else {
 			final UserBO cacheUser = (UserBO) this.getObjectFromCache(USER_KEY,
 					record.getId());
-			record.setPassword(cacheUser.getPassword());
+			if (record.getPassword() == null) {
+				record.setPassword(cacheUser.getPassword());
+			}
 			record.setCreation(cacheUser.getCreation());
 			if (record.getPhoto() == null && cacheUser.getPhoto() != null) {
 				record.setPhoto(cacheUser.getPhoto());
