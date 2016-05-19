@@ -18,11 +18,15 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
 public class SchoolBO extends AbstractWithCodeBO {
 
 	private static final long serialVersionUID = -318874995739938197L;
-	
+
 	private String photo;
-	
+
 	private Integer period;
-	
+
+	private volatile String nit;
+
+	private volatile String dane;
+
 	private NoteConfigurationBO note;
 
 	public SchoolBO() {
@@ -35,6 +39,8 @@ public class SchoolBO extends AbstractWithCodeBO {
 						.isEnabled());
 		this.photo = bzSchool.getPhoto();
 		this.period = bzSchool.getPeriod();
+		this.nit = bzSchool.getNit();
+		this.dane = bzSchool.getDane();
 		this.note = new NoteConfigurationBO(bzSchool.getCnnote());
 	}
 
@@ -52,6 +58,22 @@ public class SchoolBO extends AbstractWithCodeBO {
 
 	public void setPeriod(Integer period) {
 		this.period = period;
+	}
+
+	public String getNit() {
+		return nit;
+	}
+
+	public void setNit(String nit) {
+		this.nit = nit;
+	}
+
+	public String getDane() {
+		return dane;
+	}
+
+	public void setDane(String dane) {
+		this.dane = dane;
 	}
 
 	public NoteConfigurationBO getNote() {

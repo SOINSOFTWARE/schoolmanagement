@@ -57,3 +57,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+target/classes/META-INF/maven/co.com.soinsoftware/schoolmanagement/pom.properties

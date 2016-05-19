@@ -23,6 +23,12 @@
         <property name="period" type="java.lang.Integer">
             <column name="period" />
         </property>
+        <property name="nit" type="string">
+            <column name="nit" length="45" />
+        </property>
+        <property name="dane" type="string">
+            <column name="dane" length="45" />
+        </property>
         <property name="creation" type="timestamp">
             <column name="creation" length="19" not-null="true" />
         </property>

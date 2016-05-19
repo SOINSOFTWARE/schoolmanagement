@@ -18,6 +18,8 @@ public class Bzschool implements java.io.Serializable {
 	private String name;
 	private String photo;
 	private Integer period;
+	private String nit;
+	private String dane;
 	private Date creation;
 	private Date updated;
 	private boolean enabled;
@@ -28,25 +30,30 @@ public class Bzschool implements java.io.Serializable {
 	}
 
 	public Bzschool(Cnnote cnnote, String code, String name, String photo,
-			Integer period, Date creation, Date updated, boolean enabled) {
+			Integer period, String nit, String dane, Date creation,
+			Date updated, boolean enabled) {
 		this.cnnote = cnnote;
 		this.code = code;
 		this.name = name;
 		this.photo = photo;
 		this.period = period;
+		this.nit = nit;
+		this.dane = dane;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
 	}
 
 	public Bzschool(Cnnote cnnote, String code, String name, String photo,
-			Integer period, Date creation, Date updated, boolean enabled,
-			Set bzschoolxusers, Set bzclassrooms) {
+			Integer period, String nit, String dane, Date creation,
+			Date updated, boolean enabled, Set bzschoolxusers, Set bzclassrooms) {
 		this.cnnote = cnnote;
 		this.code = code;
 		this.name = name;
 		this.photo = photo;
 		this.period = period;
+		this.nit = nit;
+		this.dane = dane;
 		this.creation = creation;
 		this.updated = updated;
 		this.enabled = enabled;
@@ -93,13 +100,29 @@ public class Bzschool implements java.io.Serializable {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-	
+
 	public Integer getPeriod() {
 		return period;
 	}
 
 	public void setPeriod(Integer period) {
 		this.period = period;
+	}
+
+	public String getNit() {
+		return this.nit;
+	}
+
+	public void setNit(String nit) {
+		this.nit = nit;
+	}
+
+	public String getDane() {
+		return this.dane;
+	}
+
+	public void setDane(String dane) {
+		this.dane = dane;
 	}
 
 	public Date getCreation() {

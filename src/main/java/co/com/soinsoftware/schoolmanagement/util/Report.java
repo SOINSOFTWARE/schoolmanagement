@@ -21,7 +21,9 @@ import net.sf.dynamicreports.report.builder.component.TextFieldBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilders;
 import net.sf.dynamicreports.report.builder.subtotal.AggregationSubtotalBuilder;
+import net.sf.dynamicreports.report.constant.HorizontalImageAlignment;
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment;
+import net.sf.dynamicreports.report.constant.VerticalImageAlignment;
 import net.sf.dynamicreports.report.constant.VerticalTextAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -93,19 +95,35 @@ public class Report {
 		final InputStream image = new FileInputStream(imgFile);
 		final String schoolName = this.school.getName();
 		final StringBuilder schoolId = new StringBuilder("NIT: ");
+		schoolId.append(this.school.getNit());
+		schoolId.append(" ");
 		schoolId.append("DANE: ");
-		final StyleBuilder styleFont15 = this.getNewStyle().setFontSize(15)
-				.bold();
-		final StyleBuilder styleFont6 = this.getNewStyle().setFontSize(6)
-				.bold();
+		schoolId.append(this.school.getDane());
+		final StyleBuilder styleFont15 = this
+				.getNewStyle()
+				.setFontSize(15)
+				.setLeftPadding(5)
+				.bold()
+				.setTextAlignment(HorizontalTextAlignment.LEFT,
+						VerticalTextAlignment.BOTTOM);
+		final StyleBuilder styleFont6 = this
+				.getNewStyle()
+				.setFontSize(6)
+				.setLeftPadding(5)
+				.bold()
+				.setTextAlignment(HorizontalTextAlignment.LEFT,
+						VerticalTextAlignment.TOP);
 		this.report.title(
 				cmp.horizontalList().add(
-						cmp.horizontalGap(80),
-						cmp.image(image).setFixedHeight(30),
+						cmp.image(image).setStyle(
+								this.getNewStyle().setImageAlignment(
+										HorizontalImageAlignment.RIGHT,
+										VerticalImageAlignment.BOTTOM)),
 						cmp.verticalList().add(
 								this.getTextField(schoolName, styleFont15),
 								this.getTextField(schoolId.toString(),
-										styleFont6))), cmp.verticalGap(30));
+										styleFont6).setFixedHeight(45))),
+				cmp.verticalGap(30));
 	}
 
 	private void buildPageHeaderSection() {
