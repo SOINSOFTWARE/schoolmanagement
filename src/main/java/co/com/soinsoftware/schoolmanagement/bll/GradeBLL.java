@@ -6,9 +6,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.GradeDAO;
 import co.com.soinsoftware.schoolmanagement.entity.GradeBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzgrade;
@@ -18,12 +15,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzgrade;
  * @version 1.0
  * @since 29/06/2015
  */
-@Service
 public class GradeBLL extends AbstractBLL implements
 		IBusinessLogicLayer<GradeBO, Bzgrade> {
 
-	@Autowired
-	private GradeDAO gradeDAO;
+	private final GradeDAO dao;
+	
+	private static GradeBLL instance;
+	
+	private GradeBLL() {
+		super();
+		this.dao = new GradeDAO();
+	}
+	
+	public static GradeBLL getInstance() {
+		if (instance == null) {
+			instance = new GradeBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<GradeBO> findAll() {
@@ -67,7 +76,7 @@ public class GradeBLL extends AbstractBLL implements
 
 	@Override
 	public Set<GradeBO> selectAndPutInCache() {
-		Set<Bzgrade> bzGradeSet = this.gradeDAO.select();
+		Set<Bzgrade> bzGradeSet = this.dao.select();
 		Set<GradeBO> gradeBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzGradeSet);
 		if (gradeBOSet != null) {
@@ -79,7 +88,7 @@ public class GradeBLL extends AbstractBLL implements
 	@Override
 	public GradeBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		GradeBO gradeBO = null;
-		final Bzgrade bzGrade = this.gradeDAO.selectByIdentifier(identifier);
+		final Bzgrade bzGrade = this.dao.selectByIdentifier(identifier);
 		if (bzGrade != null) {
 			gradeBO = new GradeBO(bzGrade);
 			this.putObjectInCache(GRADE_KEY, gradeBO);

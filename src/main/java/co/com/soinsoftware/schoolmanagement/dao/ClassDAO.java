@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclass;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -15,7 +14,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 14/10/2015
  */
-@Repository
 public class ClassDAO extends AbstractDAO implements IDataAccesable<Bzclass> {
 
 	@SuppressWarnings("unchecked")

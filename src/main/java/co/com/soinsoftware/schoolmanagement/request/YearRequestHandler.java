@@ -10,11 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.YearBLL;
 import co.com.soinsoftware.schoolmanagement.entity.YearBO;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * 
@@ -25,8 +22,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/year/")
 public class YearRequestHandler {
 	
-	@Autowired
-	private YearBLL yearBLL = ServiceLocator.getBean(YearBLL.class);
+	private final YearBLL yearBLL = YearBLL.getInstance();
 
 	@GET
 	@Path("all")

@@ -7,9 +7,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.ClassRoomDAO;
 import co.com.soinsoftware.schoolmanagement.dao.ClassRoomXUserDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
@@ -29,33 +26,45 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
  * @version 1.0
  * @since 05/06/2015
  */
-@Service
 public class ClassRoomBLL extends AbstractBLL implements
 		IBusinessLogicLayer<ClassRoomBO, Bzclassroom> {
 
-	@Autowired
+	private final ClassRoomDAO dao;
+	
+	private final ClassRoomXUserDAO classRoomXUserDAO;
+	
 	private ClassBLL classBLL;
 
-	@Autowired
-	private ClassRoomDAO classRoomDAO;
-
-	@Autowired
-	private ClassRoomXUserDAO classRoomXUserDAO;
-
-	@Autowired
 	private GradeBLL gradeBLL;
 
-	@Autowired
 	private SchoolBLL schoolBLL;
 
-	@Autowired
 	private TimeBLL timeBLL;
 
-	@Autowired
 	private UserBLL userBLL;
 
-	@Autowired
 	private YearBLL yearBLL;
+	
+	private static ClassRoomBLL instance;
+	
+	private ClassRoomBLL() {
+		super();
+		this.dao = new ClassRoomDAO();
+		this.classRoomXUserDAO = new ClassRoomXUserDAO();
+	}
+	
+	public static ClassRoomBLL getInstance() {
+		if (instance == null) {
+			instance = new ClassRoomBLL();
+			instance.classBLL = ClassBLL.getInstance();
+			instance.gradeBLL = GradeBLL.getInstance();
+			instance.schoolBLL = SchoolBLL.getInstance();
+			instance.timeBLL = TimeBLL.getInstance();
+			instance.userBLL = UserBLL.getInstance();
+			instance.yearBLL = YearBLL.getInstance();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<ClassRoomBO> findAll() {
@@ -103,7 +112,7 @@ public class ClassRoomBLL extends AbstractBLL implements
 		ClassRoomBO classRoom = (ClassRoomBO) this.getObjectFromCache(
 				CLASSROOM_KEY, code);
 		if (classRoom == null) {
-			final Bzclassroom bzClassRoom = classRoomDAO.selectByCode(code);
+			final Bzclassroom bzClassRoom = dao.selectByCode(code);
 			if (bzClassRoom != null) {
 				classRoom = this.buildClassRoomBO(bzClassRoom, true);
 			}
@@ -133,13 +142,13 @@ public class ClassRoomBLL extends AbstractBLL implements
 		}
 		record.setUpdated(new Date());
 		final Bzclassroom bzClassRoom = this.buildHibernateEntity(record);
-		this.classRoomDAO.save(bzClassRoom);
+		this.dao.save(bzClassRoom);
 		return this.putObjectInCache(bzClassRoom);
 	}
 
 	@Override
 	public Set<ClassRoomBO> selectAndPutInCache() {
-		Set<Bzclassroom> bzClassRoomSet = this.classRoomDAO.select();
+		Set<Bzclassroom> bzClassRoomSet = this.dao.select();
 		Set<ClassRoomBO> classRoomBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzClassRoomSet);
 		if (classRoomBOSet != null) {
@@ -151,7 +160,7 @@ public class ClassRoomBLL extends AbstractBLL implements
 	@Override
 	public ClassRoomBO selectByIdentifierAndPutInCache(Integer identifier) {
 		ClassRoomBO classRoomBO = null;
-		Bzclassroom bzClassRoom = this.classRoomDAO
+		Bzclassroom bzClassRoom = this.dao
 				.selectByIdentifier(identifier);
 		if (bzClassRoom != null) {
 			classRoomBO = this.buildClassRoomBO(bzClassRoom, true);
@@ -240,7 +249,7 @@ public class ClassRoomBLL extends AbstractBLL implements
 
 	@Override
 	public ClassRoomBO putObjectInCache(Bzclassroom bzClassRoom) {
-		final Bzclassroom queryResult = classRoomDAO
+		final Bzclassroom queryResult = dao
 				.selectByIdentifier(bzClassRoom.getId());
 		final ClassRoomBO classRoomBO = this
 				.buildClassRoomBO(queryResult, true);

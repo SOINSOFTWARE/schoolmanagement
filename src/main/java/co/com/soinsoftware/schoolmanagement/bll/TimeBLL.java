@@ -6,9 +6,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.TimeDAO;
 import co.com.soinsoftware.schoolmanagement.entity.TimeBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bztime;
@@ -18,12 +15,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bztime;
  * @version 1.0
  * @since 27/08/2015
  */
-@Service
 public class TimeBLL extends AbstractBLL implements
 		IBusinessLogicLayer<TimeBO, Bztime> {
 
-	@Autowired
-	private TimeDAO timeDAO;
+	private final TimeDAO dao;
+	
+	private static TimeBLL instance;
+	
+	private TimeBLL() {
+		super();
+		this.dao = new TimeDAO();
+	}
+	
+	public static TimeBLL getInstance() {
+		if (instance == null) {
+			instance = new TimeBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<TimeBO> findAll() {
@@ -66,7 +75,7 @@ public class TimeBLL extends AbstractBLL implements
 
 	@Override
 	public Set<TimeBO> selectAndPutInCache() {
-		final Set<Bztime> bzTimeSet = this.timeDAO.select();
+		final Set<Bztime> bzTimeSet = this.dao.select();
 		final Set<TimeBO> timeBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzTimeSet);
 		if (timeBOSet != null) {
@@ -78,7 +87,7 @@ public class TimeBLL extends AbstractBLL implements
 	@Override
 	public TimeBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		TimeBO timeBO = null;
-		final Bztime bzTime = this.timeDAO.selectByIdentifier(identifier);
+		final Bztime bzTime = this.dao.selectByIdentifier(identifier);
 		if (bzTime != null) {
 			timeBO = new TimeBO(bzTime);
 			this.putObjectInCache(TIME_KEY, timeBO);

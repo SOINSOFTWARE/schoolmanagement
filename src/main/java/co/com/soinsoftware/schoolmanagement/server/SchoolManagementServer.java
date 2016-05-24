@@ -34,60 +34,71 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
  * @since 09/03/2015
  */
 public class SchoolManagementServer {
-	
+
 	/**
 	 * Logger instance
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SchoolManagementServer.class);
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SchoolManagementServer.class);
+
 	/**
-	 * Initialize school management server application using parameter from server.properties file
+	 * Initialize school management server application using parameter from
+	 * server.properties file
+	 * 
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) {
 		ServerProperties serverProperties = ServerProperties.getInstance();
+		Server server = new Server();
+
+		ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
+		servletHolder.setInitParameter(
+				"com.sun.jersey.config.property.resourceConfigClass",
+				"co.com.soinsoftware.schoolmanagement.request.AppConfig");
+		servletHolder.setInitParameter(serverProperties.getPackageKey(),
+				serverProperties.getPackageValue());
+		servletHolder.setInitParameter(
+				"com.sun.jersey.api.json.POJOMappingFeature", "true");
+
+		ServletContextHandler context = new ServletContextHandler(server, "/",
+				ServletContextHandler.SESSIONS);
+		context.addServlet(servletHolder, "/*");
+		context.setClassLoader(SchoolManagementServer.class.getClassLoader());
 		
-        Server server = new Server();
-        ServerConnector connector = new ServerConnector(server);
-        connector.setPort(serverProperties.getPort());
+		ContextHandlerCollection contexts = new ContextHandlerCollection();
+		contexts.addHandler(context);
+		
+		ServerConnector connector = new ServerConnector(server);
+		connector.setPort(serverProperties.getPort());
 
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
+		server.setConnectors(new Connector[] { connector });
+		server.setHandler(context);
+		server.setHandler(contexts);
 
-        ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
-        servletHolder.setInitParameter(serverProperties.getPackageKey(), serverProperties.getPackageValue());
-
-        contexts.addHandler(context);
-
-        server.setConnectors(new Connector[] {connector});
-        server.setHandler(context);
-        context.addServlet(servletHolder, "/*");
-        server.setHandler(contexts);
-        
-        try {
+		try {
 			server.start();
+			server.dumpStdErr();
 		} catch (Exception ex) {
 			LOGGER.error(ex.getMessage());
 		}
-        
-        ServiceLocator.init();
-        setupInitialData();
-    }
-	
+
+		ServiceLocator.init();
+		setupInitialData();
+	}
+
 	/**
 	 * Setups initial data from each cache used
 	 */
 	private static void setupInitialData() {
-		ServiceLocator.getBean(ClassBLL.class).findAll();
-		ServiceLocator.getBean(ClassRoomBLL.class).findAll();
-		ServiceLocator.getBean(GradeBLL.class).findAll();
-		ServiceLocator.getBean(PeriodBLL.class).findAll();
-		ServiceLocator.getBean(SchoolBLL.class).findAll();
-		ServiceLocator.getBean(SubjectBLL.class).findAll();
-		ServiceLocator.getBean(UserBLL.class).findAll();
-		ServiceLocator.getBean(UserTypeBLL.class).findAll();
-		ServiceLocator.getBean(YearBLL.class).findAll();
+		ClassBLL.getInstance().findAll();
+		ClassRoomBLL.getInstance().findAll();
+		GradeBLL.getInstance().findAll();
+		PeriodBLL.getInstance().findAll();
+		SchoolBLL.getInstance().findAll();
+		SubjectBLL.getInstance().findAll();
+		UserBLL.getInstance().findAll();
+		UserTypeBLL.getInstance().findAll();
+		YearBLL.getInstance().findAll();
 	}
 }

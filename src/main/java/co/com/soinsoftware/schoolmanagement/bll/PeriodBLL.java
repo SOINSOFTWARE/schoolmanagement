@@ -6,9 +6,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.PeriodDAO;
 import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
@@ -20,18 +17,30 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzperiod;
  * @version 1.0
  * @since 21/04/2016
  */
-@Service
 public class PeriodBLL extends AbstractBLL implements
 		IBusinessLogicLayer<PeriodBO, Bzperiod> {
 
-	@Autowired
-	private PeriodDAO dao;
+	private final PeriodDAO dao;
 
-	@Autowired
 	private SchoolBLL schoolBLL;
 	
-	@Autowired
 	private YearBLL yearBLL;
+	
+	private static PeriodBLL instance;
+	
+	private PeriodBLL() {
+		super();
+		this.dao = new PeriodDAO();
+	}
+	
+	public static PeriodBLL getInstance() {
+		if (instance == null) {
+			instance = new PeriodBLL();
+			instance.schoolBLL = SchoolBLL.getInstance();
+			instance.yearBLL = YearBLL.getInstance();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<PeriodBO> findAll() {

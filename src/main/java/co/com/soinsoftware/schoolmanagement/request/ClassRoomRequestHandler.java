@@ -12,12 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.ClassRoomBLL;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
 import co.com.soinsoftware.schoolmanagement.mapper.ClassRoomMapper;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * @author Carlos Rodriguez
@@ -27,9 +24,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/classroom/")
 public class ClassRoomRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private final ClassRoomBLL classRoomBLL = ServiceLocator
-			.getBean(ClassRoomBLL.class);
+	private final ClassRoomBLL classRoomBLL = ClassRoomBLL.getInstance();
 
 	@GET
 	@Path(PATH_ALL)

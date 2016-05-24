@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -20,7 +19,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 31/03/2015
  */
-@Repository
 public class UserTypeDAO extends AbstractDAO implements
 		IDataAccesable<Cnusertype> {
 

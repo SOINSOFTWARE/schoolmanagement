@@ -6,9 +6,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.YearDAO;
 import co.com.soinsoftware.schoolmanagement.entity.YearBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzyear;
@@ -18,12 +15,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzyear;
  * @version 1.0
  * @since 29/06/2015
  */
-@Service
 public class YearBLL extends AbstractBLL implements
 		IBusinessLogicLayer<YearBO, Bzyear> {
 
-	@Autowired
-	private YearDAO yearDAO;
+	private final YearDAO dao;
+	
+	private static YearBLL instance;
+	
+	private YearBLL() {
+		super();
+		this.dao = new YearDAO();
+	}
+	
+	public static YearBLL getInstance() {
+		if (instance == null) {
+			instance = new YearBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<YearBO> findAll() {
@@ -65,7 +74,7 @@ public class YearBLL extends AbstractBLL implements
 
 	@Override
 	public Set<YearBO> selectAndPutInCache() {
-		final Set<Bzyear> bzYearSet = this.yearDAO.select();
+		final Set<Bzyear> bzYearSet = this.dao.select();
 		final Set<YearBO> yearBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzYearSet);
 		if (yearBOSet != null) {
@@ -77,7 +86,7 @@ public class YearBLL extends AbstractBLL implements
 	@Override
 	public YearBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		YearBO yearBO = null;
-		final Bzyear bzYear = this.yearDAO.selectByIdentifier(identifier);
+		final Bzyear bzYear = this.dao.selectByIdentifier(identifier);
 		if (bzYear != null) {
 			yearBO = new YearBO(bzYear);
 			this.putObjectInCache(YEAR_KEY, yearBO);

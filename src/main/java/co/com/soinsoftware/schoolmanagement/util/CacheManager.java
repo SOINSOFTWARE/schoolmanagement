@@ -12,7 +12,6 @@ import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.entity.AbstractBO;
 import co.com.soinsoftware.schoolmanagement.entity.AbstractWithCodeBO;
@@ -24,7 +23,6 @@ import co.com.soinsoftware.schoolmanagement.entity.AbstractWithCodeBO;
  * @version 1.0
  * @since 09/03/2015
  */
-@Service
 public class CacheManager {
 
 	/**
@@ -37,13 +35,19 @@ public class CacheManager {
 	 * EhCache manager
 	 */
 	private net.sf.ehcache.CacheManager cacheManager;
+	
+	private static CacheManager instance;
 
-	/**
-	 * Constructor
-	 */
-	public CacheManager() {
+	private CacheManager() {
 		super();
 		cacheManager = net.sf.ehcache.CacheManager.create();
+	}
+	
+	public static CacheManager getInstance() {
+		if (instance == null) {
+			instance = new CacheManager();
+		}
+		return instance;
 	}
 
 	/**

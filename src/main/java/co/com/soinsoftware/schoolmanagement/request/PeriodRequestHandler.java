@@ -10,11 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.PeriodBLL;
 import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * 
@@ -25,8 +22,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/period/")
 public class PeriodRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private PeriodBLL periodBLL = ServiceLocator.getBean(PeriodBLL.class);
+	private final PeriodBLL periodBLL = PeriodBLL.getInstance();
 
 	@GET
 	@Path(PATH_ALL)

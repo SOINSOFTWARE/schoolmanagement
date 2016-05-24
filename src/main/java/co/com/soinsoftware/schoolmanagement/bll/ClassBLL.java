@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.ClassDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
@@ -24,24 +21,36 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bznotedefinition;
  * @version 1.0
  * @since 28/01/2016
  */
-@Service
 public class ClassBLL extends AbstractBLL implements
 		IBusinessLogicLayer<ClassBO, Bzclass> {
 
-	@Autowired
-	private ClassDAO classDAO;
+	private final ClassDAO dao;
 
-	@Autowired
 	private ClassRoomBLL classRoomBLL;
 	
-	@Autowired
 	private NoteValueBLL noteValueBLL;
 	
-	@Autowired
 	private SubjectBLL subjectBLL;
 
-	@Autowired
 	private UserBLL userBLL;
+	
+	private static ClassBLL instance;
+	
+	private ClassBLL() {
+		super();
+		this.dao = new ClassDAO();
+	}
+	
+	public static ClassBLL getInstance() {
+		if(instance == null) {
+			instance = new ClassBLL();
+			instance.classRoomBLL = ClassRoomBLL.getInstance();
+			instance.noteValueBLL = NoteValueBLL.getInstance();
+			instance.subjectBLL = SubjectBLL.getInstance();
+			instance.userBLL = UserBLL.getInstance();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<ClassBO> findAll() {
@@ -106,13 +115,13 @@ public class ClassBLL extends AbstractBLL implements
 		}
 		record.setUpdated(new Date());
 		Bzclass bzClass = this.buildHibernateEntity(record);
-		this.classDAO.save(bzClass);
+		this.dao.save(bzClass);
 		return this.putObjectInCache(bzClass);
 	}
 
 	@Override
 	public Set<ClassBO> selectAndPutInCache() {
-		final Set<Bzclass> bzClassSet = this.classDAO.select();
+		final Set<Bzclass> bzClassSet = this.dao.select();
 		final Set<ClassBO> classBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzClassSet);
 		if (classBOSet != null) {
@@ -124,7 +133,7 @@ public class ClassBLL extends AbstractBLL implements
 	@Override
 	public ClassBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		ClassBO classBO = null;
-		final Bzclass bzClass = this.classDAO.selectByIdentifier(identifier);
+		final Bzclass bzClass = this.dao.selectByIdentifier(identifier);
 		if (bzClass != null) {
 			classBO = this.buildClassBO(bzClass);
 			this.putObjectInCache(CLASS_KEY, classBO);
@@ -190,7 +199,7 @@ public class ClassBLL extends AbstractBLL implements
 
 	@Override
 	public ClassBO putObjectInCache(final Bzclass bzClass) {
-		final Bzclass queryResult = classDAO
+		final Bzclass queryResult = dao
 				.selectByIdentifier(bzClass.getId());
 		final ClassBO classBO = this.buildClassBO(queryResult);
 		this.putObjectInCache(CLASS_KEY, classBO);

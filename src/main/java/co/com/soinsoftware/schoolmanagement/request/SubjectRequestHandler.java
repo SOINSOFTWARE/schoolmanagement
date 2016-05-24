@@ -10,11 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.SubjectBLL;
 import co.com.soinsoftware.schoolmanagement.entity.SubjectBO;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * @author Carlos Andres Rodriguez
@@ -24,8 +21,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/subject/")
 public class SubjectRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private SubjectBLL subjectBLL = ServiceLocator.getBean(SubjectBLL.class);
+	private final SubjectBLL subjectBLL = SubjectBLL.getInstance();
 
 	@GET
 	@Path(PATH_ALL)

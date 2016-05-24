@@ -9,8 +9,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.ClassRoomBLL;
 import co.com.soinsoftware.schoolmanagement.bll.FinalNoteBLL;
 import co.com.soinsoftware.schoolmanagement.bll.PeriodBLL;
@@ -20,7 +18,6 @@ import co.com.soinsoftware.schoolmanagement.entity.FinalNoteBO;
 import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
 import co.com.soinsoftware.schoolmanagement.util.ReportGenerator;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * @author Carlos Rodriguez
@@ -30,19 +27,13 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/report/")
 public class ReportRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private final ClassRoomBLL classRoomBLL = ServiceLocator
-			.getBean(ClassRoomBLL.class);
+	private final ClassRoomBLL classRoomBLL = ClassRoomBLL.getInstance();
 
-	@Autowired
-	private final PeriodBLL periodBLL = ServiceLocator.getBean(PeriodBLL.class);
+	private final PeriodBLL periodBLL = PeriodBLL.getInstance();
 
-	@Autowired
-	private final SchoolBLL schoolBLL = ServiceLocator.getBean(SchoolBLL.class);
+	private final SchoolBLL schoolBLL = SchoolBLL.getInstance();
 
-	@Autowired
-	private final FinalNoteBLL finalNoteBLL = ServiceLocator
-			.getBean(FinalNoteBLL.class);
+	private final FinalNoteBLL finalNoteBLL = FinalNoteBLL.getInstance();
 
 	@GET
 	@Path(PATH_BY)

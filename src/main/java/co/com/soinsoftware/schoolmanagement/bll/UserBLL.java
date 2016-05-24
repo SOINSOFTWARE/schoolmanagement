@@ -5,10 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.ehcache.Cache;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.SchoolXUserDAO;
 import co.com.soinsoftware.schoolmanagement.dao.UserDAO;
 import co.com.soinsoftware.schoolmanagement.dao.UserXUserTypeDAO;
@@ -34,33 +30,45 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
  * @version 1.0
  * @since 16/04/2015
  */
-@Service
 public class UserBLL extends AbstractBLL implements
 		IBusinessLogicLayer<UserBO, Bzuser> {
+	
+	private final UserDAO dao;
+	
+	private final SchoolXUserDAO schoolxUserDAO;
+	
+	private final UserXUserTypeDAO userxUserTypeDAO;
 
-	@Autowired
 	private ClassBLL classBLL;
 
-	@Autowired
 	private ClassRoomBLL classRoomBLL;
 
-	@Autowired
 	private SchoolBLL schoolBLL;
 
-	@Autowired
-	private SchoolXUserDAO schoolxUserDAO;
-
-	@Autowired
-	private UserDAO userDAO;
-
-	@Autowired
 	private UserTypeBLL userTypeBLL;
 
-	@Autowired
-	private UserXUserTypeDAO userxUserTypeDAO;
-
-	@Autowired
 	private YearBLL yearBLL;
+	
+	private static UserBLL instance;
+	
+	private UserBLL() {
+		super();
+		this.dao = new UserDAO();
+		this.schoolxUserDAO = new SchoolXUserDAO();
+		this.userxUserTypeDAO = new UserXUserTypeDAO();
+	}
+	
+	public static UserBLL getInstance() {
+		if (instance == null) {
+			instance = new UserBLL();
+			instance.classBLL = ClassBLL.getInstance();
+			instance.classRoomBLL = ClassRoomBLL.getInstance();
+			instance.schoolBLL = SchoolBLL.getInstance();
+			instance.userTypeBLL = UserTypeBLL.getInstance();
+			instance.yearBLL = YearBLL.getInstance();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<UserBO> findAll() {
@@ -110,7 +118,7 @@ public class UserBLL extends AbstractBLL implements
 		this.setPreviousData(record);
 		record.setUpdated(new Date());
 		final Bzuser bzUser = this.buildHibernateEntity(record);
-		this.userDAO.save(bzUser);
+		this.dao.save(bzUser);
 		this.saveSchoolXUserRecords(bzUser.getId(), bzUser.getBzschoolxusers());
 		this.saveUserXUserTypeRecords(bzUser.getId(),
 				bzUser.getBzuserxusertypes());
@@ -119,7 +127,7 @@ public class UserBLL extends AbstractBLL implements
 
 	@Override
 	public Set<UserBO> selectAndPutInCache() {
-		final Set<Bzuser> bzUserSet = this.userDAO.select();
+		final Set<Bzuser> bzUserSet = this.dao.select();
 		final Set<UserBO> userBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzUserSet);
 		if (userBOSet != null) {
@@ -146,7 +154,7 @@ public class UserBLL extends AbstractBLL implements
 	@Override
 	public UserBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		UserBO userBO = null;
-		final Bzuser bzUser = this.userDAO.selectByIdentifier(identifier);
+		final Bzuser bzUser = this.dao.selectByIdentifier(identifier);
 		if (bzUser != null) {
 			userBO = this.buildUserBO(bzUser, true);
 			this.putObjectInCache(USER_KEY, userBO);
@@ -156,7 +164,7 @@ public class UserBLL extends AbstractBLL implements
 
 	public UserBO selectByDocumentNumer(final String documentNumber) {
 		UserBO userBO = null;
-		final Bzuser bzUser = this.userDAO
+		final Bzuser bzUser = this.dao
 				.selectByDocumentNumber(documentNumber);
 		if (bzUser != null) {
 			userBO = this.buildUserBO(bzUser, true);
@@ -309,7 +317,7 @@ public class UserBLL extends AbstractBLL implements
 
 	@Override
 	public UserBO putObjectInCache(Bzuser record) {
-		final Bzuser queryResult = this.userDAO.selectByIdentifier(record
+		final Bzuser queryResult = this.dao.selectByIdentifier(record
 				.getId());
 		final UserBO userBO = this.buildUserBO(queryResult, true);
 		this.putObjectInCache(USER_KEY, userBO);
@@ -385,7 +393,7 @@ public class UserBLL extends AbstractBLL implements
 	}
 	
 	public Set<UserBO> selectByGuardian(final Integer idUser) {
-		final Set<Bzuser> bzUserSet = this.userDAO.selectByGuardian(idUser);
+		final Set<Bzuser> bzUserSet = this.dao.selectByGuardian(idUser);
 		return this.createEntityBOSetUsingHibernatEntities(bzUserSet);
 	}
 

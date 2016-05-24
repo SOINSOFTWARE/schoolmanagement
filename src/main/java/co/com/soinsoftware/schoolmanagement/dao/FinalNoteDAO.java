@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzfinalnote;
 import co.com.soinsoftware.schoolmanagement.hibernate.BzfinalnoteId;
@@ -16,7 +15,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 13/05/2016
  */
-@Repository
 public class FinalNoteDAO extends AbstractDAO implements
 		IDataAccesable<Bzfinalnote> {
 

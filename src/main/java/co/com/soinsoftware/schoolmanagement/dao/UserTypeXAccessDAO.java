@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertypexaccess;
 import co.com.soinsoftware.schoolmanagement.hibernate.CnusertypexaccessId;
@@ -16,7 +15,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 20/10/2015
  */
-@Repository
 public class UserTypeXAccessDAO extends AbstractDAO implements IDataAccesable<Cnusertypexaccess> {
 	
 	public static final String COLUMN_IDENTIFIER_USERTYPE = "idUserType";

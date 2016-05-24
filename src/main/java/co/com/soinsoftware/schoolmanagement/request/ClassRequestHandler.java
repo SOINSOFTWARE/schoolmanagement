@@ -11,8 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.ClassBLL;
 import co.com.soinsoftware.schoolmanagement.bll.FinalNoteBLL;
 import co.com.soinsoftware.schoolmanagement.bll.NoteDefinitionBLL;
@@ -23,7 +21,6 @@ import co.com.soinsoftware.schoolmanagement.entity.NoteValueBO;
 import co.com.soinsoftware.schoolmanagement.mapper.ClassMapper;
 import co.com.soinsoftware.schoolmanagement.mapper.NoteDefinitionMapper;
 import co.com.soinsoftware.schoolmanagement.mapper.NoteValueMapper;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * @author Carlos Andres Rodriguez
@@ -33,17 +30,13 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/class/")
 public class ClassRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private ClassBLL classBLL = ServiceLocator.getBean(ClassBLL.class);
+	private final ClassBLL classBLL = ClassBLL.getInstance();
 	
-	@Autowired
-	private FinalNoteBLL finalNoteBLL = ServiceLocator.getBean(FinalNoteBLL.class);
+	private final FinalNoteBLL finalNoteBLL = FinalNoteBLL.getInstance();
 	
-	@Autowired
-	private NoteDefinitionBLL noteDefBLL = ServiceLocator.getBean(NoteDefinitionBLL.class);
+	private final NoteDefinitionBLL noteDefBLL = NoteDefinitionBLL.getInstance();
 	
-	@Autowired
-	private NoteValueBLL noteValueBLL = ServiceLocator.getBean(NoteValueBLL.class);
+	private final NoteValueBLL noteValueBLL = NoteValueBLL.getInstance();
 
 	@GET
 	@Path(PATH_ALL)

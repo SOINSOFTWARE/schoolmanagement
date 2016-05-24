@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bznotevalue;
 import co.com.soinsoftware.schoolmanagement.hibernate.BznotevalueId;
@@ -16,7 +15,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 15/10/2015
  */
-@Repository
 public class NoteValueDAO extends AbstractDAO implements
 		IDataAccesable<Bznotevalue> {
 

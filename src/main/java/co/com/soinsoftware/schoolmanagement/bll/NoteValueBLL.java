@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.NoteValueDAO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteValueBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bznotevalue;
@@ -17,12 +14,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.BznotevalueId;
  * @version 1.0
  * @since 27/04/2016
  */
-@Service
 public class NoteValueBLL extends AbstractBLL implements
 		IBusinessLogicLayer<NoteValueBO, Bznotevalue> {
 
-	@Autowired
-	private NoteValueDAO dao;
+	private final NoteValueDAO dao;
+	
+	private static NoteValueBLL instance;
+	
+	private NoteValueBLL() {
+		super();
+		this.dao = new NoteValueDAO();
+	}
+	
+	public static NoteValueBLL getInstance() {
+		if (instance == null) {
+			instance = new NoteValueBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<NoteValueBO> findAll() {

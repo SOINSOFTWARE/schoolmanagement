@@ -3,9 +3,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.SubjectDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
@@ -17,15 +14,27 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzsubject;
  * @version 1.0
  * @since 28/01/2016
  */
-@Service
 public class SubjectBLL extends AbstractBLL implements
 		IBusinessLogicLayer<SubjectBO, Bzsubject> {
 
-	@Autowired
-	private SubjectDAO subjectDAO;
+	private final SubjectDAO dao;
 
-	@Autowired
 	private ClassRoomBLL classRoomBLL;
+	
+	private static SubjectBLL instance;
+	
+	private SubjectBLL() {
+		super();
+		this.dao = new SubjectDAO();
+	}
+	
+	public static SubjectBLL getInstance() {
+		if (instance == null) {
+			instance = new SubjectBLL();
+			instance.classRoomBLL = ClassRoomBLL.getInstance();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<SubjectBO> findAll() {
@@ -107,7 +116,7 @@ public class SubjectBLL extends AbstractBLL implements
 
 	@Override
 	public Set<SubjectBO> selectAndPutInCache() {
-		final Set<Bzsubject> bzSubjectSet = this.subjectDAO.select();
+		final Set<Bzsubject> bzSubjectSet = this.dao.select();
 		final Set<SubjectBO> subjectBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzSubjectSet);
 		if (subjectBOSet != null) {
@@ -119,7 +128,7 @@ public class SubjectBLL extends AbstractBLL implements
 	@Override
 	public SubjectBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		SubjectBO classBO = null;
-		final Bzsubject bzSubject = this.subjectDAO
+		final Bzsubject bzSubject = this.dao
 				.selectByIdentifier(identifier);
 		if (bzSubject != null) {
 			classBO = new SubjectBO(bzSubject);

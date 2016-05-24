@@ -7,10 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.ehcache.Cache;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.UserTypeDAO;
 import co.com.soinsoftware.schoolmanagement.entity.AccessBO;
 import co.com.soinsoftware.schoolmanagement.entity.UserTypeBO;
@@ -23,12 +19,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertypexaccess;
  * @version 1.0
  * @since 05/06/2015
  */
-@Service
 public class UserTypeBLL extends AbstractBLL implements
 		IBusinessLogicLayer<UserTypeBO, Cnusertype> {
 
-	@Autowired
-	private UserTypeDAO userTypeDAO;
+	private final UserTypeDAO dao;
+	
+	public static UserTypeBLL instance;
+	
+	private UserTypeBLL() {
+		super();
+		this.dao = new UserTypeDAO();
+	}
+	
+	public static UserTypeBLL getInstance() {
+		if (instance == null) {
+			instance = new UserTypeBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<UserTypeBO> findAll() {
@@ -65,7 +73,7 @@ public class UserTypeBLL extends AbstractBLL implements
 
 	@Override
 	public Set<UserTypeBO> selectAndPutInCache() {
-		final Set<Cnusertype> cnUserTypeSet = this.userTypeDAO.select();
+		final Set<Cnusertype> cnUserTypeSet = this.dao.select();
 		final Set<UserTypeBO> userTypeBOSet = this
 				.createEntityBOSetUsingHibernatEntities(cnUserTypeSet);
 		if (userTypeBOSet != null) {
@@ -119,7 +127,7 @@ public class UserTypeBLL extends AbstractBLL implements
 
 	public UserTypeBO selectByCode(final String code) {
 		UserTypeBO userTypeBO = null;
-		final Cnusertype cnuserType = this.userTypeDAO.selectByCode(code);
+		final Cnusertype cnuserType = this.dao.selectByCode(code);
 		if (cnuserType != null) {
 			Set<AccessBO> accessSet = this.getAccessSet(cnuserType);
 			userTypeBO = new UserTypeBO(cnuserType, accessSet);

@@ -10,11 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.GradeBLL;
 import co.com.soinsoftware.schoolmanagement.entity.GradeBO;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * 
@@ -25,8 +22,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/grade/")
 public class GradeRequestHandler {
 
-	@Autowired
-	private GradeBLL gradeBLL = ServiceLocator.getBean(GradeBLL.class);
+	private final GradeBLL gradeBLL = GradeBLL.getInstance();
 
 	@GET
 	@Path("all")

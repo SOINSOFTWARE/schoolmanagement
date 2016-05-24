@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import co.com.soinsoftware.schoolmanagement.dao.NoteDefinitionDAO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
@@ -18,12 +17,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzperiod;
  * @version 1.0
  * @since 26/04/2016
  */
-@Service
 public class NoteDefinitionBLL extends AbstractBLL implements
 		IBusinessLogicLayer<NoteDefinitionBO, Bznotedefinition> {
 	
-	@Autowired
-	private NoteDefinitionDAO dao;
+	private final NoteDefinitionDAO dao;
+	
+	private static NoteDefinitionBLL instance;
+	
+	private NoteDefinitionBLL() {
+		super();
+		this.dao = new NoteDefinitionDAO();
+	}
+	
+	public static NoteDefinitionBLL getInstance() {
+		if (instance == null) {
+			instance = new NoteDefinitionBLL();
+		}
+		return instance;
+	}
 	
 	@Autowired
 	private ClassBLL classBLL;

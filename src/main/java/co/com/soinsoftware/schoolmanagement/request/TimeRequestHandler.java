@@ -10,11 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.TimeBLL;
 import co.com.soinsoftware.schoolmanagement.entity.TimeBO;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * 
@@ -25,8 +22,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/time/")
 public class TimeRequestHandler {
 	
-	@Autowired
-	private TimeBLL timeBLL = ServiceLocator.getBean(TimeBLL.class);
+	private final TimeBLL timeBLL = TimeBLL.getInstance();
 
 	@GET
 	@Path("all")

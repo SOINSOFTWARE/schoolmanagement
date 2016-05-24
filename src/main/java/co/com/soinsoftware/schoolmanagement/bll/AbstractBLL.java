@@ -6,7 +6,6 @@ import net.sf.ehcache.Cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import co.com.soinsoftware.schoolmanagement.util.CacheManager;
 
@@ -40,8 +39,7 @@ public abstract class AbstractBLL {
 	protected static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractBLL.class);
 
-	@Autowired
-	private CacheManager cacheManager;
+	private final CacheManager cacheManager = CacheManager.getInstance();
 
 	public boolean isCacheEmpty(final String cacheKey) {
 		return this.cacheManager.isCacheEmpty(cacheKey);

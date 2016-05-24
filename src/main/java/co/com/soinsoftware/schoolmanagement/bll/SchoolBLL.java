@@ -6,9 +6,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.SchoolDAO;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
@@ -21,12 +18,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.Bzschoolxuser;
  * @version 1.0
  * @since 09/03/2015
  */
-@Service
 public class SchoolBLL extends AbstractBLL implements
 		IBusinessLogicLayer<SchoolBO, Bzschool> {
 
-	@Autowired
-	private SchoolDAO schoolDAO;
+	private final SchoolDAO dao;
+	
+	private static SchoolBLL instance;
+	
+	private SchoolBLL() {
+		super();
+		this.dao = new SchoolDAO();
+	}
+	
+	public static SchoolBLL getInstance() {
+		if (instance == null) {
+			instance = new SchoolBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<SchoolBO> findAll() {
@@ -68,7 +77,7 @@ public class SchoolBLL extends AbstractBLL implements
 
 	@Override
 	public Set<SchoolBO> selectAndPutInCache() {
-		final Set<Bzschool> bzSchoolSet = this.schoolDAO.select();
+		final Set<Bzschool> bzSchoolSet = this.dao.select();
 		final Set<SchoolBO> schoolBOSet = this
 				.createEntityBOSetUsingHibernatEntities(bzSchoolSet);
 		if (schoolBOSet != null) {
@@ -80,7 +89,7 @@ public class SchoolBLL extends AbstractBLL implements
 	@Override
 	public SchoolBO selectByIdentifierAndPutInCache(final Integer identifier) {
 		SchoolBO schoolBO = null;
-		final Bzschool bzSchool = this.schoolDAO.selectByIdentifier(identifier);
+		final Bzschool bzSchool = this.dao.selectByIdentifier(identifier);
 		if (bzSchool != null) {
 			schoolBO = new SchoolBO(bzSchool);
 			this.putObjectInCache(SCHOOL_KEY, schoolBO);

@@ -10,12 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.UserBLL;
 import co.com.soinsoftware.schoolmanagement.entity.UserBO;
 import co.com.soinsoftware.schoolmanagement.mapper.UserMapper;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * @author Carlos Andres Rodriguez
@@ -25,8 +22,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/user/")
 public class UserRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private UserBLL userBLL = ServiceLocator.getBean(UserBLL.class);
+	private final UserBLL userBLL = UserBLL.getInstance();
 
 	@GET
 	@Path(PATH_ALL)

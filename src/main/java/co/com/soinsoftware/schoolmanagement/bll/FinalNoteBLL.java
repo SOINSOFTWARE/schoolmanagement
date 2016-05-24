@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import co.com.soinsoftware.schoolmanagement.dao.FinalNoteDAO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassBO;
 import co.com.soinsoftware.schoolmanagement.entity.ClassRoomBO;
@@ -25,12 +22,24 @@ import co.com.soinsoftware.schoolmanagement.hibernate.BzfinalnoteId;
  * @version 1.0
  * @since 13/05/2016
  */
-@Service
 public class FinalNoteBLL extends AbstractBLL implements
 		IBusinessLogicLayer<FinalNoteBO, Bzfinalnote> {
 
-	@Autowired
-	private FinalNoteDAO dao;
+	private final FinalNoteDAO dao;
+	
+	private static FinalNoteBLL instance;
+	
+	private FinalNoteBLL() {
+		super();
+		this.dao = new FinalNoteDAO();
+	}
+	
+	public static FinalNoteBLL getInstance() {
+		if (instance == null) {
+			instance = new FinalNoteBLL();
+		}
+		return instance;
+	}
 
 	@Override
 	public Set<FinalNoteBO> findAll() {

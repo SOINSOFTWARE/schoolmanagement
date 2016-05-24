@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuserxusertype;
 import co.com.soinsoftware.schoolmanagement.hibernate.BzuserxusertypeId;
@@ -16,7 +15,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 20/10/2015
  */
-@Repository
 public class UserXUserTypeDAO extends AbstractDAO implements
 		IDataAccesable<Bzuserxusertype> {
 

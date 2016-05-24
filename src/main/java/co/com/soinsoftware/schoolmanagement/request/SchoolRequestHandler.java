@@ -13,11 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.bll.SchoolBLL;
 import co.com.soinsoftware.schoolmanagement.entity.SchoolBO;
-import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 
 /**
  * School request handler
@@ -29,8 +26,7 @@ import co.com.soinsoftware.schoolmanagement.util.ServiceLocator;
 @Path("/schoolmanagement/school/")
 public class SchoolRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	private SchoolBLL schoolBLL = ServiceLocator.getBean(SchoolBLL.class);
+	private final SchoolBLL schoolBLL = SchoolBLL.getInstance();
 
 	@GET
 	@Path(PATH_ALL)

@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroom;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -18,7 +17,6 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 05/06/2015
  */
-@Repository
 public class ClassRoomDAO extends AbstractDAO implements
 		IDataAccesable<Bzclassroom> {
 
