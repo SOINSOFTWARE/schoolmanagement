@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclass;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -20,32 +21,40 @@ public class ClassDAO extends AbstractDAO implements IDataAccesable<Bzclass> {
 	@Override
 	public Set<Bzclass> select() {
 		Set<Bzclass> bzClassSet = null;
-		Chronometer chrono = this.startNewChronometer();        
-        try {
-            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            bzClassSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName() + ", Select function");
-        }        
-        return bzClassSet;
+		Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
+		try {
+			Query query = session.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzClassSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName()
+					+ ", Select function");
+		}
+		return bzClassSet;
 	}
 
 	@Override
 	public Bzclass selectByIdentifier(Integer identifier) {
 		Bzclass bzClass = null;
 		Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	bzClass = (query.list().isEmpty()) ? null : (Bzclass) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = session.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER, identifier);
+			bzClass = (query.list().isEmpty()) ? null : (Bzclass) query.list()
+					.get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono, ClassDAO.class.getName()
+					+ ", selectByIdentifier function");
+		}
 		return bzClass;
 	}
 
@@ -61,16 +70,17 @@ public class ClassDAO extends AbstractDAO implements IDataAccesable<Bzclass> {
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, ClassRoomDAO.class.getName() + ", save function");
-        }		
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					ClassRoomDAO.class.getName() + ", save function");
+		}
 	}
 
 	@Override
 	protected String getSelectStatementWithoutWhere() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(STATEMENT_FROM);
-		sql.append(TABLE_NAME_CLASS);		
+		sql.append(TABLE_NAME_CLASS);
 		return sql.toString();
 	}
 }

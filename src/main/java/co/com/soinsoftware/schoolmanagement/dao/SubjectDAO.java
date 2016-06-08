@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzsubject;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -14,54 +15,66 @@ import co.com.soinsoftware.schoolmanagement.util.Chronometer;
  * @version 1.0
  * @since 20/10/2015
  */
-public class SubjectDAO extends AbstractDAO implements IDataAccesable<Bzsubject> {
+public class SubjectDAO extends AbstractDAO implements
+		IDataAccesable<Bzsubject> {
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Bzsubject> select() {
 		Set<Bzsubject> bzSubjectSet = null;
-		Chronometer chrono = this.startNewChronometer();
-		
-        try {
-        	Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-        	bzSubjectSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", Select function");
-        }
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
+		try {
+			Query query = session.createQuery(this
+					.getSelectStatementWithoutWhere());
+			bzSubjectSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono,
+					SubjectDAO.class.getName() + ", Select function");
+		}
 		return bzSubjectSet;
 	}
 
 	@Override
 	public Bzsubject selectByIdentifier(Integer identifier) {
 		Bzsubject bzSubject = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	bzSubject = (Bzsubject) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = session.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER, identifier);
+			bzSubject = (Bzsubject) query.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono,
+					SubjectDAO.class.getName()
+							+ ", selectByIdentifier function");
+		}
 		return bzSubject;
 	}
 
 	@Override
 	public Bzsubject selectByCode(String code) {
 		Bzsubject bzSubject = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByCode());
-        	query.setParameter(COLUMN_CODE, code);
-        	bzSubject = (Bzsubject) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", selectByCode function");
-        }
+			Query query = session.createQuery(this.getSelectStatementByCode());
+			query.setParameter(COLUMN_CODE, code);
+			bzSubject = (Bzsubject) query.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono,
+					SubjectDAO.class.getName() + ", selectByCode function");
+		}
 		return bzSubject;
 	}
 
@@ -72,11 +85,12 @@ public class SubjectDAO extends AbstractDAO implements IDataAccesable<Bzsubject>
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, SubjectDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono,
+					SubjectDAO.class.getName() + ", save function");
+		}
 	}
 
 	@Override

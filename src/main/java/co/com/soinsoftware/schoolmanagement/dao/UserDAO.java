@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzuser;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -24,15 +25,16 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 	@Override
 	public Set<Bzuser> select() {
 		Set<Bzuser> bzUserSet = null;
-		Chronometer chrono = this.startNewChronometer();
-
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementWithoutWhere());
 			bzUserSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
 					+ ", Select function");
 		}
@@ -42,9 +44,10 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 	@Override
 	public Bzuser selectByIdentifier(Integer identifier) {
 		Bzuser bzUser = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByIdentifier());
 			query.setParameter(COLUMN_IDENTIFIER, identifier);
 			bzUser = (query.list().isEmpty()) ? null : (Bzuser) query.list()
@@ -52,6 +55,7 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
 					+ ", selectByIdentifier function");
 		}
@@ -65,9 +69,10 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 
 	public Bzuser selectByDocumentNumber(String documentNumber) {
 		Bzuser bzUser = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByDocumentNumber());
 			query.setParameter(COLUMN_DOCUMENT_NUMBER, documentNumber);
 			bzUser = (query.list().isEmpty()) ? null : (Bzuser) query.list()
@@ -75,6 +80,7 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
 					+ ", selectByDocumentNumber function");
 		}
@@ -95,14 +101,14 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 					+ ", save function");
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Set<Bzuser> selectByGuardian(final Integer idUser) {
 		Set<Bzuser> bzUserSet = null;
 		final Chronometer chrono = this.startNewChronometer();
-
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByGuardian());
 			query.setParameter(COLUMN_GUARDIAN1, idUser);
 			query.setParameter(COLUMN_GUARDIAN2, idUser);
@@ -110,6 +116,7 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, UserDAO.class.getName()
 					+ ", Select function");
 		}
@@ -132,7 +139,7 @@ public class UserDAO extends AbstractDAO implements IDataAccesable<Bzuser> {
 		sql.append(PARAMETER + COLUMN_DOCUMENT_NUMBER);
 		return sql.toString();
 	}
-	
+
 	private String getSelectStatementByGuardian() {
 		final StringBuilder sql = new StringBuilder(
 				this.getSelectStatementWithoutWhere());

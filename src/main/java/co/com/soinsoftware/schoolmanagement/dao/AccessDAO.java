@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Cnaccess;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -23,33 +24,39 @@ public class AccessDAO extends AbstractDAO implements IDataAccesable<Cnaccess> {
 	public Set<Cnaccess> select() {
 		Set<Cnaccess> cnAccessSet = null;
 		Chronometer chrono = this.startNewChronometer();
-        
-        try {
-            Query query = this.createQuery(this.getSelectStatementWithoutWhere());
-            cnAccessSet = new HashSet<>(query.list());
-        } catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", Select function");
-        }
-        
-        return cnAccessSet;
+		final Session session = this.openSession();
+		try {
+			Query query = session.createQuery(this
+					.getSelectStatementWithoutWhere());
+			cnAccessSet = new HashSet<>(query.list());
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName()
+					+ ", Select function");
+		}
+
+		return cnAccessSet;
 	}
 
 	@Override
 	public Cnaccess selectByIdentifier(Integer identifier) {
 		Cnaccess cnAccess = null;
 		Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByIdentifier());
-        	query.setParameter(COLUMN_IDENTIFIER, identifier);
-        	cnAccess = (Cnaccess) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", selectByIdentifier function");
-        }
+			Query query = session.createQuery(this
+					.getSelectStatementByIdentifier());
+			query.setParameter(COLUMN_IDENTIFIER, identifier);
+			cnAccess = (Cnaccess) query.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName()
+					+ ", selectByIdentifier function");
+		}
 		return cnAccess;
 	}
 
@@ -57,15 +64,18 @@ public class AccessDAO extends AbstractDAO implements IDataAccesable<Cnaccess> {
 	public Cnaccess selectByCode(String code) {
 		Cnaccess cnAccess = null;
 		Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-        	Query query = this.createQuery(this.getSelectStatementByCode());
-        	query.setParameter(COLUMN_CODE, code);
-        	cnAccess = (Cnaccess) query.list().get(0);
-        } catch (HibernateException ex) {
-            LOGGER.error(ex.getMessage());
-        } finally {
-            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", selectByCode function");
-        }
+			Query query = session.createQuery(this.getSelectStatementByCode());
+			query.setParameter(COLUMN_CODE, code);
+			cnAccess = (Cnaccess) query.list().get(0);
+		} catch (HibernateException ex) {
+			LOGGER.error(ex.getMessage());
+		} finally {
+			session.disconnect();
+			this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName()
+					+ ", selectByCode function");
+		}
 		return cnAccess;
 	}
 
@@ -76,11 +86,12 @@ public class AccessDAO extends AbstractDAO implements IDataAccesable<Cnaccess> {
 			boolean isNew = (record.getId() == 0) ? true : false;
 			this.save(record, isNew);
 		} catch (HibernateException ex) {
-        	LOGGER.error(ex.getMessage());
-        } finally {
-            chrono.stop();
-            this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName() + ", save function");
-        }
+			LOGGER.error(ex.getMessage());
+		} finally {
+			chrono.stop();
+			this.stopChronometerAndLogMessage(chrono, AccessDAO.class.getName()
+					+ ", save function");
+		}
 	}
 
 	@Override

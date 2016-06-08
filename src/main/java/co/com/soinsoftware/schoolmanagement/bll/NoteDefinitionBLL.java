@@ -3,8 +3,6 @@ package co.com.soinsoftware.schoolmanagement.bll;
 import java.util.Date;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import co.com.soinsoftware.schoolmanagement.dao.NoteDefinitionDAO;
 import co.com.soinsoftware.schoolmanagement.entity.NoteDefinitionBO;
 import co.com.soinsoftware.schoolmanagement.entity.PeriodBO;
@@ -22,6 +20,10 @@ public class NoteDefinitionBLL extends AbstractBLL implements
 	
 	private final NoteDefinitionDAO dao;
 	
+	private ClassBLL classBLL;
+	
+	private PeriodBLL periodBLL;
+	
 	private static NoteDefinitionBLL instance;
 	
 	private NoteDefinitionBLL() {
@@ -32,15 +34,11 @@ public class NoteDefinitionBLL extends AbstractBLL implements
 	public static NoteDefinitionBLL getInstance() {
 		if (instance == null) {
 			instance = new NoteDefinitionBLL();
+			instance.classBLL = ClassBLL.getInstance();
+			instance.periodBLL = PeriodBLL.getInstance();
 		}
 		return instance;
 	}
-	
-	@Autowired
-	private ClassBLL classBLL;
-	
-	@Autowired
-	private PeriodBLL periodBLL;
 
 	@Override
 	public Set<NoteDefinitionBO> findAll() {

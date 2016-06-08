@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzfinalnote;
 import co.com.soinsoftware.schoolmanagement.hibernate.BzfinalnoteId;
@@ -27,14 +28,15 @@ public class FinalNoteDAO extends AbstractDAO implements
 	public Set<Bzfinalnote> select() {
 		Set<Bzfinalnote> bzFinalNoteSet = null;
 		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			final Query query = this.createQuery(this
+			final Query query = session.createQuery(this
 					.getSelectStatementWithoutWhere());
 			bzFinalNoteSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
-			chrono.stop();
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					FinalNoteDAO.class.getName() + ", Select function");
 		}
@@ -55,8 +57,9 @@ public class FinalNoteDAO extends AbstractDAO implements
 			final Integer idUser, final Integer idPeriod) {
 		Bzfinalnote bzFinalNote = null;
 		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			final Query query = this.createQuery(this
+			final Query query = session.createQuery(this
 					.getSelectStatementByIdentifier());
 			query.setParameter(COLUMN_IDENTIFIER_CLASS, idClassRoom);
 			query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
@@ -66,6 +69,7 @@ public class FinalNoteDAO extends AbstractDAO implements
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					FinalNoteDAO.class.getName()
 							+ ", selectByIdentifier function");
@@ -93,12 +97,13 @@ public class FinalNoteDAO extends AbstractDAO implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<Bzfinalnote> selectByClassAndPeriod(
-			final Integer idClass, final Integer idPeriod) {
+	public Set<Bzfinalnote> selectByClassAndPeriod(final Integer idClass,
+			final Integer idPeriod) {
 		Set<Bzfinalnote> bzFinalNoteSet = null;
 		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			final Query query = this.createQuery(this
+			final Query query = session.createQuery(this
 					.getSelectStatementByClassAndPeriod());
 			query.setParameter(COLUMN_IDENTIFIER_CLASS, idClass);
 			query.setParameter(COLUMN_IDENTIFIER_PERIOD, idPeriod);
@@ -106,6 +111,7 @@ public class FinalNoteDAO extends AbstractDAO implements
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					FinalNoteDAO.class.getName()
 							+ ", selectByIdClassRoomAndPeriod function");

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzschool;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -25,15 +26,16 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 	@Override
 	public Set<Bzschool> select() {
 		Set<Bzschool> bzSchoolSet = null;
-		Chronometer chrono = this.startNewChronometer();
-
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementWithoutWhere());
 			bzSchoolSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
 					+ ", Select function");
 		}
@@ -43,9 +45,10 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 	@Override
 	public Bzschool selectByIdentifier(Integer identifier) {
 		Bzschool bzSchool = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByIdentifier());
 			query.setParameter(COLUMN_IDENTIFIER, identifier);
 			bzSchool = (query.list().isEmpty()) ? null : (Bzschool) query
@@ -53,6 +56,7 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
 					+ ", selectByIdentifier function");
 		}
@@ -62,15 +66,17 @@ public class SchoolDAO extends AbstractDAO implements IDataAccesable<Bzschool> {
 	@Override
 	public Bzschool selectByCode(String code) {
 		Bzschool bzSchool = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this.getSelectStatementByCode());
+			Query query = session.createQuery(this.getSelectStatementByCode());
 			query.setParameter(COLUMN_CODE, code);
 			bzSchool = (query.list().isEmpty()) ? null : (Bzschool) query
 					.list().get(0);
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono, SchoolDAO.class.getName()
 					+ ", selectByCode function");
 		}

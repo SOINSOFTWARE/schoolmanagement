@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Cnusertype;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -26,16 +27,16 @@ public class UserTypeDAO extends AbstractDAO implements
 	@Override
 	public Set<Cnusertype> select() {
 		Set<Cnusertype> CnusertypeSet = null;
-		Chronometer chrono = this.startNewChronometer();
-
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementWithoutWhere());
 			CnusertypeSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
-			chrono.stop();
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					UserTypeDAO.class.getName() + ", Select function");
 		}
@@ -46,15 +47,17 @@ public class UserTypeDAO extends AbstractDAO implements
 	@Override
 	public Cnusertype selectByIdentifier(Integer identifier) {
 		Cnusertype cnUserType = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByIdentifier());
 			query.setParameter(COLUMN_IDENTIFIER, identifier);
 			cnUserType = (Cnusertype) query.list().get(0);
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					UserTypeDAO.class.getName()
 							+ ", selectByIdentifier function");
@@ -65,15 +68,17 @@ public class UserTypeDAO extends AbstractDAO implements
 	@Override
 	public Cnusertype selectByCode(String code) {
 		Cnusertype cnUserType = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this.getSelectStatementByCode());
+			Query query = session.createQuery(this.getSelectStatementByCode());
 			query.setParameter(COLUMN_CODE, code);
 			cnUserType = (query.list().isEmpty()) ? null : (Cnusertype) query
 					.list().get(0);
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					UserTypeDAO.class.getName() + ", selectByCode function");
 		}

@@ -3,7 +3,6 @@
  */
 package co.com.soinsoftware.schoolmanagement.dao;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -63,6 +62,8 @@ public abstract class AbstractDAO {
 	protected static final String STATEMENT_UPDATE = " update ";
 	protected static final String STATEMENT_UPDATE_SET = " set ";
 	
+	private final SessionFactory sessioFactory = ServiceLocator.getBean("sessionFactory");
+	
 	/**
 	 * Creates and starts new {@link Chronometer} object
 	 * @return {@link Chronometer} object
@@ -85,16 +86,6 @@ public abstract class AbstractDAO {
 	}
 	
 	/**
-	 * Creates a new {@link Query} using the {@link Session} previously opened
-	 * @param queryStatement Statement used to query database
-	 * @return {@link Query} object
-	 */
-	public Query createQuery(String queryStatement) {
-		return this.openSession().createQuery(queryStatement.toString());
-        
-	}
-	
-	/**
      * Saves and commit data to database
      * 
      * @param object New object to be saved.
@@ -102,12 +93,16 @@ public abstract class AbstractDAO {
      */
     public void save(java.io.Serializable object, boolean isNew) {
         Session session = this.openSession();
-        if (isNew) {
-            session.save(object);
-        } else {
-            session.update(object);
+        try {
+	        if (isNew) {
+	            session.save(object);
+	        } else {
+	            session.update(object);
+	        }
+	        session.getTransaction().commit();
+        } finally {
+        	session.disconnect();
         }
-        session.getTransaction().commit();
     }
     
     /**
@@ -149,9 +144,8 @@ public abstract class AbstractDAO {
 	 * Opens a new {@link Session} using session factory bean
 	 * @return {@link Session} object
 	 */
-	private Session openSession() {
-		SessionFactory sessioFactory = ServiceLocator.getBean("sessionFactory");
-		Session session = sessioFactory.openSession();
+	protected Session openSession() {
+		Session session = this.sessioFactory.openSession();
 		session.beginTransaction();
         return session;
     }

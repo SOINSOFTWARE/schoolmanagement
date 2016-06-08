@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bzclassroomxuser;
 import co.com.soinsoftware.schoolmanagement.util.Chronometer;
@@ -24,15 +25,16 @@ public class ClassRoomXUserDAO extends AbstractDAO implements
 	@Override
 	public Set<Bzclassroomxuser> select() {
 		Set<Bzclassroomxuser> bzClassRoomXUserSet = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementWithoutWhere());
 			bzClassRoomXUserSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
-			chrono.stop();
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					ClassRoomXUserDAO.class.getName() + ", Select function");
 		}
@@ -52,9 +54,10 @@ public class ClassRoomXUserDAO extends AbstractDAO implements
 	public Bzclassroomxuser selectByIdentifier(Integer idClassRoom,
 			Integer idUser) {
 		Bzclassroomxuser bzClassRoomXUser = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByIdentifier());
 			query.setParameter(COLUMN_IDENTIFIER_CLASSROOM, idClassRoom);
 			query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
@@ -63,6 +66,7 @@ public class ClassRoomXUserDAO extends AbstractDAO implements
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					ClassRoomXUserDAO.class.getName()
 							+ ", selectByIdentifier function");

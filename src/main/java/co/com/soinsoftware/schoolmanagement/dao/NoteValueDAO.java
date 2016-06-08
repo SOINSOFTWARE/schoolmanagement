@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import co.com.soinsoftware.schoolmanagement.hibernate.Bznotevalue;
 import co.com.soinsoftware.schoolmanagement.hibernate.BznotevalueId;
@@ -25,15 +26,16 @@ public class NoteValueDAO extends AbstractDAO implements
 	@Override
 	public Set<Bznotevalue> select() {
 		Set<Bznotevalue> bzNoteDefinitionSet = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementWithoutWhere());
 			bzNoteDefinitionSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
-			chrono.stop();
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					NoteValueDAO.class.getName() + ", Select function");
 		}
@@ -53,17 +55,20 @@ public class NoteValueDAO extends AbstractDAO implements
 	public Bznotevalue selectByIdentifier(Integer idNoteDefinition,
 			Integer idUser) {
 		Bznotevalue bzNoteValue = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
-			Query query = this.createQuery(this
+			Query query = session.createQuery(this
 					.getSelectStatementByIdentifier());
 			query.setParameter(COLUMN_IDENTIFIER_NOTEDEFINITION,
 					idNoteDefinition);
 			query.setParameter(COLUMN_IDENTIFIER_USER, idUser);
-			bzNoteValue = (query.list().isEmpty()) ? null : (Bznotevalue) query.list().get(0);
+			bzNoteValue = (query.list().isEmpty()) ? null : (Bznotevalue) query
+					.list().get(0);
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					NoteValueDAO.class.getName()
 							+ ", selectByIdentifier function");
@@ -94,20 +99,22 @@ public class NoteValueDAO extends AbstractDAO implements
 	public Set<Bznotevalue> selectByIdNoteDefinition(
 			final Integer idNoteDefinition) {
 		Set<Bznotevalue> bzNoteValueSet = null;
-		Chronometer chrono = this.startNewChronometer();
+		final Chronometer chrono = this.startNewChronometer();
+		final Session session = this.openSession();
 		try {
 			final StringBuilder queryStr = new StringBuilder(
 					this.getSelectStatementWithoutWhere());
 			queryStr.append(STATEMENT_WHERE);
 			queryStr.append(COLUMN_IDENTIFIER_NOTEDEFINITION);
 			queryStr.append(PARAMETER + COLUMN_IDENTIFIER_NOTEDEFINITION);
-			final Query query = this.createQuery(queryStr.toString());
+			final Query query = session.createQuery(queryStr.toString());
 			query.setParameter(COLUMN_IDENTIFIER_NOTEDEFINITION,
 					idNoteDefinition);
 			bzNoteValueSet = new HashSet<>(query.list());
 		} catch (HibernateException ex) {
 			LOGGER.error(ex.getMessage());
 		} finally {
+			session.disconnect();
 			this.stopChronometerAndLogMessage(chrono,
 					NoteValueDAO.class.getName()
 							+ ", selectByIdNoteDefinition function");
