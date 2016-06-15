@@ -60,3 +60,6 @@ $RECYCLE.BIN/
 target/classes/META-INF/maven/co.com.soinsoftware/schoolmanagement/pom.properties
 logs/schoolmanagementserver.log
 *.1
+target/classes/school.jasper
+target/classes/school.jrxml
+target/classes/META-INF/maven/org.apache.maven/schoolmanagement/pom.properties
